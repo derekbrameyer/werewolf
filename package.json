@@ -1,0 +1,56 @@
+{
+  "name": "werewolf",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "deploy": "npm run build && firebase deploy",
+    "build":
+      "parcel build ./website/index.html --no-cache --no-minify --public-url=./",
+    "start": "parcel ./website/index.html"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.0.1",
+    "@types/ramda": "^0.25.16",
+    "jest": "^22.1.4",
+    "nodemon": "^1.14.11",
+    "parcel-bundler": "^1.5.1",
+    "prettier": "^1.10.2",
+    "ts-jest": "^22.0.1",
+    "ts-node": "^4.1.0",
+    "ts-node-dev": "^1.0.0-pre.9",
+    "typescript": "^2.7.0-rc"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
+    "modulePaths": ["src/", "node_modules"],
+    "moduleDirectories": ["node_modules", "src"]
+  },
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true
+  },
+  "dependencies": {
+    "@firebase/app-types": "^0.1.1",
+    "@firebase/firestore": "^0.3.1",
+    "@types/react": "^16.0.35",
+    "@types/react-dom": "^16.0.3",
+    "@types/styled-jsx": "^2.2.1",
+    "firebase": "^4.9.0",
+    "firebase-tools": "^3.17.4",
+    "ramda": "^0.25.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "styled-jsx": "^2.2.1"
+  }
+}
