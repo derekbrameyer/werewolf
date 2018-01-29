@@ -6,7 +6,7 @@ import { Players, FirebaseProps as PlayersProps } from 'views/players'
 import { BuildDeck, FirebaseProps as DeckProps } from 'views/deck'
 import { SetupGame } from 'views/setupgame'
 import { Game } from 'interfaces/game'
-import { getDeckWeight, getNumberOfARole, getRoles } from 'helpers'
+import { getDeckWeight } from 'helpers'
 import { Tabs } from 'components/tabs'
 import { Overview } from 'views/overview'
 
