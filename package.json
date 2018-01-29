@@ -6,8 +6,8 @@
   "scripts": {
     "deploy": "npm run build && firebase deploy",
     "build":
-      "parcel build ./website/index.html --no-cache --no-minify --public-url=./",
-    "start": "parcel ./website/index.html"
+      "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
+    "start": "parcel ./src/index.html"
   },
   "devDependencies": {
     "@types/jest": "^22.0.1",
@@ -48,6 +48,7 @@
     "@types/styled-jsx": "^2.2.1",
     "firebase": "^4.9.0",
     "firebase-tools": "^3.17.4",
+    "parcel-plugin-typescript": "^0.5.3",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

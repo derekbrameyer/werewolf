@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Player } from '../src/game'
+import { Player } from 'game'
 import { find, whereEq, remove, findIndex } from 'ramda'
 
 // Anything we want persisted to firebase
@@ -18,24 +18,6 @@ interface State {
 export class Players extends React.Component<Props, State> {
   state: State = { playerName: '' }
 
-  addPlayer = () => {
-    if (find(whereEq({ name: this.state.playerName }), this.props.players)) {
-      return alert('Player already exists')
-    }
-    this.setState({
-      playerName: '',
-    })
-
-    this.props.update({
-      players: [
-        ...this.props.players,
-        { alive: true, name: this.state.playerName },
-      ],
-    })
-  }
-
-  removePlayer = (name: string) => {}
-
   render() {
     return (
       <div>
@@ -45,7 +27,30 @@ export class Players extends React.Component<Props, State> {
             id="player-name"
             value={this.state.playerName}
             onChange={e => this.setState({ playerName: e.target.value })}
-            onKeyPress={e => e.key === 'Enter' && this.addPlayer()}
+            onKeyPress={e => {
+              if (e.key !== 'Enter') return
+              e.preventDefault()
+
+              if (
+                find(
+                  whereEq({ name: this.state.playerName }),
+                  this.props.players
+                )
+              ) {
+                return alert('Player already exists')
+              }
+
+              this.setState({
+                playerName: '',
+              })
+
+              this.props.update({
+                players: [
+                  ...this.props.players,
+                  { alive: true, name: this.state.playerName },
+                ],
+              })
+            }}
           />
           <button
             onClick={() => {
@@ -89,37 +94,6 @@ export class Players extends React.Component<Props, State> {
             done
           </button>
         </div>
-
-        <style jsx>{`
-          .player-form {
-            display: flex;
-            width: 100%;
-            white-space: nowrap;
-            padding: 15px;
-          }
-
-          .player-count {
-            text-align: center;
-            margin-bottom: 15px;
-          }
-
-          .player-list {
-            padding: 15px;
-          }
-
-          .player-form input {
-            margin: 0 15px;
-            width: 100%;
-          }
-
-          .done {
-            border: none;
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-            padding: 15px;
-            width: 100%;
-          }
-        `}</style>
       </div>
     )
   }

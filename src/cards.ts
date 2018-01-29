@@ -1,5 +1,3 @@
-import { Death, Action, Game, Link } from 'game'
-
 export type Roles =
   | 'werewolf'
   | 'big bad wolf'
@@ -14,15 +12,13 @@ export type Roles =
   | 'mason'
   | 'witch'
   | 'doppleganger'
+  | 'sorceress'
 
 export interface Card {
   role: Roles // A unique id
-  team: 'wolf' | 'villager' | 'tanner'
+  team: 'wolf' | 'minion' | 'villager' | 'tanner'
   weight: number // How much it offsets theme
   cardCount: number // How many cards can appear in a deck
-  setupRequired?: (game: Game) => Link[] | null // Dictates if the card needs to wake up the first night
-  isActive?: (game: Game) => boolean // Dictates if the card should perform its function at night
-  deathAction?: (death: Death) => Action | null
 }
 
 export const doppleganger: Card = {
@@ -34,8 +30,15 @@ export const doppleganger: Card = {
 
 export const cursed: Card = {
   cardCount: 1,
-  team: 'wolf',
+  team: 'minion',
   role: 'cursed',
+  weight: -3,
+}
+
+export const sorceress: Card = {
+  cardCount: 1,
+  team: 'minion',
+  role: 'sorceress',
   weight: -3,
 }
 
