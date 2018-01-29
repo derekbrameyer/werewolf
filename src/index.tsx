@@ -20,27 +20,31 @@ firebase.initializeApp({
 let database = firebase.database()
 
 interface Props {}
-interface State extends PlayersProps, DeckProps {
-  view: 'menu' | 'deck' | 'players' | 'setup'
+
+interface FirebaseState extends PlayersProps, DeckProps {
   game: Game | null
+}
+interface State extends FirebaseState {
+  view: 'menu' | 'deck' | 'players' | 'setup'
 }
 
 class App extends React.Component<Props, State> {
-  defaultState: State = {
-    view: 'menu',
+  defaultFirebaseState: FirebaseState = {
     cards: [],
     players: [],
     game: null,
   }
-  state: State = this.defaultState
+  state: State = { ...this.defaultFirebaseState, view: 'menu' }
 
   componentWillMount() {
     database.ref('/').on('value', snapshot => {
-      this.setState(snapshot ? { ...this.defaultState, ...snapshot.val() } : {})
+      this.setState(
+        snapshot ? { ...this.defaultFirebaseState, ...snapshot.val() } : {}
+      )
     })
   }
 
-  updateFirebase = <T extends Partial<State>>(props: T) => {
+  updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
     database.ref().update(
       toPairs<string, any>(props).reduce(
         (acc, [key, val]) => ({
@@ -52,14 +56,15 @@ class App extends React.Component<Props, State> {
     )
   }
 
-  showMenu = () => this.updateFirebase({ view: 'menu' })
+  showMenu = () => this.setState({ view: 'menu' })
 
   render() {
     if (this.state.game) {
       return (
         <h1>
           game started
-          <button onClick={() => this.updateFirebase(this.defaultState)}>
+          <button
+            onClick={() => this.updateFirebase(this.defaultFirebaseState)}>
             end game
           </button>
         </h1>
@@ -70,11 +75,11 @@ class App extends React.Component<Props, State> {
       <div>
         {
           <div>
-            <button onClick={() => this.updateFirebase({ view: 'deck' })}>
+            <button onClick={() => this.setState({ view: 'deck' })}>
               build deck
             </button>
 
-            <button onClick={() => this.updateFirebase({ view: 'players' })}>
+            <button onClick={() => this.setState({ view: 'players' })}>
               manage players
             </button>
 
@@ -84,7 +89,7 @@ class App extends React.Component<Props, State> {
                 !this.state.players ||
                 !this.state.players.length
               }
-              onClick={() => this.updateFirebase({ view: 'setup' })}>
+              onClick={() => this.setState({ view: 'setup' })}>
               start game
             </button>
           </div>
