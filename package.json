@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "deploy": "npm run build && firebase deploy",
-    "build":
-      "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
+    "build": "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
     "start": "parcel ./src/index.html"
   },
   "devDependencies": {
@@ -26,9 +25,20 @@
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
-    "modulePaths": ["src/", "node_modules"],
-    "moduleDirectories": ["node_modules", "src"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "modulePaths": [
+      "src/",
+      "node_modules"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
   },
   "prettier": {
     "printWidth": 80,
@@ -43,11 +53,14 @@
   "dependencies": {
     "@firebase/app-types": "^0.1.1",
     "@firebase/firestore": "^0.3.1",
+    "@types/classnames": "^2.2.3",
     "@types/react": "^16.0.35",
     "@types/react-dom": "^16.0.3",
     "@types/styled-jsx": "^2.2.1",
+    "classnames": "^2.2.5",
     "firebase": "^4.9.0",
     "firebase-tools": "^3.17.4",
+    "node-sass": "^4.7.2",
     "parcel-plugin-typescript": "^0.5.3",
     "ramda": "^0.25.0",
     "react": "^16.2.0",

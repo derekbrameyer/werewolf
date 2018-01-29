@@ -1,0 +1,115 @@
+// ==============
+// Variables
+// ==============
+$spacing: 5px;
+
+// ==============
+// Globals
+// ==============
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+html {
+  touch-action: manipulation;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+}
+
+button {
+  border: 0;
+  padding: 2 * $spacing;
+  outline: none;
+
+  &:active,
+  &:focus {
+    font-weight: bold;
+  }
+}
+
+input {
+  width: 100%;
+}
+
+h1 {
+  padding: $spacing;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+
+// ==============
+// Row
+// ==============
+.row {
+  display: flex;
+  white-space: nowrap;
+  padding: $spacing;
+
+  > * + * {
+    margin-left: $spacing;
+  }
+
+  & + .row {
+    margin-top: $spacing;
+  }
+}
+
+.row--title {
+  font-weight: bold;
+
+  .row--subtitle {
+    margin-left: $spacing;
+    font-weight: normal;
+    font-style: italic;
+    font-size: 0.7rem;
+  }
+}
+
+.row--actions {
+  padding: 0;
+
+  button {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  > * + * {
+    margin-left: 2 * $spacing;
+  }
+}
+
+// ==============
+// Tabs
+// ==============
+.tabs {
+  width: 100%;
+
+  .active {
+    border-bottom: 1px solid black;
+  }
+
+  :disabled {
+    color: lightgray;
+  }
+
+  &.tabs--centered {
+    justify-content: center;
+    button {
+      flex: 1 1 auto;
+    }
+  }
+
+  & + * {
+    margin-top: $spacing;
+  }
+}

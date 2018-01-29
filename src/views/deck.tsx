@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Card, AllCards } from 'cards'
-import { getDeckWeight, getNumberOfARole, getRoles } from 'helpers'
+import { Card, AllCards } from 'interfaces/cards'
+import { getNumberOfARole, getRoles } from 'helpers'
 import { remove, findIndex, propEq } from 'ramda'
-import { CardRow } from 'card'
+import { CardRow } from 'components/card'
+import { Tabs } from 'components/tabs'
 
 export interface FirebaseProps {
   cards: Card[]
@@ -48,14 +49,14 @@ export class BuildDeck extends React.Component<Props> {
       <div>
         <div className="body">
           <section>
-            <h3>negative</h3>
+            <h1>negative</h1>
             {AllCards.filter(c => c.weight < 0)
               .sort((a, b) => b.weight - a.weight)
               .map(this.renderCard)}
           </section>
 
           <section>
-            <h3>positive</h3>
+            <h1>positive</h1>
             {AllCards.filter(c => c.weight >= 0)
               .sort((a, b) => a.weight - b.weight)
               .map(this.renderCard)}
@@ -64,7 +65,7 @@ export class BuildDeck extends React.Component<Props> {
           <section>
             {!!this.props.cards.length && (
               <>
-                <h3>Roles</h3>
+                <h1>Roles</h1>
                 {getRoles(this.props.cards).map(role => (
                   <div key={role}>
                     <a href={`#${role}`}>
@@ -74,20 +75,17 @@ export class BuildDeck extends React.Component<Props> {
                 ))}
               </>
             )}
-
-            <div className="deck-actions">
-              <button
-                className="reset"
-                disabled={!this.props.cards.length}
-                onClick={() => this.props.update({ cards: [] })}>
-                reset
-              </button>
-              <button className="make-deck" onClick={() => this.props.done()}>
-                done {getDeckWeight(this.props.cards)}/{this.props.cards.length}
-              </button>
-            </div>
           </section>
         </div>
+
+        <Tabs center>
+          <button
+            className="reset"
+            disabled={!this.props.cards.length}
+            onClick={() => this.props.update({ cards: [] })}>
+            reset
+          </button>
+        </Tabs>
       </div>
     )
   }

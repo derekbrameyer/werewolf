@@ -1,4 +1,4 @@
-import { Roles } from 'cards'
+import { Roles } from 'interfaces/cards'
 
 type Id = string
 

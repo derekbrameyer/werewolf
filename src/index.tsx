@@ -1,12 +1,10 @@
 import * as React from 'react'
 import { render } from 'react-dom'
-import { toPairs } from 'ramda'
 import firebase from 'firebase'
-import { Players, FirebaseProps as PlayersProps } from 'players'
-import { BuildDeck, FirebaseProps as DeckProps } from 'deck'
-import { getDeckWeight, getNumberOfARole, getRoles } from 'helpers'
-import { Game } from 'game'
-import { SetupGame } from 'setupgame'
+
+import './styles.scss'
+
+import { App } from 'views'
 
 firebase.initializeApp({
   apiKey: 'AIzaSyC2XK6ev0rkTjbX1DEuiUrQb9ohAaJjRYg',
@@ -19,126 +17,4 @@ firebase.initializeApp({
 
 let database = firebase.database()
 
-interface Props {}
-
-interface FirebaseState extends PlayersProps, DeckProps {
-  game: Game | null
-}
-interface State extends FirebaseState {
-  view: 'menu' | 'deck' | 'players' | 'setup'
-}
-
-class App extends React.Component<Props, State> {
-  defaultFirebaseState: FirebaseState = {
-    cards: [],
-    players: [],
-    game: null,
-  }
-  state: State = { ...this.defaultFirebaseState, view: 'menu' }
-
-  componentWillMount() {
-    database.ref('/').on('value', snapshot => {
-      this.setState(
-        snapshot ? { ...this.defaultFirebaseState, ...snapshot.val() } : {}
-      )
-    })
-  }
-
-  updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
-    database.ref().update(
-      toPairs<string, any>(props).reduce(
-        (acc, [key, val]) => ({
-          ...acc,
-          [`/${key}`]: val,
-        }),
-        {}
-      )
-    )
-  }
-
-  showMenu = () => this.setState({ view: 'menu' })
-
-  render() {
-    if (this.state.game) {
-      return (
-        <h1>
-          game started
-          <button onClick={() => this.updateFirebase({ game: null })}>
-            end game
-          </button>
-        </h1>
-      )
-    }
-
-    return (
-      <div>
-        {
-          <div>
-            <button onClick={() => this.setState({ view: 'deck' })}>
-              build deck
-            </button>
-
-            <button onClick={() => this.setState({ view: 'players' })}>
-              manage players
-            </button>
-
-            <button
-              disabled={
-                !this.state.cards.length ||
-                !this.state.players ||
-                !this.state.players.length
-              }
-              onClick={() => this.setState({ view: 'setup' })}>
-              start game
-            </button>
-          </div>
-        }
-
-        {this.state.view === 'menu' && (
-          <div>
-            <h2>Players ({(this.state.players || []).length}):</h2>
-            {this.state.players &&
-              this.state.players.map(player => (
-                <div key={player.name}>{player.name}</div>
-              ))}
-            <h2>
-              Deck ({this.state.cards.length} /{' '}
-              {getDeckWeight(this.state.cards)}):
-            </h2>
-            {getRoles(this.state.cards).map(role => (
-              <div key={role}>
-                {role} @ {getNumberOfARole(role, this.state.cards)}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {this.state.view === 'deck' && (
-          <BuildDeck
-            done={this.showMenu}
-            update={this.updateFirebase}
-            cards={this.state.cards}
-          />
-        )}
-
-        {this.state.view === 'players' && (
-          <Players
-            done={this.showMenu}
-            update={this.updateFirebase}
-            players={this.state.players}
-          />
-        )}
-
-        {this.state.view === 'setup' && (
-          <SetupGame
-            players={this.state.players}
-            cards={this.state.cards}
-            done={game => this.updateFirebase({ game })}
-          />
-        )}
-      </div>
-    )
-  }
-}
-
-render(<App />, document.getElementById('root'))
+render(<App database={database} />, document.getElementById('root'))
