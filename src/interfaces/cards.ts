@@ -13,12 +13,20 @@ export type Roles =
   | 'witch'
   | 'doppleganger'
   | 'sorceress'
+  | 'tanner'
 
 export interface Card {
   role: Roles // A unique id
   team: 'wolf' | 'minion' | 'villager' | 'tanner'
   weight: number // How much it offsets theme
   cardCount: number // How many cards can appear in a deck
+}
+
+export const tanner: Card = {
+  cardCount: 1,
+  team: 'tanner',
+  role: 'tanner',
+  weight: 1,
 }
 
 export const doppleganger: Card = {
@@ -133,4 +141,5 @@ export const AllCards = [
   witch,
   mason,
   cursed,
+  tanner,
 ]

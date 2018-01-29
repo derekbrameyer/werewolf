@@ -64,5 +64,7 @@ export const roleIcon = (role: Roles | undefined): string => {
       return '🐺'
     case 'wolf cub':
       return '🐶'
+    case 'tanner':
+      return '😭'
   }
 }

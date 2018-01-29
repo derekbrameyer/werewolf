@@ -68,12 +68,13 @@ export class Players extends React.Component<Props, State> {
 
         <Tabs grow>
           <button
+            className="red"
             disabled={!this.props.players.length}
             onClick={() => {
               this.setState({ playerName: '' })
               this.props.update({ players: [] })
             }}>
-            reset
+            reset players
           </button>
         </Tabs>
 

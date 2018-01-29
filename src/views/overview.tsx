@@ -4,6 +4,7 @@ import { Card } from 'interfaces/cards'
 import { getDeckWeight, getRoles, getNumberOfARole } from 'helpers'
 import { Tabs } from 'components/tabs'
 import { Row } from 'components/row'
+import { Weight } from 'components/weight'
 
 interface Props {
   players: Player[]
@@ -16,7 +17,7 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
     <h1>Players ({players.length}):</h1>
     {players.map(player => <Row key={player.name}>{player.name}</Row>)}
     <h1>
-      Deck ({cards.length} / {getDeckWeight(cards)}):
+      Deck ({cards.length} / <Weight weight={getDeckWeight(cards)} />):
     </h1>
     {getRoles(cards).map(role => (
       <Row key={role}>
@@ -25,8 +26,11 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
     ))}
 
     <Tabs grow>
-      <button disabled={!players.length && !cards.length} onClick={reset}>
-        reset
+      <button
+        className="red"
+        disabled={!players.length && !cards.length}
+        onClick={reset}>
+        reset everything
       </button>
     </Tabs>
   </div>

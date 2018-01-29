@@ -64,10 +64,10 @@ export class BuildDeck extends React.Component<Props> {
 
         <Tabs grow>
           <button
-            className="reset"
+            className="red"
             disabled={!this.props.cards.length}
             onClick={() => this.props.update({ cards: [] })}>
-            reset
+            reset deck
           </button>
         </Tabs>
 

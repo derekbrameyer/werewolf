@@ -68,6 +68,7 @@ export const setupRole = (role: Roles): Setup | null => {
     case 'big bad wolf':
     case 'sorceress':
     case 'wolf cub':
+    case 'tanner':
     case 'bodyguard':
       return {
         role,
@@ -79,13 +80,17 @@ export const setupRole = (role: Roles): Setup | null => {
   }
 }
 
-export const deathAction = (role: Roles): Action | string | null => {
+export const deathAction = (
+  role: Roles,
+  reason: Death
+): Action | string | null => {
   switch (role) {
     case 'hunter':
+    case 'tanner':
     case 'cursed':
-      return 'wake up and point at two players. when one dies, the other dies.'
-
     case 'wolf cub':
+      return 'todo'
+
     case 'seer':
     case 'big bad wolf':
     case 'apprentice seer':

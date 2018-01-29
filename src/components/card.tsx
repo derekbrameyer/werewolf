@@ -11,22 +11,26 @@ interface Props {
   deck: Card[]
 }
 
-export const CardRow: React.SFC<Props> = ({ card, deck = [], children }) => (
-  <Row>
-    <RowImg>{roleIcon(card.role)}</RowImg>
-    <RowDetail>
-      <RowTitle
-        subtitle={
-          <React.Fragment>
-            ({getNumberOfARole(card.role, deck)} of {card.cardCount}) *{' '}
-            <Weight weight={card.weight} />
-          </React.Fragment>
-        }>
-        <span className={cx({ grey: !getNumberOfARole(card.role, deck) })}>
-          {card.role}
-        </span>
-      </RowTitle>
-      <RowActions>{children}</RowActions>
-    </RowDetail>
-  </Row>
-)
+export const CardRow: React.SFC<Props> = ({ card, deck = [], children }) => {
+  const numberInDeck = getNumberOfARole(card.role, deck)
+
+  return (
+    <Row>
+      <RowImg className={cx({ dim: numberInDeck === 0 })}>
+        {roleIcon(card.role)}
+      </RowImg>
+      <RowDetail>
+        <RowTitle
+          subtitle={
+            <React.Fragment>
+              ({numberInDeck} of {card.cardCount}) *{' '}
+              <Weight weight={card.weight} />
+            </React.Fragment>
+          }>
+          <span className={cx({ grey: numberInDeck === 0 })}>{card.role}</span>
+        </RowTitle>
+        <RowActions>{children}</RowActions>
+      </RowDetail>
+    </Row>
+  )
+}

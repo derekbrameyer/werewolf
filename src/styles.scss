@@ -1,7 +1,7 @@
 // ==============
 // Variables
 // ==============
-$base-font-size: 1rem;
+$base-font-size: 0.9rem;
 $spacing: 0.2rem;
 
 // ==============
@@ -50,6 +50,9 @@ h1 {
 }
 .grey {
   color: lightgrey;
+}
+.dim {
+  opacity: 0.3;
 }
 
 // ==============
@@ -114,7 +117,7 @@ h1 {
   }
 
   & + * {
-    margin-top: $spacing;
+    margin-top: 2 * $spacing;
   }
 }
 
