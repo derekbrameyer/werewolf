@@ -74,6 +74,8 @@ export class Players extends React.Component<Props, State> {
             reset
           </button>
         </Tabs>
+
+        <span className="floating">{this.props.players.length}</span>
       </div>
     )
   }

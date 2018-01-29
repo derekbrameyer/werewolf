@@ -9,6 +9,7 @@ import { Game } from 'interfaces/game'
 import { getDeckWeight } from 'helpers'
 import { Tabs } from 'components/tabs'
 import { Overview } from 'views/overview'
+import { Weight } from 'components/weight'
 
 interface Props {
   database: firebase.database.Database
@@ -63,8 +64,6 @@ export class App extends React.Component<Props, State> {
       )
     }
 
-    const deckWeight = getDeckWeight(this.state.cards)
-
     return (
       <div>
         <Tabs center>
@@ -78,10 +77,7 @@ export class App extends React.Component<Props, State> {
             className={cx({ active: this.state.view === 'deck' })}
             onClick={() => this.setState({ view: 'deck' })}>
             build deck ({this.state.cards.length} /{' '}
-            <span
-              className={cx({ red: deckWeight < 0, green: deckWeight > 0 })}>
-              {deckWeight}
-            </span>)
+            <Weight weight={getDeckWeight(this.state.cards)} />)
           </button>
 
           <button

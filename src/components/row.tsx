@@ -19,7 +19,7 @@ export const RowDetail: React.SFC<Props> = ({ children, className }) => (
   <div className={cx('row--detail', className)}>{children}</div>
 )
 
-export const RowTitle: React.SFC<Props & { subtitle?: string }> = ({
+export const RowTitle: React.SFC<Props & { subtitle?: React.ReactNode }> = ({
   children,
   className,
   subtitle,

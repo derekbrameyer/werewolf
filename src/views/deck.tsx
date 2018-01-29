@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { Card, AllCards } from 'interfaces/cards'
-import { getNumberOfARole, getRoles } from 'helpers'
+import { getNumberOfARole, getRoles, getDeckWeight } from 'helpers'
 import { remove, findIndex, propEq } from 'ramda'
 import { CardRow } from 'components/card'
 import { Tabs } from 'components/tabs'
+import { Weight } from 'components/weight'
 
 export interface FirebaseProps {
   cards: Card[]
@@ -16,7 +17,7 @@ interface Props extends FirebaseProps {
 
 export class BuildDeck extends React.Component<Props> {
   renderCard = (card: Card) => (
-    <CardRow card={card} id={card.role} key={card.role}>
+    <CardRow deck={this.props.cards} card={card} id={card.role} key={card.role}>
       <button
         onClick={() =>
           this.props.update({
@@ -47,36 +48,17 @@ export class BuildDeck extends React.Component<Props> {
   render() {
     return (
       <div>
-        <div className="body">
-          <section>
-            <h1>negative</h1>
-            {AllCards.filter(c => c.weight < 0)
-              .sort((a, b) => b.weight - a.weight)
-              .map(this.renderCard)}
-          </section>
+        <h1>negative</h1>
 
-          <section>
-            <h1>positive</h1>
-            {AllCards.filter(c => c.weight >= 0)
-              .sort((a, b) => a.weight - b.weight)
-              .map(this.renderCard)}
-          </section>
+        {AllCards.filter(c => c.weight < 0)
+          .sort((a, b) => b.weight - a.weight)
+          .map(this.renderCard)}
 
-          <section>
-            {!!this.props.cards.length && (
-              <>
-                <h1>Roles</h1>
-                {getRoles(this.props.cards).map(role => (
-                  <div key={role}>
-                    <a href={`#${role}`}>
-                      {role}: {getNumberOfARole(role, this.props.cards)}
-                    </a>
-                  </div>
-                ))}
-              </>
-            )}
-          </section>
-        </div>
+        <h1>positive</h1>
+
+        {AllCards.filter(c => c.weight >= 0)
+          .sort((a, b) => a.weight - b.weight)
+          .map(this.renderCard)}
 
         <Tabs center>
           <button
@@ -86,6 +68,11 @@ export class BuildDeck extends React.Component<Props> {
             reset
           </button>
         </Tabs>
+
+        <span className="floating">
+          {this.props.cards.length} /{' '}
+          <Weight weight={getDeckWeight(this.props.cards)} />
+        </span>
       </div>
     )
   }
