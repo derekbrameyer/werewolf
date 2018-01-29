@@ -3,6 +3,7 @@ import { Player, Game, setupRole, Setup, Action } from 'game'
 import { Card } from 'cards'
 import { getRoles, updateFirst, getNumberOfARole } from 'helpers'
 import { sortBy, whereEq } from 'ramda'
+import { PlayerRow } from 'player'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {}
@@ -223,10 +224,9 @@ export class SetupGame extends React.Component<Props, State> {
         </h2>
 
         {players.map(player => (
-          <div key={player.name}>
-            {player.name} <em>{player.role}</em>{' '}
+          <PlayerRow player={player} key={player.name}>
             {this.makePlayerButtons(player, currentSetup)}
-          </div>
+          </PlayerRow>
         ))}
 
         {this.makeDoneButton()}

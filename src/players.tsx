@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Player } from 'game'
 import { find, whereEq, remove, findIndex } from 'ramda'
+import { PlayerRow } from 'player'
 
 // Anything we want persisted to firebase
 export interface FirebaseProps {
@@ -68,8 +69,7 @@ export class Players extends React.Component<Props, State> {
             </div>
           )}
           {this.props.players.map(player => (
-            <div key={player.name}>
-              {player.name}{' '}
+            <PlayerRow player={player} key={player.name}>
               <button
                 onClick={() => {
                   this.props.update({
@@ -85,7 +85,7 @@ export class Players extends React.Component<Props, State> {
                 }}>
                 remove
               </button>
-            </div>
+            </PlayerRow>
           ))}
         </div>
 

@@ -63,8 +63,7 @@ class App extends React.Component<Props, State> {
       return (
         <h1>
           game started
-          <button
-            onClick={() => this.updateFirebase(this.defaultFirebaseState)}>
+          <button onClick={() => this.updateFirebase({ game: null })}>
             end game
           </button>
         </h1>

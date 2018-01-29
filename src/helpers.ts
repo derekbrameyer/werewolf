@@ -29,3 +29,40 @@ export const updateFirst = <T extends object>(
   updater: (item: T) => T,
   list: T[]
 ): T[] => adjust(updater, findIndex(predicate, list), list)
+
+export const roleIcon = (role: Roles | undefined): string => {
+  if (!role) {
+    return '❓'
+  }
+
+  switch (role) {
+    case 'apprentice seer':
+      return '🧖‍'
+    case 'seer':
+      return '🔮'
+    case 'bodyguard':
+      return '👮‍♀️'
+    case 'cupid':
+      return '❤️'
+    case 'cursed':
+      return '🧟‍'
+    case 'doppleganger':
+      return '🤷‍♀️'
+    case 'hunter':
+      return '🏹'
+    case 'mason':
+      return '💎'
+    case 'sorceress':
+      return '🧙‍♀️'
+    case 'villager':
+      return '👨‍🌾'
+    case 'witch':
+      return '🧙‍♂️'
+    case 'big bad wolf':
+      return '🐗'
+    case 'werewolf':
+      return '🐺'
+    case 'wolf cub':
+      return '🐶'
+  }
+}

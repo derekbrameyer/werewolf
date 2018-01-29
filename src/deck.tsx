@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Card, AllCards } from 'cards'
 import { getDeckWeight, getNumberOfARole, getRoles } from 'helpers'
 import { remove, findIndex, propEq } from 'ramda'
+import { CardRow } from 'card'
 
 export interface FirebaseProps {
   cards: Card[]
@@ -14,46 +15,32 @@ interface Props extends FirebaseProps {
 
 export class BuildDeck extends React.Component<Props> {
   renderCard = (card: Card) => (
-    <div className="card" id={card.role} key={card.role}>
-      <div className="card-description">
-        <span className={`card-title ${card.team}`}>{card.role}</span>
-        <span className="card-count">
-          ({getNumberOfARole(card.role, this.props.cards)} /{card.cardCount})
-        </span>
-      </div>
-      <div>
-        <span className="card-weight">
-          {getNumberOfARole(card.role, this.props.cards)} @ {card.weight} ={' '}
-          {getNumberOfARole(card.role, this.props.cards) * card.weight}
-        </span>
-      </div>
-      <div className="card-actions">
-        <button
-          onClick={() =>
-            this.props.update({
-              cards: remove(
-                findIndex(propEq('role', card.role), this.props.cards),
-                1,
-                this.props.cards
-              ),
-            })
-          }
-          disabled={!getNumberOfARole(card.role, this.props.cards)}>
-          remove
-        </button>
-        <button
-          onClick={() =>
-            this.props.update({
-              cards: this.props.cards.concat(card),
-            })
-          }
-          disabled={
-            !(card.cardCount - getNumberOfARole(card.role, this.props.cards))
-          }>
-          add
-        </button>
-      </div>
-    </div>
+    <CardRow card={card} id={card.role} key={card.role}>
+      <button
+        onClick={() =>
+          this.props.update({
+            cards: remove(
+              findIndex(propEq('role', card.role), this.props.cards),
+              1,
+              this.props.cards
+            ),
+          })
+        }
+        disabled={!getNumberOfARole(card.role, this.props.cards)}>
+        remove
+      </button>
+      <button
+        onClick={() =>
+          this.props.update({
+            cards: this.props.cards.concat(card),
+          })
+        }
+        disabled={
+          !(card.cardCount - getNumberOfARole(card.role, this.props.cards))
+        }>
+        add
+      </button>
+    </CardRow>
   )
 
   render() {
