@@ -70,7 +70,7 @@ export class SetupGame extends React.Component<Props, State> {
       getNumberOfARole(currentSetup.role, this.props.cards)
 
     return (
-      <Tabs center>
+      <Tabs grow>
         <button
           className="red"
           onClick={() =>

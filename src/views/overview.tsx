@@ -24,7 +24,7 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
       </Row>
     ))}
 
-    <Tabs center>
+    <Tabs grow>
       <button disabled={!players.length && !cards.length} onClick={reset}>
         reset
       </button>

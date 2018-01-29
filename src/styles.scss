@@ -1,7 +1,8 @@
 // ==============
 // Variables
 // ==============
-$spacing: 5px;
+$base-font-size: 1rem;
+$spacing: 0.2rem;
 
 // ==============
 // Globals
@@ -16,13 +17,14 @@ $spacing: 5px;
 html {
   touch-action: manipulation;
   font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
+  font-size: $base-font-size;
 }
 
 button {
   border: 0;
   padding: 2 * $spacing;
   outline: none;
+  font-size: 1rem;
 
   &:active,
   &:focus {
@@ -96,6 +98,8 @@ h1 {
 // ==============
 .tabs {
   width: 100%;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
 
   .active {
     border-bottom: 1px solid black;
@@ -105,11 +109,8 @@ h1 {
     color: lightgray;
   }
 
-  &.tabs--centered {
-    justify-content: center;
-    button {
-      flex: 1 1 auto;
-    }
+  &.tabs--expand button {
+    flex: 1 1 auto;
   }
 
   & + * {

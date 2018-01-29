@@ -4,11 +4,11 @@ import { Row } from 'components/row'
 
 interface Props {
   className?: string
-  center?: boolean
+  grow?: boolean
 }
 
-export const Tabs: React.SFC<Props> = ({ children, className, center }) => (
-  <Row className={cx('tabs', className, { 'tabs--centered': center })}>
+export const Tabs: React.SFC<Props> = ({ children, className, grow }) => (
+  <Row className={cx('tabs', className, { 'tabs--expand': grow })}>
     {children}
   </Row>
 )

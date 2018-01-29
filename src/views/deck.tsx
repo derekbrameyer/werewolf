@@ -62,7 +62,7 @@ export class BuildDeck extends React.Component<Props> {
           .sort((a, b) => a.weight - b.weight)
           .map(this.renderCard)}
 
-        <Tabs center>
+        <Tabs grow>
           <button
             className="reset"
             disabled={!this.props.cards.length}

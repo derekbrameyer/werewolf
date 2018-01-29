@@ -66,7 +66,7 @@ export class Players extends React.Component<Props, State> {
           </PlayerRow>
         ))}
 
-        <Tabs center>
+        <Tabs grow>
           <button
             disabled={!this.props.players.length}
             onClick={() => {

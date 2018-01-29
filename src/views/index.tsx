@@ -66,7 +66,7 @@ export class App extends React.Component<Props, State> {
 
     return (
       <div>
-        <Tabs center>
+        <Tabs grow>
           <button
             className={cx({ active: this.state.view === 'menu' })}
             onClick={() => this.setState({ view: 'menu' })}>
