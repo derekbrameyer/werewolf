@@ -1,6 +1,6 @@
 import { reduce, uniq, adjust, findIndex } from 'ramda'
-import { Card, Roles } from 'cards'
-import { Player } from 'game'
+import { Card, Roles } from 'interfaces/cards'
+import { Player } from 'interfaces/game'
 
 // ================
 // HELPER FUNCTIONS
@@ -51,7 +51,7 @@ export const roleIcon = (role: Roles | undefined): string => {
     case 'hunter':
       return '🏹'
     case 'mason':
-      return '💎'
+      return '👁'
     case 'sorceress':
       return '🧙‍♀️'
     case 'villager':

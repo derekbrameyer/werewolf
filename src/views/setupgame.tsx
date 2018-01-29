@@ -4,6 +4,7 @@ import { Card } from 'interfaces/cards'
 import { getRoles, updateFirst, getNumberOfARole } from 'helpers'
 import { sortBy, whereEq } from 'ramda'
 import { PlayerRow } from 'components/player'
+import { Tabs } from 'components/tabs'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {}
@@ -65,19 +66,21 @@ export class SetupGame extends React.Component<Props, State> {
       : true)
 
     return (
-      <button
-        disabled={!isActionComplete}
-        onClick={() =>
-          this.setState({
-            setupsRemaining: setupsRemaining.slice(1),
-            currentSetup: setupsRemaining[0],
-            completedSetups: currentSetup.action
-              ? [...completedSetups, currentSetup.action]
-              : completedSetups,
-          })
-        }>
-        next
-      </button>
+      <Tabs center>
+        <button
+          disabled={!isActionComplete}
+          onClick={() =>
+            this.setState({
+              setupsRemaining: setupsRemaining.slice(1),
+              currentSetup: setupsRemaining[0],
+              completedSetups: currentSetup.action
+                ? [...completedSetups, currentSetup.action]
+                : completedSetups,
+            })
+          }>
+          next
+        </button>
+      </Tabs>
     )
   }
 
