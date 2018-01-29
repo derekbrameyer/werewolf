@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { Card, AllCards } from 'interfaces/cards'
-import { getNumberOfARole, getRoles, getDeckWeight } from 'helpers'
+import { getNumberOfARole, getDeckWeight } from 'helpers'
 import { remove, findIndex, propEq } from 'ramda'
 import { CardRow } from 'components/card'
 import { Tabs } from 'components/tabs'
 import { Weight } from 'components/weight'
+import { Player } from 'interfaces/game'
 
 export interface FirebaseProps {
   cards: Card[]
@@ -13,6 +14,7 @@ export interface FirebaseProps {
 interface Props extends FirebaseProps {
   done: () => void
   update: (props: FirebaseProps) => void
+  players: Player[]
 }
 
 export class BuildDeck extends React.Component<Props> {
@@ -70,7 +72,7 @@ export class BuildDeck extends React.Component<Props> {
         </Tabs>
 
         <span className="floating">
-          {this.props.cards.length} /{' '}
+          {this.props.cards.length} of {this.props.players.length} /{' '}
           <Weight weight={getDeckWeight(this.props.cards)} />
         </span>
       </div>

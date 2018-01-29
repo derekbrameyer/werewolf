@@ -4,6 +4,7 @@ import { find, whereEq, remove, findIndex } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'
+import { Card } from 'interfaces/cards'
 
 // Anything we want persisted to firebase
 export interface FirebaseProps {
@@ -13,6 +14,7 @@ export interface FirebaseProps {
 interface Props extends FirebaseProps {
   done: () => void
   update: (props: FirebaseProps) => void
+  cards: Card[]
 }
 interface State {
   playerName: string
@@ -75,7 +77,9 @@ export class Players extends React.Component<Props, State> {
           </button>
         </Tabs>
 
-        <span className="floating">{this.props.players.length}</span>
+        <span className="floating">
+          {this.props.players.length} of {this.props.cards.length}
+        </span>
       </div>
     )
   }

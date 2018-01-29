@@ -65,10 +65,24 @@ export class SetupGame extends React.Component<Props, State> {
       ? action.target && ('source' in action ? action.source : true)
       : true)
 
+    const areRolesSet =
+      getNumberOfARole(currentSetup.role, this.state.players) ===
+      getNumberOfARole(currentSetup.role, this.props.cards)
+
     return (
       <Tabs center>
         <button
-          disabled={!isActionComplete}
+          className="red"
+          onClick={() =>
+            this.setState({
+              setupsRemaining: setupsRemaining.slice(1),
+              currentSetup: setupsRemaining[0],
+            })
+          }>
+          skip
+        </button>
+        <button
+          disabled={!isActionComplete || !areRolesSet}
           onClick={() =>
             this.setState({
               setupsRemaining: setupsRemaining.slice(1),

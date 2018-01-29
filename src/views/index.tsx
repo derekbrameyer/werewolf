@@ -111,6 +111,7 @@ export class App extends React.Component<Props, State> {
             done={this.showMenu}
             update={this.updateFirebase}
             cards={this.state.cards}
+            players={this.state.players}
           />
         )}
 
@@ -119,6 +120,7 @@ export class App extends React.Component<Props, State> {
             done={this.showMenu}
             update={this.updateFirebase}
             players={this.state.players}
+            cards={this.state.cards}
           />
         )}
 
