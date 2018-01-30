@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { roleIcon, getNumberOfARole } from 'helpers'
-import { Card } from 'interfaces/cards'
+import { getNumberOfARole } from 'helpers'
+import { Card, getCardEmoji } from 'interfaces/cards'
 import { Row, RowActions, RowImg, RowDetail, RowTitle } from 'components/row'
 import { Weight } from 'components/weight'
 
@@ -17,7 +17,7 @@ export const CardRow: React.SFC<Props> = ({ card, deck = [], children }) => {
   return (
     <Row>
       <RowImg className={cx({ dim: numberInDeck === 0 })}>
-        {roleIcon(card.role)}
+        {getCardEmoji(card.role)}
       </RowImg>
       <RowDetail>
         <RowTitle

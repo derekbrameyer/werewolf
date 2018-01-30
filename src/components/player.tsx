@@ -1,8 +1,8 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Player } from 'interfaces/game'
-import { roleIcon } from 'helpers'
 import { Row, RowActions, RowImg, RowDetail, RowTitle } from 'components/row'
+import { getCardEmoji } from 'interfaces/cards'
 
 interface Props {
   player: Player
@@ -11,7 +11,7 @@ interface Props {
 export const PlayerRow: React.SFC<Props> = ({ player, children }) => (
   <Row>
     <RowImg className={cx({ dim: !player.alive })}>
-      {roleIcon(player.role)}
+      {getCardEmoji(player.role)}
     </RowImg>
     <RowDetail>
       <RowTitle subtitle={player.role && `(${player.role})`}>

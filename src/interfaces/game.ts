@@ -2,7 +2,8 @@ import { Roles } from 'interfaces/cards'
 
 type Id = string
 
-export type Death = 'lynch' | 'bite' | 'action' | 'moderator'
+export type Death = 'lynch' | 'bite' | 'other' | 'mason'
+export const Death: Death[] = ['lynch', 'bite', 'other', 'mason']
 
 export type Action =
   | { type: 'kill'; target: Id; reason: Death }
@@ -37,7 +38,7 @@ export interface Setup {
 
 export const setupRole = (role: Roles): Setup | null => {
   switch (role) {
-    case 'cupid':
+    case Roles['cupid']:
       return {
         role,
         message:
@@ -45,13 +46,13 @@ export const setupRole = (role: Roles): Setup | null => {
         action: { type: 'link-2-way', target: '', source: '' },
       }
 
-    case 'mason':
+    case Roles['mason']:
       return {
         role,
         message: 'wake up and look for the other masons.',
       }
 
-    case 'doppleganger':
+    case Roles['doppleganger']:
       return {
         role,
         message:
@@ -59,23 +60,23 @@ export const setupRole = (role: Roles): Setup | null => {
         action: { type: 'copy', target: '', source: '' },
       }
 
-    case 'cursed':
-    case 'hunter':
-    case 'seer':
-    case 'apprentice seer':
-    case 'witch':
-    case 'werewolf':
-    case 'big bad wolf':
-    case 'sorceress':
-    case 'wolf cub':
-    case 'tanner':
-    case 'bodyguard':
+    case Roles['cursed']:
+    case Roles['hunter']:
+    case Roles['seer']:
+    case Roles['apprentice seer']:
+    case Roles['witch']:
+    case Roles['werewolf']:
+    case Roles['big bad wolf']:
+    case Roles['sorceress']:
+    case Roles['wolf cub']:
+    case Roles['tanner']:
+    case Roles['bodyguard']:
       return {
         role,
         message: 'wake up and look at me.',
       }
 
-    case 'villager':
+    case Roles['villager']:
       return null
   }
 }
@@ -85,23 +86,23 @@ export const deathAction = (
   reason: Death
 ): Action | string | null => {
   switch (role) {
-    case 'hunter':
-    case 'tanner':
-    case 'cursed':
-    case 'wolf cub':
+    case Roles['hunter']:
+    case Roles['tanner']:
+    case Roles['cursed']:
+    case Roles['wolf cub']:
       return 'todo'
 
-    case 'seer':
-    case 'big bad wolf':
-    case 'apprentice seer':
-    case 'witch':
-    case 'werewolf':
-    case 'sorceress':
-    case 'bodyguard':
-    case 'cupid':
-    case 'mason':
-    case 'doppleganger':
-    case 'villager':
+    case Roles['seer']:
+    case Roles['big bad wolf']:
+    case Roles['apprentice seer']:
+    case Roles['witch']:
+    case Roles['werewolf']:
+    case Roles['sorceress']:
+    case Roles['bodyguard']:
+    case Roles['cupid']:
+    case Roles['mason']:
+    case Roles['doppleganger']:
+    case Roles['villager']:
       return null
   }
 }

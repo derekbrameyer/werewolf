@@ -1,145 +1,128 @@
-export type Roles =
-  | 'werewolf'
-  | 'big bad wolf'
-  | 'wolf cub'
-  | 'seer'
-  | 'apprentice seer'
-  | 'bodyguard'
-  | 'hunter'
-  | 'villager'
-  | 'cupid'
-  | 'cursed'
-  | 'mason'
-  | 'witch'
-  | 'doppleganger'
-  | 'sorceress'
-  | 'tanner'
+export enum Team {
+  'wolf' = 'wolf',
+  'minion' = 'minion',
+  'villager' = 'villager',
+  'tanner' = 'tanner',
+}
+
+export enum Roles {
+  'werewolf' = 'werewolf',
+  'big bad wolf' = 'big bad wolf',
+  'wolf cub' = 'wolf cub',
+  'seer' = 'seer',
+  'apprentice seer' = 'apprentice seer',
+  'bodyguard' = 'bodyguard',
+  'hunter' = 'hunter',
+  'villager' = 'villager',
+  'cupid' = 'cupid',
+  'cursed' = 'cursed',
+  'mason' = 'mason',
+  'witch' = 'witch',
+  'doppleganger' = 'doppleganger',
+  'sorceress' = 'sorceress',
+  'tanner' = 'tanner',
+}
 
 export interface Card {
-  role: Roles // A unique id
-  team: 'wolf' | 'minion' | 'villager' | 'tanner'
-  weight: number // How much it offsets theme
-  cardCount: number // How many cards can appear in a deck
+  role: Roles
+  team: Team
+  weight: number
+  cardCount: number
+  emoji: string
 }
 
-export const tanner: Card = {
-  cardCount: 1,
-  team: 'tanner',
-  role: 'tanner',
-  weight: 1,
+export const getCardCount = (role: Roles): number => {
+  // prettier-ignore
+  switch (role) {
+    case Roles['tanner']: return 1
+    case Roles['doppleganger']: return 1
+    case Roles['cursed']: return 1
+    case Roles['sorceress']: return 1
+    case Roles['werewolf']: return 5
+    case Roles['wolf cub']: return 1
+    case Roles['witch']: return 1
+    case Roles['big bad wolf']: return 1
+    case Roles['cupid']: return 1
+    case Roles['mason']: return 3
+    case Roles['villager']: return 15
+    case Roles['hunter']: return 1
+    case Roles['seer']: return 1
+    case Roles['apprentice seer']: return 1
+    case Roles['bodyguard']: return 1
+  }
 }
 
-export const doppleganger: Card = {
-  cardCount: 1,
-  team: 'villager',
-  role: 'doppleganger',
-  weight: -2,
+export const getCardTeam = (role: Roles): Team => {
+  // prettier-ignore
+  switch (role) {
+    case Roles['tanner']: return Team.tanner
+    case Roles['doppleganger']: return Team.villager
+    case Roles['cursed']: return Team.minion
+    case Roles['sorceress']: return Team.minion
+    case Roles['werewolf']: return Team.wolf
+    case Roles['wolf cub']: return Team.wolf
+    case Roles['witch']: return Team.villager
+    case Roles['big bad wolf']: return Team.wolf
+    case Roles['cupid']: return Team.villager
+    case Roles['mason']: return Team.villager
+    case Roles['villager']: return Team.villager
+    case Roles['hunter']: return Team.villager
+    case Roles['seer']: return Team.villager
+    case Roles['apprentice seer']: return Team.villager
+    case Roles['bodyguard']: return Team.villager
+  }
 }
 
-export const cursed: Card = {
-  cardCount: 1,
-  team: 'minion',
-  role: 'cursed',
-  weight: -3,
+export const getCardWeight = (role: Roles): number => {
+  // prettier-ignore
+  switch (role) {
+    case Roles['tanner']: return 1
+    case Roles['doppleganger']: return -2
+    case Roles['cursed']: return -3
+    case Roles['sorceress']: return -3
+    case Roles['werewolf']: return -6
+    case Roles['wolf cub']: return -8
+    case Roles['witch']: return 4
+    case Roles['big bad wolf']: return -9
+    case Roles['cupid']: return -3
+    case Roles['mason']: return 2
+    case Roles['villager']: return 1
+    case Roles['hunter']: return 3
+    case Roles['seer']: return 7
+    case Roles['apprentice seer']: return 4
+    case Roles['bodyguard']: return 3
+  }
 }
 
-export const sorceress: Card = {
-  cardCount: 1,
-  team: 'minion',
-  role: 'sorceress',
-  weight: -3,
+export const getCardEmoji = (role: Roles | undefined): string => {
+  // prettier-ignore
+  if (!role) return '❓'
+
+  // prettier-ignore
+  switch (role) {
+    case Roles['apprentice seer']: return '🧖‍'
+    case Roles['seer']: return '🔮'
+    case Roles['bodyguard']: return '👮‍♀️'
+    case Roles['cupid']: return '❤️'
+    case Roles['cursed']: return '🧟‍'
+    case Roles['doppleganger']: return '🤷‍♀️'
+    case Roles['hunter']: return '🏹'
+    case Roles['mason']: return '👁'
+    case Roles['sorceress']: return '🧙‍♀️'
+    case Roles['villager']: return '👨‍🌾'
+    case Roles['witch']: return '🧙‍♂️'
+    case Roles['big bad wolf']: return '🐗'
+    case Roles['werewolf']: return '🐺'
+    case Roles['wolf cub']: return '🐶'
+    case Roles['tanner']: return '😭'
+  }
 }
 
-export const werewolf: Card = {
-  cardCount: 5,
-  team: 'wolf',
-  role: 'werewolf',
-  weight: -6,
-}
-
-export const wolfCub: Card = {
-  cardCount: 1,
-  role: 'wolf cub',
-  team: 'wolf',
-  weight: -8,
-}
-
-export const witch: Card = {
-  cardCount: 1,
-  role: 'witch',
-  team: 'villager',
-  weight: 4,
-}
-
-export const bigBadWolf: Card = {
-  cardCount: 1,
-  role: 'big bad wolf',
-  team: 'wolf',
-  weight: -9,
-}
-
-export const cupid: Card = {
-  cardCount: 1,
-  role: 'cupid',
-  team: 'villager',
-  weight: -3,
-}
-
-export const mason: Card = {
-  cardCount: 3,
-  role: 'mason',
-  team: 'villager',
-  weight: 2,
-}
-
-export const villager: Card = {
-  cardCount: 15,
-  team: 'villager',
-  role: 'villager',
-  weight: 1,
-}
-
-export const hunter: Card = {
-  cardCount: 1,
-  role: 'hunter',
-  team: 'villager',
-  weight: 3,
-}
-
-export const seer: Card = {
-  cardCount: 1,
-  role: 'seer',
-  team: 'villager',
-  weight: 7,
-}
-
-export const apprenticeSeer: Card = {
-  cardCount: 1,
-  role: 'apprentice seer',
-  team: 'villager',
-  weight: 4,
-}
-
-export const bodyguard: Card = {
-  cardCount: 1,
-  role: 'bodyguard',
-  team: 'villager',
-  weight: 3,
-}
-
-export const AllCards = [
-  werewolf,
-  bigBadWolf,
-  wolfCub,
-  villager,
-  seer,
-  apprenticeSeer,
-  bodyguard,
-  doppleganger,
-  cupid,
-  hunter,
-  witch,
-  mason,
-  cursed,
-  tanner,
-]
+export const AllRoles = Object.keys(Roles)
+export const AllCards: Card[] = AllRoles.map((role: any) => ({
+  role,
+  team: getCardTeam(role),
+  weight: getCardWeight(role),
+  cardCount: getCardCount(role),
+  emoji: getCardEmoji(role),
+}))

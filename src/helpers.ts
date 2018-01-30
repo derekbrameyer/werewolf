@@ -1,6 +1,6 @@
 import { reduce, uniq, adjust, findIndex } from 'ramda'
 import { Card, Roles } from 'interfaces/cards'
-import { Player } from 'interfaces/game'
+import { Player, Game } from 'interfaces/game'
 
 // ================
 // HELPER FUNCTIONS
@@ -30,41 +30,5 @@ export const updateFirst = <T extends object>(
   list: T[]
 ): T[] => adjust(updater, findIndex(predicate, list), list)
 
-export const roleIcon = (role: Roles | undefined): string => {
-  if (!role) {
-    return '❓'
-  }
-
-  switch (role) {
-    case 'apprentice seer':
-      return '🧖‍'
-    case 'seer':
-      return '🔮'
-    case 'bodyguard':
-      return '👮‍♀️'
-    case 'cupid':
-      return '❤️'
-    case 'cursed':
-      return '🧟‍'
-    case 'doppleganger':
-      return '🤷‍♀️'
-    case 'hunter':
-      return '🏹'
-    case 'mason':
-      return '👁'
-    case 'sorceress':
-      return '🧙‍♀️'
-    case 'villager':
-      return '👨‍🌾'
-    case 'witch':
-      return '🧙‍♂️'
-    case 'big bad wolf':
-      return '🐗'
-    case 'werewolf':
-      return '🐺'
-    case 'wolf cub':
-      return '🐶'
-    case 'tanner':
-      return '😭'
-  }
-}
+export const gameHasMasons = (game: Game): boolean =>
+  game.roles.indexOf(Roles.mason) > -1

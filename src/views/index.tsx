@@ -10,6 +10,7 @@ import { getDeckWeight } from 'helpers'
 import { Tabs } from 'components/tabs'
 import { Overview } from 'views/overview'
 import { Weight } from 'components/weight'
+import { GameView } from 'views/game'
 
 interface Props {
   database: firebase.database.Database
@@ -55,12 +56,11 @@ export class App extends React.Component<Props, State> {
   render() {
     if (this.state.game) {
       return (
-        <h1>
-          game started
-          <button onClick={() => this.updateFirebase({ game: null })}>
-            end game
-          </button>
-        </h1>
+        <GameView
+          game={this.state.game}
+          endGame={() => this.updateFirebase({ game: null })}
+          update={this.updateFirebase}
+        />
       )
     }
 
