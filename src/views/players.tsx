@@ -41,7 +41,10 @@ export class Players extends React.Component<Props, State> {
             })
 
             this.props.update({
-              players: [...this.props.players, { alive: true, name: value }],
+              players: [
+                ...this.props.players,
+                { alive: true, name: value, links: [], copiedBy: null },
+              ],
             })
           }}
         />

@@ -1,10 +1,17 @@
 import * as React from 'react'
-import { Player, Game, setupRole, Setup, Action } from 'interfaces/game'
+import {
+  Player,
+  Game,
+  setupRole,
+  SetupPrompt,
+  performPregameAction,
+} from 'interfaces/game'
 import { Card } from 'interfaces/cards'
-import { getRoles, updateFirst, getNumberOfARole } from 'helpers'
-import { sortBy, whereEq } from 'ramda'
+import { getRoles, getNumberOfARole } from 'helpers'
+import { sortBy, values } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
+import { makePregameActionButton } from 'components/setupButtons'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {}
@@ -17,10 +24,8 @@ interface Props extends FirebaseProps {
 
 interface State {
   game: Game
-  players: Player[]
-  completedSetups: Action[] // Completed setups the game needs to track
-  setupsRemaining: Setup[] // The current role we are setting up
-  currentSetup: Setup | undefined | null // The remaining roles we need to setup
+  promptsRemaining: SetupPrompt[] // The current role we are setting up
+  currentPrompt: SetupPrompt | undefined | null // The remaining roles we need to setup
 }
 
 export class SetupGame extends React.Component<Props, State> {
@@ -29,45 +34,49 @@ export class SetupGame extends React.Component<Props, State> {
 
     const setups = getRoles(sortBy(card => card.team, this.props.cards))
       .map(setupRole)
-      .reduce<Setup[]>((acc, setup) => (setup ? [...acc, setup] : acc), [])
+      .reduce<SetupPrompt[]>(
+        (acc, setup) => (setup ? [...acc, setup] : acc),
+        []
+      )
 
     this.state = {
-      players: this.props.players.slice(0),
       game: {
-        day: [],
-        night: [],
-        players: [],
+        players: props.players.reduce(
+          (memo, player) => ({ ...memo, [player.name]: player }),
+          {}
+        ),
         roles: getRoles(this.props.cards),
-        setup: [],
+        prompts: [],
+        cards: this.props.cards,
       },
-      completedSetups: [],
-      setupsRemaining: setups.slice(1),
-      currentSetup: setups[0],
+      promptsRemaining: setups.slice(1),
+      currentPrompt: setups[0],
     }
   }
 
   componentDidUpdate() {
-    if (!this.state.currentSetup) {
-      this.props.done({
-        ...this.state.game,
-        players: this.state.players,
-        setup: this.state.completedSetups,
-      })
+    if (!this.state.currentPrompt) {
+      this.props.done(this.state.game)
     }
   }
 
   makeDoneButton = () => {
-    const { setupsRemaining, currentSetup, completedSetups } = this.state
-    if (!currentSetup) return null
+    const { promptsRemaining, currentPrompt } = this.state
+    if (!currentPrompt) return null
 
-    const { action } = currentSetup
-    const isActionComplete = !!(action
-      ? action.target && ('source' in action ? action.source : true)
-      : true)
+    const { role, action } = currentPrompt
 
-    const areRolesSet =
-      getNumberOfARole(currentSetup.role, this.state.players) ===
-      getNumberOfARole(currentSetup.role, this.props.cards)
+    const hasAllKeys = <T extends object>(obj: T): boolean =>
+      values(obj).reduce((valid, val) => valid && !!val, true)
+
+    const isActionComplete = !action
+      ? true
+      : hasAllKeys(action) && hasAllKeys(action.buttons)
+
+    const areRolesSet = role
+      ? getNumberOfARole(role, values(this.state.game.players)) ===
+        getNumberOfARole(role, this.props.cards)
+      : true
 
     return (
       <Tabs grow>
@@ -75,169 +84,50 @@ export class SetupGame extends React.Component<Props, State> {
           className="red"
           onClick={() =>
             this.setState({
-              setupsRemaining: setupsRemaining.slice(1),
-              currentSetup: setupsRemaining[0],
+              promptsRemaining: promptsRemaining.slice(1),
+              currentPrompt: promptsRemaining[0],
             })
           }>
           skip
         </button>
         <button
           disabled={!isActionComplete || !areRolesSet}
-          onClick={() =>
+          onClick={() => {
             this.setState({
-              setupsRemaining: setupsRemaining.slice(1),
-              currentSetup: setupsRemaining[0],
-              completedSetups: currentSetup.action
-                ? [...completedSetups, currentSetup.action]
-                : completedSetups,
+              promptsRemaining: promptsRemaining.slice(1),
+              currentPrompt: promptsRemaining[0],
+              game: performPregameAction(this.state.game, action),
             })
-          }>
+          }}>
           next
         </button>
       </Tabs>
     )
   }
 
-  makePlayerButtons = (player: Player, { action, role, message }: Setup) => {
-    const numberOfRoleInDeck = getNumberOfARole(role, this.props.cards)
-    const numberOfRoleInPlayers = getNumberOfARole(role, this.state.players)
-
-    let sourceButton: React.ReactElement<{}> | null = null
-    let undoSourceButton: React.ReactElement<{}> | null = null
-    let targetButton: React.ReactElement<{}> | null = null
-    let undoTargetButton: React.ReactElement<{}> | null = null
-
-    if (action && 'target' in action) {
-      targetButton = (
-        <button
-          onClick={() =>
-            this.setState({
-              currentSetup: {
-                role,
-                message,
-                action: { ...action, target: player.name },
-              },
-            })
-          }>
-          target
-        </button>
-      )
-
-      undoTargetButton = (
-        <button
-          onClick={() =>
-            this.setState({
-              currentSetup: {
-                role,
-                message,
-                action: { ...action, target: '' },
-              },
-            })
-          }>
-          undo target
-        </button>
-      )
-    }
-
-    if (action && 'source' in action) {
-      sourceButton = (
-        <button
-          onClick={() =>
-            this.setState({
-              currentSetup: {
-                role,
-                message,
-                action: { ...action, source: player.name },
-              },
-            })
-          }>
-          source
-        </button>
-      )
-
-      undoSourceButton = (
-        <button
-          onClick={() =>
-            this.setState({
-              currentSetup: {
-                role,
-                message,
-                action: { ...action, source: '' },
-              },
-            })
-          }>
-          undo source
-        </button>
-      )
-    }
-
-    return (
-      <React.Fragment>
-        {!player.role &&
-          numberOfRoleInPlayers < numberOfRoleInDeck &&
-          player.role !== role && (
-            <button
-              onClick={() => {
-                this.setState({
-                  players: updateFirst(
-                    whereEq({ name: player.name }),
-                    player => ({ ...player, role: role }),
-                    this.state.players
-                  ),
-                })
-              }}>
-              set as {role}
-            </button>
-          )}
-        {player.role === role && (
-          <button
-            onClick={() => {
-              this.setState({
-                players: updateFirst(
-                  whereEq({ name: player.name }),
-                  player => ({ ...player, role: undefined }),
-                  this.state.players
-                ),
-              })
-            }}>
-            undo {role}
-          </button>
-        )}
-
-        {action &&
-          !action.target &&
-          player.name !== action.target &&
-          targetButton}
-        {action && player.name === action.target && undoTargetButton}
-        {action &&
-          'source' in action &&
-          !action.source &&
-          player.name !== action.target &&
-          sourceButton}
-        {action &&
-          'source' in action &&
-          player.name === action.source &&
-          undoSourceButton}
-      </React.Fragment>
-    )
-  }
-
   render() {
-    const { players, currentSetup } = this.state
+    const { game, currentPrompt } = this.state
 
-    if (!currentSetup) {
+    if (!currentPrompt) {
       return <h1>done</h1>
     }
 
     return (
       <div>
         <h1>
-          {currentSetup.role}, {currentSetup.message}
+          {currentPrompt.role}, {currentPrompt.message}
         </h1>
 
-        {players.map(player => (
+        {values(game.players).map(player => (
           <PlayerRow player={player} key={player.name}>
-            {this.makePlayerButtons(player, currentSetup)}
+            {makePregameActionButton(
+              this.state.game,
+              player,
+              currentPrompt,
+              ({ game, prompt }) => {
+                this.setState({ currentPrompt: prompt, game })
+              }
+            )}
           </PlayerRow>
         ))}
 

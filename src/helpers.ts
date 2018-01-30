@@ -1,6 +1,6 @@
-import { reduce, uniq, adjust, findIndex } from 'ramda'
+import { reduce, uniq, adjust, findIndex, remove, propEq } from 'ramda'
 import { Card, Roles } from 'interfaces/cards'
-import { Player, Game } from 'interfaces/game'
+import { Player, Game, Prompt } from 'interfaces/game'
 
 // ================
 // HELPER FUNCTIONS
@@ -26,9 +26,47 @@ export const getNumberOfARole = (
 
 export const updateFirst = <T extends object>(
   predicate: (prop: T) => boolean,
-  updater: (item: T) => T,
+  updater: T | ((item: T) => T),
   list: T[]
-): T[] => adjust(updater, findIndex(predicate, list), list)
+): T[] =>
+  adjust(
+    typeof updater === 'function' ? updater : () => updater,
+    findIndex(predicate, list),
+    list
+  )
+
+export const isPlayerAlive = (game: Game, name: string): boolean =>
+  game.players[name].alive
+
+export const removeFirst = <T extends object>(
+  predicate: (prop: T) => boolean,
+  list: T[]
+): T[] => remove(findIndex(predicate, list), 1, list)
 
 export const gameHasMasons = (game: Game): boolean =>
   game.roles.indexOf(Roles.mason) > -1
+
+export const updatePlayer = (
+  game: Game,
+  name: string,
+  props: Partial<Player> | ((player: Player) => Partial<Player>)
+): Game => ({
+  ...game,
+  players: {
+    ...game.players,
+    [name]: {
+      ...game.players[name],
+      ...(typeof props === 'function' ? props(game.players[name]) : props),
+    },
+  },
+})
+
+export const addPrompt = (game: Game, prompt: Prompt): Game => ({
+  ...game,
+  prompts: [...(game.prompts || []), prompt],
+})
+
+export const removePrompt = (game: Game, message: string): Game => ({
+  ...game,
+  prompts: removeFirst(propEq('message', message), game.prompts || []),
+})

@@ -29,9 +29,31 @@ export interface Card {
   weight: number
   cardCount: number
   emoji: string
+  wakesUp: boolean
 }
 
-export const getCardCount = (role: Roles): number => {
+export const doesRoleWakeUp = (role: Roles): boolean => {
+  // prettier-ignore
+  switch (role) {
+    case Roles['tanner']: return false
+    case Roles['doppleganger']: return false
+    case Roles['cursed']: return false
+    case Roles['sorceress']: return true
+    case Roles['werewolf']: return true
+    case Roles['wolf cub']: return true
+    case Roles['witch']: return true
+    case Roles['big bad wolf']: return true
+    case Roles['cupid']: return false
+    case Roles['mason']: return false
+    case Roles['villager']: return false
+    case Roles['hunter']: return false
+    case Roles['seer']: return true
+    case Roles['apprentice seer']: return true
+    case Roles['bodyguard']: return true
+  }
+}
+
+export const getRoleCardCount = (role: Roles): number => {
   // prettier-ignore
   switch (role) {
     case Roles['tanner']: return 1
@@ -52,7 +74,7 @@ export const getCardCount = (role: Roles): number => {
   }
 }
 
-export const getCardTeam = (role: Roles): Team => {
+export const getRoleTeam = (role: Roles): Team => {
   // prettier-ignore
   switch (role) {
     case Roles['tanner']: return Team.tanner
@@ -73,7 +95,7 @@ export const getCardTeam = (role: Roles): Team => {
   }
 }
 
-export const getCardWeight = (role: Roles): number => {
+export const getRoleWeight = (role: Roles): number => {
   // prettier-ignore
   switch (role) {
     case Roles['tanner']: return 1
@@ -94,7 +116,7 @@ export const getCardWeight = (role: Roles): number => {
   }
 }
 
-export const getCardEmoji = (role: Roles | undefined): string => {
+export const getRoleEmoji = (role: Roles | undefined): string => {
   // prettier-ignore
   if (!role) return '❓'
 
@@ -121,8 +143,9 @@ export const getCardEmoji = (role: Roles | undefined): string => {
 export const AllRoles = Object.keys(Roles)
 export const AllCards: Card[] = AllRoles.map((role: any) => ({
   role,
-  team: getCardTeam(role),
-  weight: getCardWeight(role),
-  cardCount: getCardCount(role),
-  emoji: getCardEmoji(role),
+  team: getRoleTeam(role),
+  weight: getRoleWeight(role),
+  cardCount: getRoleCardCount(role),
+  emoji: getRoleEmoji(role),
+  wakesUp: doesRoleWakeUp(role),
 }))

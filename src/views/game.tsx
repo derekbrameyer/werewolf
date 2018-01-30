@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { propEq } from 'ramda'
-import { Game, Death, Player } from 'interfaces/game'
+import { propEq, values } from 'ramda'
+import { Game, Prompt } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
-import { gameHasMasons, updateFirst } from 'helpers'
-import { getCardTeam, Roles, Team } from 'interfaces/cards'
+import { getRoleTeam, Roles, Team } from 'interfaces/cards'
+import { PromptView } from 'components/prompt'
+import { updatePlayer } from 'helpers'
+import { makeGameActionButtons } from 'components/gameButtons'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {
@@ -18,64 +20,56 @@ interface Props extends FirebaseProps {
 
 interface State {}
 
-// Game helpers
-const updatePlayer = (
-  game: Game,
-  player: Player,
-  attributes: Partial<Player>
-): Game => {
-  return {
-    ...game,
-    players: updateFirst(
-      propEq('name', player.name),
-      p => ({ ...p, ...attributes }),
-      game.players
-    ),
-  }
-}
-
 export class GameView extends React.Component<Props, State> {
-  killPlayer = (reason: Death, player: Player) => () => {
+  addPrompt = (prompt: Prompt) => {
     this.props.update({
-      game: updatePlayer(this.props.game, player, { alive: false }),
+      game: {
+        ...this.props.game,
+        prompts: (this.props.game.prompts || []).concat([prompt]),
+      },
     })
   }
 
-  revivePlayer = (player: Player) => () => {
+  killPlayer = (name: string) => () => {
     this.props.update({
-      game: updatePlayer(this.props.game, player, { alive: true }),
+      game: updatePlayer(this.props.game, name, { alive: false }),
+    })
+  }
+
+  revivePlayer = (name: string) => () => {
+    this.props.update({
+      game: updatePlayer(this.props.game, name, { alive: true }),
     })
   }
 
   render() {
-    const theLiving = this.props.game.players.filter(propEq('alive', true))
+    const theLiving = values(this.props.game.players).filter(
+      propEq('alive', true)
+    )
     const theLivingWolves = theLiving.filter(
-      p => getCardTeam(p.role || Roles.villager) === Team.wolf
+      p => getRoleTeam(p.role || Roles.villager) === Team.wolf
     )
     const theLivingVillagers = theLiving.filter(
-      p => getCardTeam(p.role || Roles.villager) === Team.villager
+      p => getRoleTeam(p.role || Roles.villager) === Team.villager
     )
+
+    console.log(this.props.game)
 
     return (
       <div>
-        <h1>game started!</h1>
+        {(this.props.game.prompts || []).map(prompt => (
+          <PromptView
+            game={this.props.game}
+            done={game => this.props.update({ game })}
+            prompt={prompt}
+            key={prompt.message}
+          />
+        ))}
 
-        {this.props.game.players.map(player => (
+        {values(this.props.game.players).map(player => (
           <PlayerRow player={player} key={player.name}>
-            {player.alive && (
-              <button onClick={this.killPlayer('lynch', player)}>lynch</button>
-            )}
-            {player.alive &&
-              gameHasMasons(this.props.game) && (
-                <button onClick={this.killPlayer('mason', player)}>
-                  mason
-                </button>
-              )}
-            {player.alive && (
-              <button onClick={this.killPlayer('other', player)}>other</button>
-            )}
-            {!player.alive && (
-              <button onClick={this.revivePlayer(player)}>revive</button>
+            {makeGameActionButtons(this.props.game, player, game =>
+              this.props.update({ game })
             )}
           </PlayerRow>
         ))}
@@ -83,6 +77,11 @@ export class GameView extends React.Component<Props, State> {
         <Tabs grow>
           <button className="red" onClick={() => this.props.endGame()}>
             end game
+          </button>
+          <button
+            disabled={!!(this.props.game.prompts || []).length}
+            onClick={() => {}}>
+            next
           </button>
         </Tabs>
 
