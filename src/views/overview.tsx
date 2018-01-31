@@ -5,6 +5,7 @@ import { getDeckWeight, getRoles, getNumberOfARole } from 'helpers'
 import { Tabs } from 'components/tabs'
 import { Row } from 'components/row'
 import { Weight } from 'components/weight'
+import { Grid } from 'components/grid'
 
 interface Props {
   players: Player[]
@@ -14,16 +15,23 @@ interface Props {
 
 export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
   <div>
-    <h1>Players ({players.length}):</h1>
-    {players.map(player => <Row key={player.name}>{player.name}</Row>)}
-    <h1>
-      Deck ({cards.length} / <Weight weight={getDeckWeight(cards)} />):
-    </h1>
-    {getRoles(cards).map(role => (
-      <Row key={role}>
-        {role} @ {getNumberOfARole(role, cards)}
-      </Row>
-    ))}
+    <Grid>
+      <div>
+        <h1>Players ({players.length}):</h1>
+        {players.map(player => <Row key={player.name}>{player.name}</Row>)}
+      </div>
+
+      <div>
+        <h1>
+          Deck ({cards.length} / <Weight weight={getDeckWeight(cards)} />):
+        </h1>
+        {getRoles(cards).map(role => (
+          <Row key={role}>
+            {role} @ {getNumberOfARole(role, cards)}
+          </Row>
+        ))}
+      </div>
+    </Grid>
 
     <Tabs grow>
       <button

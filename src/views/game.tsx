@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { propEq, values } from 'ramda'
-import { Game, nightAction, Prompt } from 'interfaces/game'
+import { Game, nightAction, Prompt, Player } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
-import { getRoleTeam, Roles, Team } from 'interfaces/cards'
+import { getRoleTeam, Roles, Team, getRoleWeight } from 'interfaces/cards'
 import { PromptView } from 'components/prompt'
 import { makeGameActionButtons } from 'components/gameButtons'
+import { Grid } from 'components/grid'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {
@@ -25,19 +26,20 @@ export class GameView extends React.Component<Props, State> {
       this.props.update({
         game: {
           ...this.props.game,
-          prompts: (this.props.game.prompts || []).concat(this.props.game.cards
-            .sort((a, b) => b.weight - a.weight)
-            .reduce<Prompt[]>((prompts, card) => {
-              const action = nightAction(card.role)
-              return action ? prompts.concat(action) : prompts
-            }, [])
-            .concat({
-              message: 'werewolves wake up and kill someone',
-            }),
+          prompts: (this.props.game.prompts || []).concat(
+            this.props.game.cards
+              .sort((a, b) => b.weight - a.weight)
+              .reduce<Prompt[]>((prompts, card) => {
+                const action = nightAction(card.role)
+                return action ? prompts.concat(action) : prompts
+              }, [])
+              .concat({
+                message: 'werewolves wake up and kill someone',
+              })
+          ),
         },
       })
     }
-
   }
 
   render() {
@@ -51,6 +53,10 @@ export class GameView extends React.Component<Props, State> {
       p => getRoleTeam(p.role || Roles.villager) === Team.villager
     )
 
+    const isGood = (player: Player): boolean =>
+      getRoleTeam(player.role) === Team.villager ||
+      getRoleTeam(player.role) === Team.tanner
+
     return (
       <div>
         {(this.props.game.prompts || []).map(prompt => (
@@ -62,13 +68,37 @@ export class GameView extends React.Component<Props, State> {
           />
         ))}
 
-        {values(this.props.game.players).map(player => (
-          <PlayerRow player={player} key={player.name}>
-            {makeGameActionButtons(this.props.game, player, game =>
-              this.props.update({ game })
-            )}
-          </PlayerRow>
-        ))}
+        <Grid>
+          <div>
+            {values(this.props.game.players)
+              .filter(p => isGood(p))
+              .sort(
+                (a, b) =>
+                  Math.abs(getRoleWeight(b.role)) -
+                  Math.abs(getRoleWeight(a.role))
+              )
+              .sort((a, b) => (a.alive ? 1 : 0))
+              .map(player => (
+                <PlayerRow player={player} key={player.name}>
+                  {makeGameActionButtons(this.props.game, player, game =>
+                    this.props.update({ game })
+                  )}
+                </PlayerRow>
+              ))}
+          </div>
+
+          <div>
+            {values(this.props.game.players)
+              .filter(p => !isGood(p))
+              .map(player => (
+                <PlayerRow player={player} key={player.name}>
+                  {makeGameActionButtons(this.props.game, player, game =>
+                    this.props.update({ game })
+                  )}
+                </PlayerRow>
+              ))}
+          </div>
+        </Grid>
 
         <Tabs grow>
           <button className="red" onClick={() => this.props.endGame()}>

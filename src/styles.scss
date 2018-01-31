@@ -129,3 +129,14 @@ h1 {
   top: 48%;
   right: $spacing;
 }
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (min-width: 400px) {
+    > * {
+      width: 50%;
+    }
+  }
+}

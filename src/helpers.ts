@@ -1,5 +1,5 @@
-import { reduce, uniq, adjust, findIndex, remove, propEq } from 'ramda'
-import { Card, Roles } from 'interfaces/cards'
+import { reduce, uniq, adjust, findIndex, remove, propEq, values } from 'ramda'
+import { Card, Roles, getRoleWeight } from 'interfaces/cards'
 import { Player, Game, Prompt } from 'interfaces/game'
 
 // ================
@@ -66,10 +66,24 @@ export const addPrompt = (
   prompt: Prompt | undefined | null
 ): Game => ({
   ...game,
-  prompts: prompt ? [...(game.prompts || []), prompt] : game.prompts,
+  prompts: prompt ? [...(game.prompts || []), prompt] : game.prompts || [],
 })
 
 export const removePrompt = (game: Game, message: string): Game => ({
   ...game,
   prompts: removeFirst(propEq('message', message), game.prompts || []),
 })
+
+export const sortPlayers = (game: Game): Player[] => {
+  return values(game.players).sort(
+    (a, b) => getRoleWeight(b.role) - getRoleWeight(a.role)
+  )
+  // this.props.game.cards
+  //   .reduce<Prompt[]>((prompts, card) => {
+  //     const action = nightAction(card.role)
+  //     return action ? prompts.concat(action) : prompts
+  //   }, [])
+  //   .concat({
+  //     message: 'werewolves wake up and kill someone',
+  //   })
+}

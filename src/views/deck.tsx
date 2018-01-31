@@ -6,6 +6,7 @@ import { CardRow } from 'components/card'
 import { Tabs } from 'components/tabs'
 import { Weight } from 'components/weight'
 import { Player } from 'interfaces/game'
+import { Grid } from 'components/grid'
 
 export interface FirebaseProps {
   cards: Card[]
@@ -50,17 +51,20 @@ export class BuildDeck extends React.Component<Props> {
   render() {
     return (
       <div>
-        <h1>negative</h1>
-
-        {AllCards.filter(c => c.weight < 0)
-          .sort((a, b) => b.weight - a.weight)
-          .map(this.renderCard)}
-
-        <h1>positive</h1>
-
-        {AllCards.filter(c => c.weight >= 0)
-          .sort((a, b) => a.weight - b.weight)
-          .map(this.renderCard)}
+        <Grid>
+          <div>
+            <h1>positive</h1>
+            {AllCards.filter(c => c.weight >= 0)
+              .sort((a, b) => a.weight - b.weight)
+              .map(this.renderCard)}
+          </div>
+          <div>
+            <h1>negative</h1>
+            {AllCards.filter(c => c.weight < 0)
+              .sort((a, b) => b.weight - a.weight)
+              .map(this.renderCard)}
+          </div>
+        </Grid>
 
         <Tabs grow>
           <button

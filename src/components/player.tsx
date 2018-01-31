@@ -15,7 +15,7 @@ export const PlayerRow: React.SFC<Props> = ({ player, children }) => {
   if (player.copiedBy) subtitle += ` (doppleganged by: ${player.copiedBy})`
 
   return (
-    <Row>
+    <Row className="player-row">
       <RowImg className={cx({ dim: !player.alive })}>
         {getRoleEmoji(player.role)}
       </RowImg>

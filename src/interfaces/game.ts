@@ -124,6 +124,7 @@ export const setupRole = (role: Roles): SetupPrompt | null => {
     case Roles['witch']:
     case Roles['werewolf']:
     case Roles['big bad wolf']:
+    case Roles['lycan']:
     case Roles['sorceress']:
     case Roles['wolf cub']:
     case Roles['tanner']:
@@ -174,6 +175,7 @@ export const nightAction = (role: Roles): Prompt | null => {
     case Roles['cupid']:
     case Roles['mason']:
     case Roles['doppleganger']:
+    case Roles['lycan']:
     case Roles['cursed']:
     case Roles['hunter']:
     case Roles['villager']:
@@ -225,6 +227,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['cupid']:
     case Roles['mason']:
     case Roles['doppleganger']:
+    case Roles['lycan']:
     case Roles['villager']:
       return null
 

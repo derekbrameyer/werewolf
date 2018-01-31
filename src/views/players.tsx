@@ -5,6 +5,7 @@ import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'
 import { Card } from 'interfaces/cards'
+import { Grid } from 'components/grid'
 
 // Anything we want persisted to firebase
 export interface FirebaseProps {
@@ -49,25 +50,27 @@ export class Players extends React.Component<Props, State> {
           }}
         />
 
-        {this.props.players.map(player => (
-          <PlayerRow player={player} key={player.name}>
-            <button
-              onClick={() => {
-                this.props.update({
-                  players: remove(
-                    findIndex(
-                      whereEq({ name: player.name }),
+        <Grid>
+          {this.props.players.map(player => (
+            <PlayerRow player={player} key={player.name}>
+              <button
+                onClick={() => {
+                  this.props.update({
+                    players: remove(
+                      findIndex(
+                        whereEq({ name: player.name }),
+                        this.props.players
+                      ),
+                      1,
                       this.props.players
                     ),
-                    1,
-                    this.props.players
-                  ),
-                })
-              }}>
-              remove
-            </button>
-          </PlayerRow>
-        ))}
+                  })
+                }}>
+                remove
+              </button>
+            </PlayerRow>
+          ))}
+        </Grid>
 
         <Tabs grow>
           <button
