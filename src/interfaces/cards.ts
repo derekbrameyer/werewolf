@@ -21,6 +21,8 @@ export enum Roles {
   'doppleganger' = 'doppleganger',
   'sorceress' = 'sorceress',
   'tanner' = 'tanner',
+  'pi' = 'pi',
+  'prince' = 'prince',
 }
 
 export interface Card {
@@ -50,6 +52,8 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['seer']: return true
     case Roles['apprentice seer']: return true
     case Roles['bodyguard']: return true
+    case Roles['pi']: return true
+    case Roles['prince']: return true
   }
 }
 
@@ -71,6 +75,8 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['seer']: return 1
     case Roles['apprentice seer']: return 1
     case Roles['bodyguard']: return 1
+    case Roles['pi']: return 1
+    case Roles['prince']: return 1
   }
 }
 
@@ -92,6 +98,8 @@ export const getRoleTeam = (role: Roles): Team => {
     case Roles['seer']: return Team.villager
     case Roles['apprentice seer']: return Team.villager
     case Roles['bodyguard']: return Team.villager
+    case Roles['pi']: return Team.villager
+    case Roles['prince']: return Team.villager
   }
 }
 
@@ -113,6 +121,8 @@ export const getRoleWeight = (role: Roles): number => {
     case Roles['seer']: return 7
     case Roles['apprentice seer']: return 4
     case Roles['bodyguard']: return 3
+    case Roles['pi']: return 3
+    case Roles['prince']: return 3
   }
 }
 
@@ -137,6 +147,8 @@ export const getRoleEmoji = (role: Roles | undefined): string => {
     case Roles['werewolf']: return '🐺'
     case Roles['wolf cub']: return '🐶'
     case Roles['tanner']: return '😭'
+    case Roles['pi']: return '👻'
+    case Roles['prince']: return '🤴'
   }
 }
 

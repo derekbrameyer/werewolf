@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Player } from 'interfaces/game'
+import { Player, defaultPlayer } from 'interfaces/game'
 import { find, whereEq, remove, findIndex } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
@@ -43,7 +43,7 @@ export class Players extends React.Component<Props, State> {
             this.props.update({
               players: [
                 ...this.props.players,
-                { alive: true, name: value, links: [], copiedBy: null },
+                { ...defaultPlayer, name: value },
               ],
             })
           }}

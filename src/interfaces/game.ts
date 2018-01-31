@@ -4,13 +4,12 @@ import { updatePlayer, addPrompt, isPlayerAlive } from 'helpers'
 type Id = string
 
 export type Action =
-  | { type: 'kill'; target: Id }
+  | { type: 'kill' | 'force-kill'; target: Id }
   | {
-      type: 'cursed'
+      type: 'confirm-kill'
       target: Id
       buttons: {
         kill: boolean
-        'make wolf': boolean
       }
     }
   | { type: 'protect'; target: Id }
@@ -47,6 +46,7 @@ export interface Game {
   roles: Roles[]
   cards: Card[]
   prompts: Prompt[] | null
+  nightPrompts: Prompt[] | null
 }
 
 export interface Player {
@@ -55,6 +55,15 @@ export interface Player {
   alive: boolean
   links: Id[] | null
   copiedBy: Id | null
+  protected: boolean
+}
+
+export const defaultPlayer: Player = {
+  name: '',
+  alive: true,
+  links: null,
+  copiedBy: null,
+  protected: false,
 }
 
 export interface SetupPrompt {
@@ -108,6 +117,8 @@ export const setupRole = (role: Roles): SetupPrompt | null => {
 
     case Roles['cursed']:
     case Roles['hunter']:
+    case Roles['pi']:
+    case Roles['prince']:
     case Roles['seer']:
     case Roles['apprentice seer']:
     case Roles['witch']:
@@ -127,6 +138,49 @@ export const setupRole = (role: Roles): SetupPrompt | null => {
   }
 }
 
+export const nightAction = (role: Roles): Prompt | null => {
+  switch (role) {
+    case Roles['seer']:
+      return {
+        message: `${role}, wake up and inspect someone`,
+      }
+    case Roles['apprentice seer']:
+      return {
+        message: `${role}, wake up and inspect someone`,
+      }
+    case Roles['witch']:
+      return {
+        message: `${role}, wake up thumbs up if you want to save everyone, thumbs down if you want to kill someone`,
+      }
+    case Roles['sorceress']:
+      return {
+        message: `${role}, wake up and look for the seer`,
+      }
+    case Roles['bodyguard']:
+      return {
+        message: `${role}, wake up and protect someone`,
+      }
+
+    case Roles['pi']:
+      return {
+        message: `${role}, wake up and point at some one, if that person or one of their neighbors is a wolf I will tell you`,
+      }
+
+    case Roles['wolf cub']:
+    case Roles['prince']:
+    case Roles['werewolf']:
+    case Roles['big bad wolf']:
+    case Roles['tanner']:
+    case Roles['cupid']:
+    case Roles['mason']:
+    case Roles['doppleganger']:
+    case Roles['cursed']:
+    case Roles['hunter']:
+    case Roles['villager']:
+      return null
+  }
+}
+
 export const deathAction = (player: Player): Prompt | null => {
   switch (player.role) {
     case Roles['hunter']:
@@ -135,12 +189,34 @@ export const deathAction = (player: Player): Prompt | null => {
       }
 
     case Roles['tanner']:
-    case Roles['cursed']:
+      return {
+        message: 'if the tanner was lynched then game over, tanner wins',
+      }
+
     case Roles['wolf cub']:
-      return { message: 'todo' }
+      return {
+        message:
+          'the wolf cub has been killed, wolves get to kill two people next night',
+      }
+
+    case Roles['prince']:
+    case Roles['cursed']:
+      return {
+        message: `${player.name} is the ${
+          player.role
+        }, what would you like to do?`,
+        action: {
+          type: 'confirm-kill',
+          target: player.name,
+          buttons: {
+            kill: false,
+          },
+        },
+      }
 
     case Roles['seer']:
     case Roles['big bad wolf']:
+    case Roles['pi']:
     case Roles['apprentice seer']:
     case Roles['witch']:
     case Roles['werewolf']:
@@ -158,23 +234,17 @@ export const deathAction = (player: Player): Prompt | null => {
 }
 
 export const performAction = (cleanGame: Game, action: Action): Game => {
-  const player = cleanGame.players[action.target]
   let game: Game = { ...cleanGame }
+  const player = game.players[action.target]
 
   switch (action.type) {
     case 'kill':
-      if (player.role === Roles.cursed) {
-        return addPrompt(game, {
-          message: `${player.name} is cursed, what would you like to do?`,
-          action: {
-            type: 'cursed',
-            target: player.name,
-            buttons: {
-              'make wolf': false,
-              kill: false,
-            },
-          },
-        })
+    case 'force-kill':
+      if (
+        action.type === 'kill' &&
+        (player.role === Roles.cursed || player.role === Roles.prince)
+      ) {
+        return addPrompt(game, deathAction(player))
       }
 
       if (player.copiedBy) {
@@ -202,23 +272,21 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
         })
       }
 
+      if (action.type !== 'force-kill') {
+        game = addPrompt(game, deathAction(player))
+      }
+
       return updatePlayer(game, player.name, { alive: false })
 
     case 'protect':
-      return cleanGame
-
-    case 'cursed':
-      const wolfGame = updatePlayer(game, player.name, {
-        role: Roles['werewolf'],
+      return updatePlayer(game, player.name, {
+        protected: player.protected ? false : true,
       })
 
-      if (action.buttons['make wolf']) {
-        return wolfGame
-      } else if (action.buttons.kill) {
-        return performAction(wolfGame, { type: 'kill', target: player.name })
-      }
-
-      return cleanGame
+    case 'confirm-kill':
+      return action.buttons.kill
+        ? performAction(game, { type: 'force-kill', target: player.name })
+        : game
 
     case 'revive':
       if (player.copiedBy) {

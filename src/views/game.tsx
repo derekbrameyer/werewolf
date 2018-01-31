@@ -1,11 +1,10 @@
 import * as React from 'react'
 import { propEq, values } from 'ramda'
-import { Game, Prompt } from 'interfaces/game'
+import { Game, nightAction, Prompt } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
 import { getRoleTeam, Roles, Team } from 'interfaces/cards'
 import { PromptView } from 'components/prompt'
-import { updatePlayer } from 'helpers'
 import { makeGameActionButtons } from 'components/gameButtons'
 
 // Any state you want to persist to firebase
@@ -21,25 +20,24 @@ interface Props extends FirebaseProps {
 interface State {}
 
 export class GameView extends React.Component<Props, State> {
-  addPrompt = (prompt: Prompt) => {
-    this.props.update({
-      game: {
-        ...this.props.game,
-        prompts: (this.props.game.prompts || []).concat([prompt]),
-      },
-    })
-  }
+  startNight = () => {
+    if (!this.props.game.nightPrompts || !this.props.game.nightPrompts.length) {
+      this.props.update({
+        game: {
+          ...this.props.game,
+          prompts: (this.props.game.prompts || []).concat(this.props.game.cards
+            .sort((a, b) => b.weight - a.weight)
+            .reduce<Prompt[]>((prompts, card) => {
+              const action = nightAction(card.role)
+              return action ? prompts.concat(action) : prompts
+            }, [])
+            .concat({
+              message: 'werewolves wake up and kill someone',
+            }),
+        },
+      })
+    }
 
-  killPlayer = (name: string) => () => {
-    this.props.update({
-      game: updatePlayer(this.props.game, name, { alive: false }),
-    })
-  }
-
-  revivePlayer = (name: string) => () => {
-    this.props.update({
-      game: updatePlayer(this.props.game, name, { alive: true }),
-    })
   }
 
   render() {
@@ -52,8 +50,6 @@ export class GameView extends React.Component<Props, State> {
     const theLivingVillagers = theLiving.filter(
       p => getRoleTeam(p.role || Roles.villager) === Team.villager
     )
-
-    console.log(this.props.game)
 
     return (
       <div>
@@ -78,10 +74,10 @@ export class GameView extends React.Component<Props, State> {
           <button className="red" onClick={() => this.props.endGame()}>
             end game
           </button>
-          <button
-            disabled={!!(this.props.game.prompts || []).length}
-            onClick={() => {}}>
-            next
+          <button onClick={this.startNight}>
+            {this.props.game.nightPrompts && this.props.game.nightPrompts.length
+              ? 'next role'
+              : 'start night'}
           </button>
         </Tabs>
 

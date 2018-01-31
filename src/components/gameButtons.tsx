@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Button } from 'components/button'
 import { Game, Player, performAction } from 'interfaces/game'
+import { gameHasRole, updatePlayer } from 'helpers'
+import { Roles } from 'interfaces/cards'
 
 export const makeKill = (
   game: Game,
@@ -10,6 +12,7 @@ export const makeKill = (
   if (!player.alive) return null
   return (
     <Button
+      disabled={player.protected}
       onClick={() =>
         update(performAction(game, { type: 'kill', target: player.name }))
       }>
@@ -39,13 +42,31 @@ export const makeProtect = (
   player: Player,
   update: (game: Game) => void
 ) => {
-  if (player.alive) return null
+  if (!gameHasRole(game, Roles.bodyguard)) return null
+
   return (
     <Button
       onClick={() =>
-        update(performAction(game, { type: 'revive', target: player.name }))
+        update(performAction(game, { type: 'protect', target: player.name }))
       }>
-      revive
+      {player.protected ? 'un-protect' : 'protect'}
+    </Button>
+  )
+}
+
+export const toggleCursed = (
+  game: Game,
+  player: Player,
+  update: (game: Game) => void
+) => {
+  if (player.role !== Roles.cursed) return null
+
+  return (
+    <Button
+      onClick={() =>
+        update(updatePlayer(game, player.name, { role: Roles.werewolf }))
+      }>
+      make wolf
     </Button>
   )
 }
@@ -58,7 +79,9 @@ export const makeGameActionButtons = (
   return (
     <React.Fragment>
       {makeRevive(game, player, update)}
-      {makeKill(game, player, update)}
+      {player.alive && makeKill(game, player, update)}
+      {player.alive && makeProtect(game, player, update)}
+      {player.alive && toggleCursed(game, player, update)}
     </React.Fragment>
   )
 }

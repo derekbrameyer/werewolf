@@ -43,8 +43,8 @@ export const removeFirst = <T extends object>(
   list: T[]
 ): T[] => remove(findIndex(predicate, list), 1, list)
 
-export const gameHasMasons = (game: Game): boolean =>
-  game.roles.indexOf(Roles.mason) > -1
+export const gameHasRole = (game: Game, role: Roles): boolean =>
+  game.roles.indexOf(role) > -1
 
 export const updatePlayer = (
   game: Game,
@@ -61,9 +61,12 @@ export const updatePlayer = (
   },
 })
 
-export const addPrompt = (game: Game, prompt: Prompt): Game => ({
+export const addPrompt = (
+  game: Game,
+  prompt: Prompt | undefined | null
+): Game => ({
   ...game,
-  prompts: [...(game.prompts || []), prompt],
+  prompts: prompt ? [...(game.prompts || []), prompt] : game.prompts,
 })
 
 export const removePrompt = (game: Game, message: string): Game => ({
