@@ -7,6 +7,8 @@ $spacing: 0.2rem;
 $card-height: 5.5rem;
 $card-min-width: 10rem;
 
+$nav-height: 4rem;
+
 // ==============
 // Globals
 // ==============
@@ -22,6 +24,7 @@ html {
   touch-action: manipulation;
   font-family: 'Roboto', sans-serif;
   font-size: $base-font-size;
+  padding-top: $nav-height;
 }
 
 button {
@@ -120,9 +123,13 @@ h1 {
 .tabs {
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
+  align-items: stretch;
+  height: $nav-height;
+  justify-content: center;
+  line-height: $nav-height;
 
   .active {
-    border-bottom: 1px solid black;
+    font-style: italic;
   }
 
   :disabled {
@@ -132,6 +139,20 @@ h1 {
   button {
     flex: 1 1 auto;
   }
+}
+
+.tabs.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: 1;
+  border-bottom: 1px solid black;
+}
+
+.tabs.actions {
+  border-top: 1px solid black;
 }
 
 // ==============
@@ -148,14 +169,7 @@ h1 {
 // Prompt
 // ==============
 .prompt {
-  margin: 10px 0 20px;
-}
-
-// ==============
-// Floating
-// ==============
-.floating {
-  position: fixed;
-  top: 48%;
-  right: $spacing;
+  padding: 20px 0 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
 }

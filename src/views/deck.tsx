@@ -65,7 +65,7 @@ export class BuildDeck extends React.Component<Props> {
             .map(this.renderCard)}
         </Grid>
 
-        <Tabs>
+        <Tabs actions>
           <Button
             confirm
             className="red"
@@ -74,11 +74,6 @@ export class BuildDeck extends React.Component<Props> {
             reset deck
           </Button>
         </Tabs>
-
-        <span className="floating">
-          {this.props.cards.length} of {this.props.players.length} /{' '}
-          <Weight weight={getDeckWeight(this.props.cards)} />
-        </span>
       </div>
     )
   }

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as cx from 'classnames'
 import { Button } from 'components/button'
 import { Game, Player, performAction } from 'interfaces/game'
 import { gameHasRole, updatePlayer } from 'helpers'
@@ -46,6 +47,7 @@ export const makeProtect = (
 
   return (
     <Button
+      className={cx({ green: player.protected })}
       onClick={() =>
         update(performAction(game, { type: 'protect', target: player.name }))
       }>

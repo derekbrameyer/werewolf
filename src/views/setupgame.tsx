@@ -6,7 +6,7 @@ import {
   SetupPrompt,
   performPregameAction,
 } from 'interfaces/game'
-import { Card, Roles } from 'interfaces/cards'
+import { Card, Roles, getRoleEmoji } from 'interfaces/cards'
 import { getRoles, getNumberOfARole } from 'helpers'
 import { sortBy, values, map } from 'ramda'
 import { PlayerRow } from 'components/player'
@@ -88,7 +88,7 @@ export class SetupGame extends React.Component<Props, State> {
       : true
 
     return (
-      <Tabs>
+      <Tabs actions>
         <Button
           confirm
           className="red"
@@ -122,8 +122,9 @@ export class SetupGame extends React.Component<Props, State> {
 
     return (
       <div>
-        <h1>
-          {currentPrompt.role}, {currentPrompt.message}
+        <h1 className="prompt">
+          {getRoleEmoji(currentPrompt.role)} {currentPrompt.role},{' '}
+          {currentPrompt.message} {getRoleEmoji(currentPrompt.role)}
         </h1>
 
         <Grid>

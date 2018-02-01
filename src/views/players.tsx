@@ -73,7 +73,7 @@ export class Players extends React.Component<Props, State> {
           ))}
         </Grid>
 
-        <Tabs>
+        <Tabs actions>
           <Button
             confirm
             className="red"
@@ -85,10 +85,6 @@ export class Players extends React.Component<Props, State> {
             reset players
           </Button>
         </Tabs>
-
-        <span className="floating">
-          {this.props.players.length} of {this.props.cards.length}
-        </span>
       </div>
     )
   }

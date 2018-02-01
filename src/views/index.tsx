@@ -11,6 +11,7 @@ import { Tabs } from 'components/tabs'
 import { Overview } from 'views/overview'
 import { Weight } from 'components/weight'
 import { GameView } from 'views/game'
+import { RowSbuTitle } from 'components/row'
 
 interface Props {
   database: firebase.database.Database
@@ -67,7 +68,7 @@ export class App extends React.Component<Props, State> {
 
     return (
       <div>
-        <Tabs>
+        <Tabs navigation>
           <button
             className={cx({ active: this.state.view === 'menu' })}
             onClick={() => this.setState({ view: 'menu' })}>
@@ -77,14 +78,18 @@ export class App extends React.Component<Props, State> {
           <button
             className={cx({ active: this.state.view === 'deck' })}
             onClick={() => this.setState({ view: 'deck' })}>
-            build deck ({this.state.cards.length} /{' '}
-            <Weight weight={getDeckWeight(this.state.cards)} />)
+            build deck
+            <RowSbuTitle>
+              cards: {this.state.cards.length}, balance:{' '}
+              <Weight weight={getDeckWeight(this.state.cards)} />
+            </RowSbuTitle>
           </button>
 
           <button
             className={cx({ active: this.state.view === 'players' })}
             onClick={() => this.setState({ view: 'players' })}>
-            manage players ({this.state.players.length})
+            manage players{' '}
+            <RowSbuTitle>players: {this.state.players.length}</RowSbuTitle>
           </button>
 
           <button

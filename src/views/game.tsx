@@ -71,6 +71,12 @@ export class GameView extends React.Component<Props, State> {
 
     return (
       <div>
+        <Tabs navigation>
+          <div>All Players: {theLiving.length}</div>
+          <div className="green">Villagers: {theLivingVillagers.length} </div>
+          <div className="red">Wolves: {theLivingWolves.length}</div>
+        </Tabs>
+
         {(this.props.game.prompts || []).map(prompt => (
           <PromptView
             game={this.props.game}
@@ -92,7 +98,7 @@ export class GameView extends React.Component<Props, State> {
             ))}
         </Grid>
 
-        <Tabs>
+        <Tabs actions>
           <Button confirm className="red" onClick={() => this.props.endGame()}>
             end game
           </Button>
@@ -102,12 +108,6 @@ export class GameView extends React.Component<Props, State> {
               : 'start night'}
           </Button>
         </Tabs>
-
-        <div className="floating">
-          <div>{theLiving.length}</div>
-          <div className="green">{theLivingVillagers.length} </div>
-          <div className="red">{theLivingWolves.length}</div>
-        </div>
       </div>
     )
   }
