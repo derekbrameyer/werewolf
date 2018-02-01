@@ -169,7 +169,11 @@ h1 {
 // Prompt
 // ==============
 .prompt {
-  padding: 20px 0 20px;
-  margin-bottom: 20px;
+  padding: 4 * $spacing 0 4 * $spacing;
+  margin-bottom: 4 * $spacing;
   border-bottom: 1px solid black;
+}
+
+.input-container {
+  padding: 5 * $spacing;
 }

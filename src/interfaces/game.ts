@@ -136,6 +136,8 @@ export const setupRole = (
     case Roles['sorceress']:
     case Roles['wolf cub']:
     case Roles['tanner']:
+    case Roles['aura seer']:
+    case Roles['minion']:
     case Roles['bodyguard']:
       return {
         role,
@@ -159,6 +161,10 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
       return {
         message: `${role}, wake up and inspect someone`,
       }
+    case Roles['aura seer']:
+      return {
+        message: `${role}, wake up and inspect someone, if they have a special power I will say yes`,
+      }
     case Roles['witch']:
       return {
         message: `${role}, wake up thumbs up if you want to save everyone, thumbs down if you want to kill someone`,
@@ -174,11 +180,12 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
 
     case Roles['pi']:
       return {
-        message: `${role}, wake up and point at some one, if that person or one of their neighbors is a wolf I will tell you`,
+        message: `${role}, wake up and point at some one, if that person or one of their neighbors is a wolf I will say yes`,
       }
 
     case Roles['wolf cub']:
     case Roles['prince']:
+    case Roles['minion']:
     case Roles['werewolf']:
     case Roles['big bad wolf']:
     case Roles['tanner']:
@@ -228,6 +235,8 @@ export const deathAction = (player: Player): Prompt | null => {
 
     case Roles['seer']:
     case Roles['big bad wolf']:
+    case Roles['aura seer']:
+    case Roles['minion']:
     case Roles['pi']:
     case Roles['apprentice seer']:
     case Roles['witch']:

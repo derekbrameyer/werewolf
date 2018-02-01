@@ -24,6 +24,8 @@ export enum Roles {
   'pi' = 'pi',
   'prince' = 'prince',
   'lycan' = 'lycan',
+  'aura seer' = 'aura seer',
+  'minion' = 'minion',
 }
 
 export interface Card {
@@ -55,7 +57,9 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['bodyguard']: return true
     case Roles['pi']: return true
     case Roles['prince']: return true
+    case Roles['aura seer']: return true
     case Roles['lycan']: return false
+    case Roles['minion']: return false
   }
 }
 
@@ -80,6 +84,8 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['pi']: return 1
     case Roles['prince']: return 1
     case Roles['lycan']: return 1
+    case Roles['aura seer']: return 1
+    case Roles['minion']: return 1
   }
 }
 
@@ -106,6 +112,8 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['pi']: return Team.villager
     case Roles['prince']: return Team.villager
     case Roles['lycan']: return Team.villager
+    case Roles['minion']: return Team.minion
+    case Roles['aura seer']: return Team.villager
   }
 }
 
@@ -131,6 +139,8 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['bodyguard']: return 3
     case Roles['pi']: return 3
     case Roles['prince']: return 3
+    case Roles['minion']: return -6
+    case Roles['aura seer']: return 3
     case Roles['lycan']: return -1
   }
 }
@@ -159,6 +169,8 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['pi']: return '👻'
     case Roles['prince']: return '🤴'
     case Roles['lycan']: return '🦊'
+    case Roles['aura seer']: return '😇'
+    case Roles['minion']: return '😈'
   }
 }
 
