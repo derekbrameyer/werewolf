@@ -1,0 +1,37 @@
+[debug] [2018-02-01T04:56:51.967Z] ----------------------------------------------------------------------
+[debug] [2018-02-01T04:56:51.969Z] Command:       /Users/kevinwelcher/.nvm/versions/node/v8.2.1/bin/node /Users/kevinwelcher/LocalDev/werewolf/node_modules/.bin/firebase deploy
+[debug] [2018-02-01T04:56:51.969Z] CLI Version:   3.17.4
+[debug] [2018-02-01T04:56:51.969Z] Platform:      darwin
+[debug] [2018-02-01T04:56:51.969Z] Node Version:  v8.2.1
+[debug] [2018-02-01T04:56:51.970Z] Time:          Wed Jan 31 2018 23:56:51 GMT-0500 (EST)
+[debug] [2018-02-01T04:56:51.970Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-02-01T04:56:51.987Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-02-01T04:56:51.987Z] > authorizing via signed-in user
+[debug] [2018-02-01T04:56:51.990Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-02-01T04:56:51.990Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/zyLJGupPxFem_xTAIQZ0Ls44l556DrbOFOlGAQhPYZexGuw0fhsIOsnBGbrnUNBx',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Wed Jan 31 2018 23:56:51 GMT-0500 (EST)
+[debug] [2018-02-01T04:56:52.181Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-01T04:56:52.191Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/wt-werewolf  
+  
+ Wed Jan 31 2018 23:56:52 GMT-0500 (EST)
+[debug] [2018-02-01T04:56:52.613Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-01T04:56:52.614Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/wt-werewolf/tokens  
+  
+ Wed Jan 31 2018 23:56:52 GMT-0500 (EST)
+[debug] [2018-02-01T04:56:52.954Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'wt-werewolf'...
+[info] 
+[info] i  deploying hosting
+[info] i  hosting: preparing dist directory for upload...
+[debug] [2018-02-01T04:56:54.340Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/wt-werewolf/uploads/-L4EiNATI_PJvuhBNyd1?fileCount=14&message=  
+  
+ Wed Jan 31 2018 23:56:54 GMT-0500 (EST)
+[debug] [2018-02-01T04:57:01.635Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-01T04:57:01.635Z] [hosting] .tgz uploaded successfully, waiting for extraction
