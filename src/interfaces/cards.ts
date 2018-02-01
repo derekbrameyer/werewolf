@@ -83,10 +83,11 @@ export const getRoleCardCount = (role: Roles): number => {
   }
 }
 
-export const getRoleTeam = (role?: Roles): Team => {
+export const getRoleTeam = (role: Roles | null | undefined): Team => {
+  if (!role) return Team.villager
+
   // prettier-ignore
   switch (role) {
-    case undefined: return Team.villager
     case Roles['tanner']: return Team.tanner
     case Roles['doppleganger']: return Team.villager
     case Roles['cursed']: return Team.minion
@@ -108,10 +109,11 @@ export const getRoleTeam = (role?: Roles): Team => {
   }
 }
 
-export const getRoleWeight = (role?: Roles): number => {
+export const getRoleWeight = (role: Roles | null | undefined): number => {
+  if (!role) return 1
+
   // prettier-ignore
   switch (role) {
-    case undefined: return 0
     case Roles['tanner']: return 1
     case Roles['doppleganger']: return -2
     case Roles['cursed']: return -3
@@ -133,7 +135,7 @@ export const getRoleWeight = (role?: Roles): number => {
   }
 }
 
-export const getRoleEmoji = (role: Roles | undefined): string => {
+export const getRoleEmoji = (role: Roles | undefined | null): string => {
   // prettier-ignore
   if (!role) return '❓'
 

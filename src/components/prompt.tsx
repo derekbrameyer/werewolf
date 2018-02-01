@@ -16,9 +16,9 @@ export const PromptView: React.SFC<Props> = ({
   game,
   done,
 }) => (
-  <div>
+  <div className="prompt">
     <h1>{message}</h1>
-    <Tabs grow>
+    <Tabs>
       <button
         className="red"
         onClick={() => {

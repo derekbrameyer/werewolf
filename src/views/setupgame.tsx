@@ -12,6 +12,8 @@ import { sortBy, values } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { makePregameActionButton } from 'components/setupButtons'
+import { Grid } from 'components/grid'
+import { Button } from 'components/button'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {}
@@ -80,8 +82,9 @@ export class SetupGame extends React.Component<Props, State> {
       : true
 
     return (
-      <Tabs grow>
-        <button
+      <Tabs>
+        <Button
+          confirm
           className="red"
           onClick={() =>
             this.setState({
@@ -90,8 +93,8 @@ export class SetupGame extends React.Component<Props, State> {
             })
           }>
           skip
-        </button>
-        <button
+        </Button>
+        <Button
           disabled={!isActionComplete || !areRolesSet}
           onClick={() => {
             this.setState({
@@ -101,7 +104,7 @@ export class SetupGame extends React.Component<Props, State> {
             })
           }}>
           next
-        </button>
+        </Button>
       </Tabs>
     )
   }
@@ -109,9 +112,7 @@ export class SetupGame extends React.Component<Props, State> {
   render() {
     const { game, currentPrompt } = this.state
 
-    if (!currentPrompt) {
-      return <h1>done</h1>
-    }
+    if (!currentPrompt) return null
 
     return (
       <div>
@@ -119,18 +120,20 @@ export class SetupGame extends React.Component<Props, State> {
           {currentPrompt.role}, {currentPrompt.message}
         </h1>
 
-        {values(game.players).map(player => (
-          <PlayerRow player={player} key={player.name}>
-            {makePregameActionButton(
-              this.state.game,
-              player,
-              currentPrompt,
-              ({ game, prompt }) => {
-                this.setState({ currentPrompt: prompt, game })
-              }
-            )}
-          </PlayerRow>
-        ))}
+        <Grid>
+          {values(game.players).map(player => (
+            <PlayerRow player={player} key={player.name}>
+              {makePregameActionButton(
+                this.state.game,
+                player,
+                currentPrompt,
+                ({ game, prompt }) => {
+                  this.setState({ currentPrompt: prompt, game })
+                }
+              )}
+            </PlayerRow>
+          ))}
+        </Grid>
 
         {this.makeDoneButton()}
       </div>

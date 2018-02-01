@@ -1,7 +1,14 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Player } from 'interfaces/game'
-import { Row, RowActions, RowImg, RowDetail, RowTitle } from 'components/row'
+import {
+  Row,
+  RowActions,
+  RowImg,
+  RowDetail,
+  RowTitle,
+  RowSbuTitle,
+} from 'components/row'
 import { getRoleEmoji } from 'interfaces/cards'
 
 interface Props {
@@ -9,19 +16,21 @@ interface Props {
 }
 
 export const PlayerRow: React.SFC<Props> = ({ player, children }) => {
-  let subtitle: string = ''
-  if (player.role) subtitle += `(${player.role}) `
-  if (player.links) subtitle += ` (links to: ${player.links.join(', ')})`
-  if (player.copiedBy) subtitle += ` (doppleganged by: ${player.copiedBy})`
-
   return (
     <Row className="player-row">
       <RowImg className={cx({ dim: !player.alive })}>
         {getRoleEmoji(player.role)}
       </RowImg>
       <RowDetail>
-        <RowTitle subtitle={subtitle}>
+        <RowTitle>
           <span className={cx({ grey: !player.alive })}>{player.name}</span>
+          {player.role && <RowSbuTitle>{player.role}</RowSbuTitle>}
+          {player.links && (
+            <RowSbuTitle>links to: {player.links.join(', ')}</RowSbuTitle>
+          )}
+          {player.copiedBy && (
+            <RowSbuTitle>doppleganged by: {player.copiedBy}</RowSbuTitle>
+          )}
         </RowTitle>
         <RowActions>{children}</RowActions>
       </RowDetail>

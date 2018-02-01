@@ -51,7 +51,7 @@ export interface Game {
 
 export interface Player {
   name: Id
-  role?: Roles
+  role: Roles | null
   alive: boolean
   links: Id[] | null
   copiedBy: Id | null
@@ -64,6 +64,7 @@ export const defaultPlayer: Player = {
   links: null,
   copiedBy: null,
   protected: false,
+  role: null,
 }
 
 export interface SetupPrompt {
@@ -77,7 +78,11 @@ export interface Prompt {
   action?: Action
 }
 
-export const setupRole = (role: Roles): SetupPrompt | null => {
+export const setupRole = (
+  role: Roles | undefined | null
+): SetupPrompt | null => {
+  if (!role) return null
+
   switch (role) {
     case Roles['cupid']:
       return {
@@ -139,7 +144,9 @@ export const setupRole = (role: Roles): SetupPrompt | null => {
   }
 }
 
-export const nightAction = (role: Roles): Prompt | null => {
+export const nightAction = (role: Roles | undefined | null): Prompt | null => {
+  if (!role) return null
+
   switch (role) {
     case Roles['seer']:
       return {
@@ -232,6 +239,7 @@ export const deathAction = (player: Player): Prompt | null => {
       return null
 
     case undefined:
+    case null:
       return null
   }
 }

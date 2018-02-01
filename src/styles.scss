@@ -4,6 +4,9 @@
 $base-font-size: 0.9rem;
 $spacing: 0.2rem;
 
+$card-height: 10rem;
+$card-min-width: 10rem;
+
 // ==============
 // Globals
 // ==============
@@ -12,6 +15,7 @@ $spacing: 0.2rem;
   padding: 0;
   margin: 0;
   font-family: inherit;
+  font-size: inherit;
 }
 
 html {
@@ -24,7 +28,6 @@ button {
   border: 0;
   padding: 2 * $spacing;
   outline: none;
-  font-size: 1rem;
 
   &:active,
   &:focus {
@@ -64,35 +67,46 @@ h1 {
   padding: $spacing;
 
   > * + * {
-    margin-left: $spacing;
+    margin-left: 3 * $spacing;
   }
 
-  & + .row {
-    margin-top: $spacing;
+  .row--title {
+    font-weight: bold;
   }
-}
-
-.row--title {
-  font-weight: bold;
 
   .row--subtitle {
-    margin-left: $spacing;
     font-weight: normal;
     font-style: italic;
     font-size: 0.7rem;
   }
+
+  .row--actions {
+    padding: 0;
+    display: flex;
+
+    button {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
 
-.row--actions {
-  padding: 0;
+.player-row,
+.card-row {
+  height: $card-height;
 
-  button {
-    padding-left: 0;
-    padding-right: 0;
+  .row--detail {
+    min-width: 0;
   }
 
-  > * + * {
-    margin-left: 2 * $spacing;
+  .row--title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .row--subtitle {
+    white-space: pre-wrap;
   }
 }
 
@@ -100,7 +114,6 @@ h1 {
 // Tabs
 // ==============
 .tabs {
-  width: 100%;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
 
@@ -112,31 +125,33 @@ h1 {
     color: lightgray;
   }
 
-  &.tabs--expand button {
+  button {
     flex: 1 1 auto;
-  }
-
-  & + * {
-    margin-top: 2 * $spacing;
   }
 }
 
 // ==============
-// Other
+// Grids
+// ==============
+.grid {
+  display: grid;
+  grid-gap: $spacing;
+  grid-template-columns: repeat(auto-fill, minmax($card-min-width, 1fr));
+  align-items: start;
+}
+
+// ==============
+// Prompt
+// ==============
+.prompt {
+  margin: 10px 0 20px;
+}
+
+// ==============
+// Floating
 // ==============
 .floating {
   position: fixed;
   top: 48%;
   right: $spacing;
-}
-
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-
-  @media (min-width: 400px) {
-    > * {
-      width: 50%;
-    }
-  }
 }

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { Tabs } from 'components/tabs'
 
 interface Props {
   className?: string
@@ -19,17 +18,14 @@ export const RowDetail: React.SFC<Props> = ({ children, className }) => (
   <div className={cx('row--detail', className)}>{children}</div>
 )
 
-export const RowTitle: React.SFC<Props & { subtitle?: React.ReactNode }> = ({
-  children,
-  className,
-  subtitle,
-}) => (
-  <div className={cx('row--title', className)}>
-    {children}
-    <span className="row--subtitle">{subtitle}</span>
-  </div>
+export const RowSbuTitle: React.SFC<Props> = ({ children, className }) => (
+  <div className={cx('row--subtitle', className)}>{children}</div>
+)
+
+export const RowTitle: React.SFC<Props> = ({ children, className }) => (
+  <div className={cx('row--title', className)}>{children}</div>
 )
 
 export const RowActions: React.SFC<Props> = ({ children, className }) => (
-  <Tabs className={cx('row--actions', className)}>{children}</Tabs>
+  <div className={cx('row--actions', className)}>{children}</div>
 )

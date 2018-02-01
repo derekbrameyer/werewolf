@@ -3,29 +3,42 @@ import * as React from 'react'
 interface Props extends React.ButtonHTMLAttributes<any> {
   confirm?: boolean
 }
+interface State {
+  confirmTimer?: any
+}
 
-export class Button extends React.Component<Props> {
-  private confirmTimer: any = null
+export class Button extends React.Component<Props, State> {
+  state: State = {
+    confirmTimer: null,
+  }
 
   onClick = (e: any) => {
     const propsOnClick = this.props.onClick
 
-    if (propsOnClick && this.props.confirm && !this.confirmTimer) {
-      this.confirmTimer = setTimeout(() => {
-        if (this.confirmTimer) {
-          this.confirmTimer = null
-          propsOnClick(e)
-        }
-      }, 3000)
-    } else if (propsOnClick && this.props.confirm && this.confirmTimer) {
-      clearTimeout(this.confirmTimer)
-      this.confirmTimer = null
+    if (propsOnClick && this.props.confirm && !this.state.confirmTimer) {
+      this.setState({
+        confirmTimer: setTimeout(() => {
+          this.setState({ confirmTimer: clearTimeout(this.state.confirmTimer) })
+        }, 3000),
+      })
+    } else if (propsOnClick && this.props.confirm && this.state.confirmTimer) {
+      this.setState({ confirmTimer: clearTimeout(this.state.confirmTimer) })
+      propsOnClick(e)
+    } else if (propsOnClick) {
       propsOnClick(e)
     }
   }
 
   render() {
-    const { confirm, ...props } = this.props
-    return <button {...props} />
+    const { confirm, children, ...props } = this.props
+    return (
+      <button {...props} onClick={this.onClick}>
+        {this.state.confirmTimer ? (
+          <React.Fragment>confirm: {children}</React.Fragment>
+        ) : (
+          children
+        )}
+      </button>
+    )
   }
 }

@@ -7,6 +7,7 @@ import { getRoleTeam, Roles, Team, getRoleWeight } from 'interfaces/cards'
 import { PromptView } from 'components/prompt'
 import { makeGameActionButtons } from 'components/gameButtons'
 import { Grid } from 'components/grid'
+import { Button } from 'components/button'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {
@@ -69,46 +70,32 @@ export class GameView extends React.Component<Props, State> {
         ))}
 
         <Grid>
-          <div>
-            {values(this.props.game.players)
-              .filter(p => isGood(p))
-              .sort(
-                (a, b) =>
-                  Math.abs(getRoleWeight(b.role)) -
-                  Math.abs(getRoleWeight(a.role))
-              )
-              .sort((a, b) => (a.alive ? 1 : 0))
-              .map(player => (
-                <PlayerRow player={player} key={player.name}>
-                  {makeGameActionButtons(this.props.game, player, game =>
-                    this.props.update({ game })
-                  )}
-                </PlayerRow>
-              ))}
-          </div>
-
-          <div>
-            {values(this.props.game.players)
-              .filter(p => !isGood(p))
-              .map(player => (
-                <PlayerRow player={player} key={player.name}>
-                  {makeGameActionButtons(this.props.game, player, game =>
-                    this.props.update({ game })
-                  )}
-                </PlayerRow>
-              ))}
-          </div>
+          {values(this.props.game.players)
+            .filter(p => isGood(p))
+            .sort(
+              (a, b) =>
+                Math.abs(getRoleWeight(b.role)) -
+                Math.abs(getRoleWeight(a.role))
+            )
+            .sort((a, b) => (a.alive ? 1 : 0))
+            .map(player => (
+              <PlayerRow player={player} key={player.name}>
+                {makeGameActionButtons(this.props.game, player, game =>
+                  this.props.update({ game })
+                )}
+              </PlayerRow>
+            ))}
         </Grid>
 
-        <Tabs grow>
-          <button className="red" onClick={() => this.props.endGame()}>
+        <Tabs>
+          <Button confirm className="red" onClick={() => this.props.endGame()}>
             end game
-          </button>
-          <button onClick={this.startNight}>
+          </Button>
+          <Button onClick={this.startNight}>
             {this.props.game.nightPrompts && this.props.game.nightPrompts.length
               ? 'next role'
               : 'start night'}
-          </button>
+          </Button>
         </Tabs>
 
         <div className="floating">

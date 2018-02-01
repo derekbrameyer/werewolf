@@ -6,6 +6,7 @@ import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'
 import { Card } from 'interfaces/cards'
 import { Grid } from 'components/grid'
+import { Button } from 'components/button'
 
 // Anything we want persisted to firebase
 export interface FirebaseProps {
@@ -72,8 +73,9 @@ export class Players extends React.Component<Props, State> {
           ))}
         </Grid>
 
-        <Tabs grow>
-          <button
+        <Tabs>
+          <Button
+            confirm
             className="red"
             disabled={!this.props.players.length}
             onClick={() => {
@@ -81,7 +83,7 @@ export class Players extends React.Component<Props, State> {
               this.props.update({ players: [] })
             }}>
             reset players
-          </button>
+          </Button>
         </Tabs>
 
         <span className="floating">
