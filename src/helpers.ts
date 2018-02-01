@@ -78,12 +78,4 @@ export const sortPlayers = (game: Game): Player[] => {
   return values(game.players).sort(
     (a, b) => getRoleWeight(b.role) - getRoleWeight(a.role)
   )
-  // this.props.game.cards
-  //   .reduce<Prompt[]>((prompts, card) => {
-  //     const action = nightAction(card.role)
-  //     return action ? prompts.concat(action) : prompts
-  //   }, [])
-  //   .concat({
-  //     message: 'werewolves wake up and kill someone',
-  //   })
 }

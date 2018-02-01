@@ -40,7 +40,6 @@ export class App extends React.Component<Props, State> {
   }
 
   updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
-    console.log(props)
     this.props.database.ref().update(
       toPairs<string, any>(props).reduce(
         (acc, [key, val]) => ({
@@ -50,6 +49,7 @@ export class App extends React.Component<Props, State> {
         {}
       )
     )
+    this.setState(props as any)
   }
 
   showMenu = () => this.setState({ view: 'menu' })

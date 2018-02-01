@@ -20,7 +20,6 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
     <Grid>
       {players.map(player => <Row key={player.name}>{player.name}</Row>)}
     </Grid>
-
     <h1>
       Deck ({cards.length} / <Weight weight={getDeckWeight(cards)} />):
     </h1>
@@ -31,7 +30,6 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
         </Row>
       ))}
     </Grid>
-
     <Tabs>
       <Button
         confirm

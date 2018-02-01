@@ -6,9 +6,9 @@ import {
   SetupPrompt,
   performPregameAction,
 } from 'interfaces/game'
-import { Card } from 'interfaces/cards'
+import { Card, Roles } from 'interfaces/cards'
 import { getRoles, getNumberOfARole } from 'helpers'
-import { sortBy, values } from 'ramda'
+import { sortBy, values, map } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { makePregameActionButton } from 'components/setupButtons'
@@ -59,7 +59,13 @@ export class SetupGame extends React.Component<Props, State> {
 
   componentDidUpdate() {
     if (!this.state.currentPrompt) {
-      this.props.done(this.state.game)
+      this.props.done({
+        ...this.state.game,
+        players: map(
+          player => ({ role: Roles.villager, ...player }),
+          this.state.game.players
+        ),
+      })
     }
   }
 

@@ -1,9 +1,10 @@
 import * as React from 'react'
+import * as cx from 'classnames'
 import { propEq, values } from 'ramda'
-import { Game, nightAction, Prompt, Player } from 'interfaces/game'
+import { Game, nightAction, Prompt, isRoleActive } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
-import { getRoleTeam, Roles, Team, getRoleWeight } from 'interfaces/cards'
+import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/cards'
 import { PromptView } from 'components/prompt'
 import { makeGameActionButtons } from 'components/gameButtons'
 import { Grid } from 'components/grid'
@@ -31,11 +32,25 @@ export class GameView extends React.Component<Props, State> {
             this.props.game.cards
               .sort((a, b) => b.weight - a.weight)
               .reduce<Prompt[]>((prompts, card) => {
-                const action = nightAction(card.role)
-                return action ? prompts.concat(action) : prompts
+                const prompt = nightAction(card.role)
+                return prompt
+                  ? prompts.concat({
+                      ...prompt,
+                      message: `${getRoleEmoji(card.role)} ${
+                        prompt.message
+                      } ${getRoleEmoji(card.role)}`,
+                      className: cx({
+                        dim: !isRoleActive(this.props.game, card.role),
+                      }),
+                    })
+                  : prompts
               }, [])
               .concat({
-                message: 'werewolves wake up and kill someone',
+                message: `${getRoleEmoji(
+                  Roles.werewolf
+                )} werewolves wake up and kill someone ${getRoleEmoji(
+                  Roles.werewolf
+                )}`,
               })
           ),
         },
@@ -54,10 +69,6 @@ export class GameView extends React.Component<Props, State> {
       p => getRoleTeam(p.role || Roles.villager) === Team.villager
     )
 
-    const isGood = (player: Player): boolean =>
-      getRoleTeam(player.role) === Team.villager ||
-      getRoleTeam(player.role) === Team.tanner
-
     return (
       <div>
         {(this.props.game.prompts || []).map(prompt => (
@@ -71,12 +82,6 @@ export class GameView extends React.Component<Props, State> {
 
         <Grid>
           {values(this.props.game.players)
-            .filter(p => isGood(p))
-            .sort(
-              (a, b) =>
-                Math.abs(getRoleWeight(b.role)) -
-                Math.abs(getRoleWeight(a.role))
-            )
             .sort((a, b) => (a.alive ? 1 : 0))
             .map(player => (
               <PlayerRow player={player} key={player.name}>

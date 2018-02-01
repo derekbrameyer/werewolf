@@ -4,7 +4,7 @@
 $base-font-size: 0.9rem;
 $spacing: 0.2rem;
 
-$card-height: 10rem;
+$card-height: 5.5rem;
 $card-min-width: 10rem;
 
 // ==============
@@ -87,6 +87,10 @@ h1 {
     button {
       padding-left: 0;
       padding-right: 0;
+    }
+
+    > * + * {
+      margin-left: 2 * $spacing;
     }
   }
 }

@@ -1,5 +1,6 @@
 import { Roles, Card } from 'interfaces/cards'
 import { updatePlayer, addPrompt, isPlayerAlive } from 'helpers'
+import { values } from 'ramda'
 
 type Id = string
 
@@ -71,11 +72,13 @@ export interface SetupPrompt {
   role: Roles
   message: string
   action?: PregameAction
+  className?: string
 }
 
 export interface Prompt {
   message: string
   action?: Action
+  className?: string
 }
 
 export const setupRole = (
@@ -345,4 +348,18 @@ export const performPregameAction = (
         links: (links || []).concat(action.buttons.link1),
       }))
   }
+}
+
+export const isRoleActive = (game: Game, role: Roles): boolean => {
+  const livingPlayers = values(game.players).filter(p => p.alive)
+  const isRoleInGame = !!livingPlayers.filter(p => p.role === role).length
+
+  const isSeerInGame = !!livingPlayers.find(p => p.role === Roles.seer)
+  const isApprenticeSeerInGame = !!livingPlayers.find(
+    p => p.role === Roles.seer
+  )
+
+  return role === Roles['apprentice seer']
+    ? !isSeerInGame && isApprenticeSeerInGame
+    : isRoleInGame
 }

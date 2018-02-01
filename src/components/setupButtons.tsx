@@ -163,7 +163,7 @@ export const makePregameActionButton = (
               }),
             })
           }}>
-          {player.role === prompt.role ? `undo ${prompt.role}` : prompt.role}
+          {player.role === prompt.role ? `undo role` : prompt.role}
         </Button>
       )}
 

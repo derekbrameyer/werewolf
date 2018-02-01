@@ -12,12 +12,12 @@ interface Props {
 }
 
 export const PromptView: React.SFC<Props> = ({
-  prompt: { action, message },
+  prompt: { action, message, className },
   game,
   done,
 }) => (
   <div className="prompt">
-    <h1>{message}</h1>
+    <h1 className={className}>{message}</h1>
     <Tabs>
       <button
         className="red"
