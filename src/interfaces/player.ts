@@ -9,6 +9,7 @@ export interface Player {
   links: Id[] | null
   copiedBy: Id | null
   protected: boolean
+  bitten: boolean
 }
 
 export const defaultPlayer: Player = {
@@ -17,5 +18,6 @@ export const defaultPlayer: Player = {
   links: null,
   copiedBy: null,
   protected: false,
+  bitten: false,
   role: null,
 }

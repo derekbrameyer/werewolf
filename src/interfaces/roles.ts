@@ -3,6 +3,7 @@ export enum Team {
   'minion' = 'minion',
   'villager' = 'villager',
   'tanner' = 'tanner',
+  'vampire' = 'vampire',
 }
 
 export enum Roles {
@@ -26,6 +27,7 @@ export enum Roles {
   'lycan' = 'lycan',
   'aura seer' = 'aura seer',
   'minion' = 'minion',
+  'vampire' = 'vampire',
 }
 
 export interface Card {
@@ -59,6 +61,7 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['prince']: return true
     case Roles['aura seer']: return true
     case Roles['lycan']: return false
+    case Roles['vampire']: return true
     case Roles['minion']: return false
   }
 }
@@ -70,13 +73,13 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['doppleganger']: return 1
     case Roles['cursed']: return 1
     case Roles['sorceress']: return 1
-    case Roles['werewolf']: return 5
+    case Roles['werewolf']: return 12
     case Roles['wolf cub']: return 1
     case Roles['witch']: return 1
     case Roles['big bad wolf']: return 1
     case Roles['cupid']: return 1
     case Roles['mason']: return 3
-    case Roles['villager']: return 15
+    case Roles['villager']: return 20
     case Roles['hunter']: return 1
     case Roles['seer']: return 1
     case Roles['apprentice seer']: return 1
@@ -86,6 +89,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['lycan']: return 1
     case Roles['aura seer']: return 1
     case Roles['minion']: return 1
+    case Roles['vampire']: return 8
   }
 }
 
@@ -114,6 +118,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['lycan']: return Team.villager
     case Roles['minion']: return Team.minion
     case Roles['aura seer']: return Team.villager
+    case Roles['vampire']: return Team.vampire
   }
 }
 
@@ -142,6 +147,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['minion']: return -6
     case Roles['aura seer']: return 3
     case Roles['lycan']: return -1
+    case Roles['vampire']: return -8
   }
 }
 
@@ -171,6 +177,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['lycan']: return '🦊'
     case Roles['aura seer']: return '😇'
     case Roles['minion']: return '😈'
+    case Roles['vampire']: return '🧛‍♀️'
   }
 }
 

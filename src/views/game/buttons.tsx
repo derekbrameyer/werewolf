@@ -6,6 +6,25 @@ import { gameHasRole, updatePlayer } from 'helpers/index'
 import { Roles } from 'interfaces/roles'
 import { Player } from 'interfaces/player'
 
+export const makeBite = (
+  game: Game,
+  player: Player,
+  update: (game: Game) => void
+) => {
+  if (!gameHasRole(game, Roles.vampire)) return null
+
+  return (
+    <Button
+      className={cx({ red: player.bitten })}
+      disabled={player.protected}
+      onClick={() =>
+        update(performAction(game, { type: 'bite', target: player.name }))
+      }>
+      {player.bitten ? 'bitten' : 'bite'}
+    </Button>
+  )
+}
+
 export const makeKill = (
   game: Game,
   player: Player,
@@ -85,6 +104,7 @@ export const makeGameActionButtons = (
       {player.alive && makeKill(game, player, update)}
       {player.alive && makeProtect(game, player, update)}
       {player.alive && toggleCursed(game, player, update)}
+      {player.alive && makeBite(game, player, update)}
     </React.Fragment>
   )
 }

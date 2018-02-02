@@ -16,6 +16,7 @@ export type Action =
     }
   | { type: 'protect'; target: Id }
   | { type: 'revive'; target: Id }
+  | { type: 'bite'; target: Id }
 
 export type PregameAction =
   | {
@@ -119,6 +120,7 @@ export const setupRole = (
     case Roles['sorceress']:
     case Roles['wolf cub']:
     case Roles['tanner']:
+    case Roles['vampire']:
     case Roles['aura seer']:
     case Roles['minion']:
     case Roles['bodyguard']:
@@ -164,6 +166,11 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
     case Roles['pi']:
       return {
         message: `${role}, wake up and point at some one, if that person or one of their neighbors is a wolf I will say yes`,
+      }
+
+    case Roles['vampire']:
+      return {
+        message: `${role}, wake up and bite someone, if that person gets two nominations from now on, they die`,
       }
 
     case Roles['wolf cub']:
@@ -227,6 +234,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['sorceress']:
     case Roles['bodyguard']:
     case Roles['cupid']:
+    case Roles['vampire']:
     case Roles['mason']:
     case Roles['doppleganger']:
     case Roles['lycan']:
@@ -293,6 +301,9 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
       return action.buttons.kill
         ? performAction(game, { type: 'force-kill', target: player.name })
         : game
+
+    case 'bite':
+      return updatePlayer(game, player.name, { bitten: !player.bitten })
 
     case 'revive':
       if (player.copiedBy) {

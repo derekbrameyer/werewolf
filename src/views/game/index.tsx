@@ -11,6 +11,7 @@ import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
+import { gameHasRole } from 'helpers'
 
 interface Props {
   game: Game
@@ -61,14 +62,29 @@ export class GameView extends React.Component<Props, State> {
     const theLivingWolves = theLiving.filter(
       p => getRoleTeam(p.role || Roles.villager) === Team.wolf
     ).length
-    const theLivingNonWolves = theLiving.length - theLivingWolves
+
+    const theLivingVampires = theLiving.filter(
+      p => getRoleTeam(p.role || Roles.villager) === Team.vampire
+    ).length
+
+    const theLivingNonWolves =
+      theLiving.length - theLivingWolves - theLivingVampires
 
     return (
       <Content>
         <Tabs navigation>
           <div>All Players: {theLiving.length}</div>
-          <div className="green">Villagers: {theLivingNonWolves} </div>
-          <div className="red">Wolves: {theLivingWolves}</div>
+          <div className="green">
+            {getRoleEmoji(Roles.villager)}: {theLivingNonWolves}{' '}
+          </div>
+          <div className="red">
+            {getRoleEmoji(Roles.werewolf)}: {theLivingWolves}
+          </div>
+          {gameHasRole(this.props.game, Roles.vampire) && (
+            <div className="red">
+              {getRoleEmoji(Roles.vampire)}: {theLivingVampires}
+            </div>
+          )}
         </Tabs>
 
         {(this.props.game.prompts || []).map(prompt => (
