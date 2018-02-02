@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { Button } from 'components/button'
-import { Game, Player, SetupPrompt } from 'interfaces/game'
-import { updatePlayer, getNumberOfARole } from 'helpers'
+import { Game, SetupPrompt } from 'interfaces/game'
+import { updatePlayer, getNumberOfARole } from 'helpers/index'
 import { values } from 'ramda'
+import { Player } from 'interfaces/player'
 
 export const makeLink = (
   game: Game,

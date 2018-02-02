@@ -1,6 +1,7 @@
-import { Roles, Card } from 'interfaces/cards'
-import { updatePlayer, addPrompt, isPlayerAlive } from 'helpers'
+import { Roles, Card } from 'interfaces/roles'
+import { updatePlayer, addPrompt, isPlayerAlive } from 'helpers/index'
 import { values } from 'ramda'
+import { Player } from 'interfaces/player'
 
 type Id = string
 
@@ -48,24 +49,6 @@ export interface Game {
   cards: Card[]
   prompts: Prompt[] | null
   nightPrompts: Prompt[] | null
-}
-
-export interface Player {
-  name: Id
-  role: Roles | null
-  alive: boolean
-  links: Id[] | null
-  copiedBy: Id | null
-  protected: boolean
-}
-
-export const defaultPlayer: Player = {
-  name: '',
-  alive: true,
-  links: null,
-  copiedBy: null,
-  protected: false,
-  role: null,
 }
 
 export interface SetupPrompt {

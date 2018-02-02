@@ -4,9 +4,9 @@ import { propEq, values } from 'ramda'
 import { Game, nightAction, Prompt, isRoleActive } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
-import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/cards'
+import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/roles'
 import { PromptView } from 'components/prompt'
-import { makeGameActionButtons } from 'components/gameButtons'
+import { makeGameActionButtons } from 'views/game/buttons'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 
@@ -64,17 +64,15 @@ export class GameView extends React.Component<Props, State> {
     )
     const theLivingWolves = theLiving.filter(
       p => getRoleTeam(p.role || Roles.villager) === Team.wolf
-    )
-    const theLivingVillagers = theLiving.filter(
-      p => getRoleTeam(p.role || Roles.villager) === Team.villager
-    )
+    ).length
+    const theLivingNonWolves = theLiving.length - theLivingWolves
 
     return (
       <div>
         <Tabs navigation>
-          <div>All Players: {theLiving.length}</div>
-          <div className="green">Villagers: {theLivingVillagers.length} </div>
-          <div className="red">Wolves: {theLivingWolves.length}</div>
+          <div>All Players: {theLiving.length}</div>,
+          <div className="green">Villagers: {theLivingNonWolves} </div>,
+          <div className="red">Wolves: {theLivingWolves}</div>,
         </Tabs>
 
         {(this.props.game.prompts || []).map(prompt => (

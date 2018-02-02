@@ -2,7 +2,7 @@ import * as React from 'react'
 import { toPairs } from 'ramda'
 import { Prompt, Game, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
-import { removePrompt } from 'helpers'
+import { removePrompt } from 'helpers/index'
 import { Button } from 'components/button'
 
 interface Props {

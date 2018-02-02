@@ -1,19 +1,19 @@
 import * as React from 'react'
 import {
-  Player,
   Game,
   setupRole,
   SetupPrompt,
   performPregameAction,
 } from 'interfaces/game'
-import { Card, Roles, getRoleEmoji } from 'interfaces/cards'
-import { getRoles, getNumberOfARole } from 'helpers'
+import { Card, Roles, getRoleEmoji } from 'interfaces/roles'
+import { getRoles, getNumberOfARole } from 'helpers/index'
 import { sortBy, values, map } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
-import { makePregameActionButton } from 'components/setupButtons'
+import { makePregameActionButton } from 'views/setup/buttons'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
+import { Player } from 'interfaces/player'
 
 // Any state you want to persist to firebase
 export interface FirebaseProps {}

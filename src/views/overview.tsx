@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Player } from 'interfaces/game'
-import { Card } from 'interfaces/cards'
-import { getDeckWeight, getRoles, getNumberOfARole } from 'helpers'
+import { Player } from 'interfaces/player'
+import { Card } from 'interfaces/roles'
+import { getDeckWeight, getRoles, getNumberOfARole } from 'helpers/index'
 import { Tabs } from 'components/tabs'
 import { Row } from 'components/row'
 import { Weight } from 'components/weight'
@@ -27,6 +27,7 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
         {role} @ {getNumberOfARole(role, cards)}
       </Row>
     ))}
+
     <Tabs actions>
       <Button
         confirm

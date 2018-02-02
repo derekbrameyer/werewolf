@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { Player } from 'interfaces/game'
+import { Player } from 'interfaces/player'
 import {
   Row,
   RowActions,
@@ -9,7 +9,7 @@ import {
   RowTitle,
   RowSbuTitle,
 } from 'components/row'
-import { getRoleEmoji } from 'interfaces/cards'
+import { getRoleEmoji } from 'interfaces/roles'
 
 interface Props {
   player: Player

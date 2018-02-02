@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { getNumberOfARole } from 'helpers'
-import { Card, getRoleEmoji } from 'interfaces/cards'
+import { getNumberOfARole } from 'helpers/index'
+import { Card, getRoleEmoji } from 'interfaces/roles'
 import {
   Row,
   RowActions,

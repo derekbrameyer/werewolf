@@ -14,11 +14,7 @@ export const Tabs: React.SFC<Props> = ({
   actions,
   navigation,
 }) => (
-  <Row
-    className={cx('tabs', className, {
-      actions,
-      navigation,
-    })}>
+  <Row className={cx('tabs', className, { actions, navigation })}>
     {children}
   </Row>
 )

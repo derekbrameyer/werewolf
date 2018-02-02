@@ -4,7 +4,7 @@ import { find, whereEq, remove, findIndex } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'
-import { Card } from 'interfaces/cards'
+import { Card } from 'interfaces/roles'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 

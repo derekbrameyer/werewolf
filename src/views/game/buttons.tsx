@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Button } from 'components/button'
-import { Game, Player, performAction } from 'interfaces/game'
-import { gameHasRole, updatePlayer } from 'helpers'
-import { Roles } from 'interfaces/cards'
+import { Game, performAction } from 'interfaces/game'
+import { gameHasRole, updatePlayer } from 'helpers/index'
+import { Roles } from 'interfaces/roles'
+import { Player } from 'interfaces/player'
 
 export const makeKill = (
   game: Game,

@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Card, AllCards } from 'interfaces/cards'
-import { getNumberOfARole } from 'helpers'
+import { Card, AllCards } from 'interfaces/roles'
+import { getNumberOfARole } from 'helpers/index'
 import { remove, findIndex, propEq } from 'ramda'
 import { CardRow } from 'components/card'
 import { Tabs } from 'components/tabs'
-import { Player } from 'interfaces/game'
+import { Player } from 'interfaces/player'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 
