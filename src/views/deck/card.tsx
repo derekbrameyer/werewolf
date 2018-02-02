@@ -9,7 +9,7 @@ import {
   RowDetail,
   RowTitle,
   RowSbuTitle,
-} from 'components/row'
+} from 'components/layout'
 import { Weight } from 'components/weight'
 
 interface Props {

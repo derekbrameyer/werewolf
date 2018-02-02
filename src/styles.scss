@@ -1,10 +1,10 @@
 // ==============
 // Variables
 // ==============
-$base-font-size: 0.9rem;
+$base-font-size: 1rem;
 $spacing: 0.2rem;
 
-$card-height: 5.5rem;
+$card-height: 6rem;
 $card-min-width: 10rem;
 
 $nav-height: 4rem;
@@ -121,11 +121,9 @@ h1 {
 // Tabs
 // ==============
 .tabs {
-  overflow-x: scroll;
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  align-items: stretch;
   height: $nav-height;
-  justify-content: center;
   line-height: $nav-height;
 
   .active {
@@ -136,8 +134,9 @@ h1 {
     color: lightgray;
   }
 
-  button {
+  > * {
     flex: 1 1 auto;
+    text-align: center;
   }
 }
 
@@ -153,6 +152,7 @@ h1 {
 
 .tabs.actions {
   border-top: 1px solid black;
+  margin-top: auto;
 }
 
 // ==============
@@ -176,4 +176,13 @@ h1 {
 
 .input-container {
   padding: 5 * $spacing;
+}
+
+.content {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  > * {
+    flex: 0 0 auto;
+  }
 }

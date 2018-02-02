@@ -14,14 +14,12 @@ import { makePregameActionButton } from 'views/setup/buttons'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 import { Player } from 'interfaces/player'
+import { updateFirebase } from 'helpers/firebase'
+import { Content } from 'components/layout'
 
-// Any state you want to persist to firebase
-export interface FirebaseProps {}
-
-interface Props extends FirebaseProps {
+interface Props {
   players: Player[]
   cards: Card[]
-  done: (game: Game) => void
 }
 
 interface State {
@@ -59,12 +57,14 @@ export class SetupGame extends React.Component<Props, State> {
 
   componentDidUpdate() {
     if (!this.state.currentPrompt) {
-      this.props.done({
-        ...this.state.game,
-        players: map(
-          player => ({ role: Roles.villager, ...player }),
-          this.state.game.players
-        ),
+      updateFirebase({
+        game: {
+          ...this.state.game,
+          players: map(
+            player => ({ role: Roles.villager, ...player }),
+            this.state.game.players
+          ),
+        },
       })
     }
   }
@@ -121,7 +121,7 @@ export class SetupGame extends React.Component<Props, State> {
     if (!currentPrompt) return null
 
     return (
-      <div>
+      <Content>
         <h1 className="prompt">
           {getRoleEmoji(currentPrompt.role)} {currentPrompt.role},{' '}
           {currentPrompt.message} {getRoleEmoji(currentPrompt.role)}
@@ -143,7 +143,7 @@ export class SetupGame extends React.Component<Props, State> {
         </Grid>
 
         {this.makeDoneButton()}
-      </div>
+      </Content>
     )
   }
 }

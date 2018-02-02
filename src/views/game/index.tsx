@@ -5,19 +5,15 @@ import { Game, nightAction, Prompt, isRoleActive } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
 import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/roles'
-import { PromptView } from 'components/prompt'
+import { PromptView } from 'views/game/prompt'
 import { makeGameActionButtons } from 'views/game/buttons'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
+import { updateFirebase } from 'helpers/firebase'
+import { Content } from 'components/layout'
 
-// Any state you want to persist to firebase
-export interface FirebaseProps {
+interface Props {
   game: Game
-}
-
-interface Props extends FirebaseProps {
-  update: (props: FirebaseProps) => void
-  endGame: () => void
 }
 
 interface State {}
@@ -25,7 +21,7 @@ interface State {}
 export class GameView extends React.Component<Props, State> {
   startNight = () => {
     if (!this.props.game.nightPrompts || !this.props.game.nightPrompts.length) {
-      this.props.update({
+      updateFirebase({
         game: {
           ...this.props.game,
           prompts: (this.props.game.prompts || []).concat(
@@ -68,17 +64,17 @@ export class GameView extends React.Component<Props, State> {
     const theLivingNonWolves = theLiving.length - theLivingWolves
 
     return (
-      <div>
+      <Content>
         <Tabs navigation>
-          <div>All Players: {theLiving.length}</div>,
-          <div className="green">Villagers: {theLivingNonWolves} </div>,
-          <div className="red">Wolves: {theLivingWolves}</div>,
+          <div>All Players: {theLiving.length}</div>
+          <div className="green">Villagers: {theLivingNonWolves} </div>
+          <div className="red">Wolves: {theLivingWolves}</div>
         </Tabs>
 
         {(this.props.game.prompts || []).map(prompt => (
           <PromptView
             game={this.props.game}
-            done={game => this.props.update({ game })}
+            done={game => updateFirebase({ game })}
             prompt={prompt}
             key={prompt.message}
           />
@@ -90,14 +86,17 @@ export class GameView extends React.Component<Props, State> {
             .map(player => (
               <PlayerRow player={player} key={player.name}>
                 {makeGameActionButtons(this.props.game, player, game =>
-                  this.props.update({ game })
+                  updateFirebase({ game })
                 )}
               </PlayerRow>
             ))}
         </Grid>
 
         <Tabs actions>
-          <Button confirm className="red" onClick={() => this.props.endGame()}>
+          <Button
+            confirm
+            className="red"
+            onClick={() => updateFirebase({ game: null })}>
             end game
           </Button>
           <Button onClick={this.startNight}>
@@ -106,7 +105,7 @@ export class GameView extends React.Component<Props, State> {
               : 'start night'}
           </Button>
         </Tabs>
-      </div>
+      </Content>
     )
   }
 }

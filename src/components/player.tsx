@@ -8,7 +8,7 @@ import {
   RowDetail,
   RowTitle,
   RowSbuTitle,
-} from 'components/row'
+} from 'components/layout'
 import { getRoleEmoji } from 'interfaces/roles'
 
 interface Props {

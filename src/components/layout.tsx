@@ -29,3 +29,7 @@ export const RowTitle: React.SFC<Props> = ({ children, className }) => (
 export const RowActions: React.SFC<Props> = ({ children, className }) => (
   <div className={cx('row--actions', className)}>{children}</div>
 )
+
+export const Content: React.SFC<Props> = ({ children, className }) => (
+  <div className={cx('content', className)}>{children}</div>
+)

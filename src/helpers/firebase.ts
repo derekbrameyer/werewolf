@@ -13,10 +13,16 @@ firebase.initializeApp({
   messagingSenderId: '529798462395',
 })
 
-interface FirebaseState {
+export interface FirebaseState {
   game: Game | null
-  players: Player[] | null
-  cards: Card[] | null
+  players: Player[]
+  cards: Card[]
+}
+
+export const defaultFirebaseState: FirebaseState = {
+  cards: [],
+  players: [],
+  game: null,
 }
 
 export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) =>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Row } from 'components/row'
+import { Row } from 'components/layout'
 
 interface Props {
   onSubmit: (value: any) => void

@@ -2,20 +2,17 @@ import * as React from 'react'
 import { Card, AllCards } from 'interfaces/roles'
 import { getNumberOfARole } from 'helpers/index'
 import { remove, findIndex, propEq } from 'ramda'
-import { CardRow } from 'components/card'
+import { CardRow } from 'views/deck/card'
 import { Tabs } from 'components/tabs'
 import { Player } from 'interfaces/player'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
+import { updateFirebase } from 'helpers/firebase'
+import { Content } from 'components/layout'
 
-export interface FirebaseProps {
-  cards: Card[]
-}
-
-interface Props extends FirebaseProps {
-  done: () => void
-  update: (props: FirebaseProps) => void
+interface Props {
   players: Player[]
+  cards: Card[]
 }
 
 export class BuildDeck extends React.Component<Props> {
@@ -23,7 +20,7 @@ export class BuildDeck extends React.Component<Props> {
     <CardRow deck={this.props.cards} card={card} id={card.role} key={card.role}>
       <button
         onClick={() =>
-          this.props.update({
+          updateFirebase({
             cards: remove(
               findIndex(propEq('role', card.role), this.props.cards),
               1,
@@ -36,7 +33,7 @@ export class BuildDeck extends React.Component<Props> {
       </button>
       <button
         onClick={() =>
-          this.props.update({
+          updateFirebase({
             cards: this.props.cards.concat(card),
           })
         }
@@ -50,7 +47,7 @@ export class BuildDeck extends React.Component<Props> {
 
   render() {
     return (
-      <div>
+      <Content>
         <h1>positive</h1>
         <Grid>
           {AllCards.filter(c => c.weight >= 0)
@@ -69,11 +66,11 @@ export class BuildDeck extends React.Component<Props> {
             confirm
             className="red"
             disabled={!this.props.cards.length}
-            onClick={() => this.props.update({ cards: [] })}>
+            onClick={() => updateFirebase({ cards: [] })}>
             reset deck
           </Button>
         </Tabs>
-      </div>
+      </Content>
     )
   }
 }

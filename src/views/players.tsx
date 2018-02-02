@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Player, defaultPlayer } from 'interfaces/game'
+import { Player, defaultPlayer } from 'interfaces/player'
 import { find, whereEq, remove, findIndex } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
@@ -7,15 +7,11 @@ import { Input } from 'components/input'
 import { Card } from 'interfaces/roles'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
+import { updateFirebase } from 'helpers/firebase'
+import { Content } from 'components/layout'
 
-// Anything we want persisted to firebase
-export interface FirebaseProps {
+interface Props {
   players: Player[]
-}
-
-interface Props extends FirebaseProps {
-  done: () => void
-  update: (props: FirebaseProps) => void
   cards: Card[]
 }
 interface State {
@@ -27,7 +23,7 @@ export class Players extends React.Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <Content>
         <Input
           id="player-name"
           value={this.state.playerName}
@@ -42,7 +38,7 @@ export class Players extends React.Component<Props, State> {
               playerName: '',
             })
 
-            this.props.update({
+            updateFirebase({
               players: [
                 ...this.props.players,
                 { ...defaultPlayer, name: value },
@@ -56,7 +52,7 @@ export class Players extends React.Component<Props, State> {
             <PlayerRow player={player} key={player.name}>
               <button
                 onClick={() => {
-                  this.props.update({
+                  updateFirebase({
                     players: remove(
                       findIndex(
                         whereEq({ name: player.name }),
@@ -80,12 +76,12 @@ export class Players extends React.Component<Props, State> {
             disabled={!this.props.players.length}
             onClick={() => {
               this.setState({ playerName: '' })
-              this.props.update({ players: [] })
+              updateFirebase({ players: [] })
             }}>
             reset players
           </Button>
         </Tabs>
-      </div>
+      </Content>
     )
   }
 }

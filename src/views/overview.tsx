@@ -3,18 +3,18 @@ import { Player } from 'interfaces/player'
 import { Card } from 'interfaces/roles'
 import { getDeckWeight, getRoles, getNumberOfARole } from 'helpers/index'
 import { Tabs } from 'components/tabs'
-import { Row } from 'components/row'
+import { Row, Content } from 'components/layout'
 import { Weight } from 'components/weight'
 import { Button } from 'components/button'
+import { defaultFirebaseState, updateFirebase } from 'helpers/firebase'
 
 interface Props {
   players: Player[]
   cards: Card[]
-  reset: () => void
 }
 
-export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
-  <div>
+export const Overview: React.SFC<Props> = ({ players, cards }) => (
+  <Content>
     <h1>players: {players.length}</h1>
     {players.map(player => <Row key={player.name}>{player.name}</Row>)}
 
@@ -33,9 +33,9 @@ export const Overview: React.SFC<Props> = ({ players, cards, reset }) => (
         confirm
         className="red"
         disabled={!players.length && !cards.length}
-        onClick={reset}>
+        onClick={() => updateFirebase(defaultFirebaseState)}>
         reset everything
       </Button>
     </Tabs>
-  </div>
+  </Content>
 )

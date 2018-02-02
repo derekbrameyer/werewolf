@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { Row } from 'components/row'
+import { Row } from 'components/layout'
 
 interface Props {
   className?: string
