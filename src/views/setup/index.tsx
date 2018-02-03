@@ -6,7 +6,7 @@ import {
   performPregameAction,
 } from 'interfaces/game'
 import { Card, Roles, getRoleEmoji } from 'interfaces/roles'
-import { getRoles, getNumberOfARole } from 'helpers/index'
+import { getRoles, getNumberOfARole, comparePlayersName } from 'helpers/index'
 import { sortBy, values, map } from 'ramda'
 import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
@@ -128,18 +128,20 @@ export class SetupGame extends React.Component<Props, State> {
         </h1>
 
         <Grid>
-          {values(game.players).map(player => (
-            <PlayerRow player={player} key={player.name}>
-              {makePregameActionButton(
-                this.state.game,
-                player,
-                currentPrompt,
-                ({ game, prompt }) => {
-                  this.setState({ currentPrompt: prompt, game })
-                }
-              )}
-            </PlayerRow>
-          ))}
+          {values(game.players)
+            .sort(comparePlayersName)
+            .map(player => (
+              <PlayerRow player={player} key={player.name}>
+                {makePregameActionButton(
+                  this.state.game,
+                  player,
+                  currentPrompt,
+                  ({ game, prompt }) => {
+                    this.setState({ currentPrompt: prompt, game })
+                  }
+                )}
+              </PlayerRow>
+            ))}
         </Grid>
 
         {this.makeDoneButton()}

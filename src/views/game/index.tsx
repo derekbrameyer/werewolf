@@ -6,12 +6,12 @@ import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
 import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/roles'
 import { PromptView } from 'views/game/prompt'
-import { makeGameActionButtons } from 'views/game/buttons'
+import { makeGameButtons } from 'views/game/buttons'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
-import { gameHasRole } from 'helpers'
+import { gameHasRole, comparePlayersFull } from 'helpers'
 
 interface Props {
   game: Game
@@ -28,11 +28,12 @@ export class GameView extends React.Component<Props, State> {
           prompts: (this.props.game.prompts || []).concat(
             this.props.game.cards
               .sort((a, b) => b.weight - a.weight)
-              .reduce<Prompt[]>((prompts, card) => {
+              .reduce<Prompt[]>((prompts, card, i) => {
                 const prompt = nightAction(card.role)
                 return prompt
                   ? prompts.concat({
                       ...prompt,
+                      key: `${i}.${Math.random()}).toString()`,
                       message: `${getRoleEmoji(card.role)} ${
                         prompt.message
                       } ${getRoleEmoji(card.role)}`,
@@ -98,12 +99,10 @@ export class GameView extends React.Component<Props, State> {
 
         <Grid>
           {values(this.props.game.players)
-            .sort((a, b) => (a.alive ? 1 : 0))
+            .sort(comparePlayersFull)
             .map(player => (
               <PlayerRow player={player} key={player.name}>
-                {makeGameActionButtons(this.props.game, player, game =>
-                  updateFirebase({ game })
-                )}
+                {makeGameButtons(this.props.game, player)}
               </PlayerRow>
             ))}
         </Grid>

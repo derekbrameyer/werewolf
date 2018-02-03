@@ -60,3 +60,23 @@ export const removePrompt = (game: Game, message: string): Game => ({
   ...game,
   prompts: removeFirst(propEq('message', message), game.prompts || []),
 })
+
+export const comparePlayersFull = (a: Player, b: Player): number => {
+  const aName = a.name.toUpperCase()
+  const bName = b.name.toUpperCase()
+
+  if (a.alive && !b.alive) return -1
+  else if (!a.alive && b.alive) return 1
+  else if (aName < bName) return -1
+  else if (aName > bName) return 1
+  else return 0
+}
+
+export const comparePlayersName = (a: Player, b: Player): number => {
+  const aName = a.name.toUpperCase()
+  const bName = b.name.toUpperCase()
+
+  if (aName < bName) return -1
+  else if (aName > bName) return 1
+  else return 0
+}

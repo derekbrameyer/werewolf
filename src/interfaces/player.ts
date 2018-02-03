@@ -10,6 +10,7 @@ export interface Player {
   copiedBy: Id | null
   protected: boolean
   bitten: boolean
+  blessed: boolean
 }
 
 export const defaultPlayer: Player = {
@@ -19,5 +20,6 @@ export const defaultPlayer: Player = {
   copiedBy: null,
   protected: false,
   bitten: false,
+  blessed: false,
   role: null,
 }

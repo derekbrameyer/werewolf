@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { toPairs } from 'ramda'
-import { Prompt, Game, performAction } from 'interfaces/game'
+import { Prompt, Game } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { removePrompt } from 'helpers/index'
+import { makeActionButton } from './buttons'
 import { Button } from 'components/button'
 
 interface Props {
@@ -12,43 +12,27 @@ interface Props {
 }
 
 export const PromptView: React.SFC<Props> = ({
-  prompt: { action, message, className },
+  prompt: { actions = [], message, className, target },
   game,
   done,
 }) => (
   <div className="prompt">
     <h1 className={className}>{message}</h1>
     <Tabs>
-      <button
+      <Button
         className="red"
         onClick={() => {
           done(removePrompt(game, message))
         }}>
         dismiss
-      </button>
+      </Button>
 
-      {action &&
-        'buttons' in action &&
-        toPairs<string, boolean>(action.buttons).map(([key, value]) => (
-          <Button
-            key={key}
-            onClick={() => {
-              done(
-                removePrompt(
-                  performAction(game, {
-                    ...action,
-                    buttons: {
-                      ...action.buttons,
-                      [key]: true,
-                    },
-                  }),
-                  message
-                )
-              )
-            }}>
-            {key}
-          </Button>
-        ))}
+      {target &&
+        actions.map(type =>
+          makeActionButton(game, game.players[target], type, game =>
+            done(removePrompt(game, message))
+          )
+        )}
     </Tabs>
   </div>
 )

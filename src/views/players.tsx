@@ -9,6 +9,7 @@ import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
+import { comparePlayersName } from 'helpers'
 
 interface Props {
   players: Player[]
@@ -48,7 +49,7 @@ export class Players extends React.Component<Props, State> {
         />
 
         <Grid>
-          {this.props.players.map(player => (
+          {this.props.players.sort(comparePlayersName).map(player => (
             <PlayerRow player={player} key={player.name}>
               <button
                 onClick={() => {

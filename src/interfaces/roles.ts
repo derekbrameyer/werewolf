@@ -1,3 +1,5 @@
+import { Action } from 'interfaces/game'
+
 export enum Team {
   'wolf' = 'wolf',
   'minion' = 'minion',
@@ -28,6 +30,7 @@ export enum Roles {
   'aura seer' = 'aura seer',
   'minion' = 'minion',
   'vampire' = 'vampire',
+  'priest' = 'priest',
 }
 
 export interface Card {
@@ -37,6 +40,7 @@ export interface Card {
   cardCount: number
   emoji: string
   wakesUp: boolean
+  actions: Action['type'][]
 }
 
 export const doesRoleWakeUp = (role: Roles): boolean => {
@@ -63,6 +67,7 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['lycan']: return false
     case Roles['vampire']: return true
     case Roles['minion']: return false
+    case Roles['priest']: return true
   }
 }
 
@@ -90,6 +95,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['aura seer']: return 1
     case Roles['minion']: return 1
     case Roles['vampire']: return 8
+    case Roles['priest']: return 1
   }
 }
 
@@ -118,6 +124,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['lycan']: return Team.villager
     case Roles['minion']: return Team.minion
     case Roles['aura seer']: return Team.villager
+    case Roles['priest']: return Team.villager
     case Roles['vampire']: return Team.vampire
   }
 }
@@ -147,6 +154,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['minion']: return -6
     case Roles['aura seer']: return 3
     case Roles['lycan']: return -1
+    case Roles['priest']: return 3
     case Roles['vampire']: return -8
   }
 }
@@ -176,8 +184,42 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['prince']: return '🤴'
     case Roles['lycan']: return '🦊'
     case Roles['aura seer']: return '😇'
+    case Roles['priest']: return '🙏'
     case Roles['minion']: return '😈'
     case Roles['vampire']: return '🧛‍♀️'
+  }
+}
+
+export const getRoleActions = (
+  role: Roles | undefined | null
+): Action['type'][] => {
+  // prettier-ignore
+  if (!role) return []
+
+  // prettier-ignore
+  switch (role) {
+    case Roles['apprentice seer']: return []
+    case Roles['seer']: return []
+    case Roles['bodyguard']: return []
+    case Roles['cupid']: return []
+    case Roles['cursed']: return ['transform']
+    case Roles['doppleganger']: return []
+    case Roles['hunter']: return []
+    case Roles['mason']: return []
+    case Roles['sorceress']: return []
+    case Roles['villager']: return []
+    case Roles['witch']: return []
+    case Roles['big bad wolf']: return []
+    case Roles['werewolf']: return []
+    case Roles['wolf cub']: return []
+    case Roles['tanner']: return []
+    case Roles['pi']: return []
+    case Roles['prince']: return []
+    case Roles['lycan']: return []
+    case Roles['aura seer']: return []
+    case Roles['minion']: return []
+    case Roles['priest']: return []
+    case Roles['vampire']: return []
   }
 }
 
@@ -189,4 +231,5 @@ export const AllCards: Card[] = AllRoles.map((role: any) => ({
   cardCount: getRoleCardCount(role),
   emoji: getRoleEmoji(role),
   wakesUp: doesRoleWakeUp(role),
+  actions: getRoleActions(role),
 }))

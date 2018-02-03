@@ -5,7 +5,7 @@ $base-font-size: 1rem;
 $spacing: 0.2rem;
 
 $card-height: 6rem;
-$card-min-width: 10rem;
+$card-min-width: 11rem;
 
 $nav-height: 4rem;
 
@@ -93,7 +93,7 @@ h1 {
     }
 
     > * + * {
-      margin-left: 2 * $spacing;
+      // margin-left: 2 * $spacing;
     }
   }
 }
@@ -114,6 +114,9 @@ h1 {
 
   .row--subtitle {
     white-space: pre-wrap;
+  }
+  .row--actions {
+    flex-wrap: wrap;
   }
 }
 
@@ -179,6 +182,7 @@ h1 {
 }
 
 .content {
+  position: relative;
   display: flex;
   flex-flow: column;
   height: 100%;
