@@ -4,10 +4,10 @@
 $base-font-size: 1rem;
 $spacing: 0.2rem;
 
-$card-height: 6rem;
-$card-min-width: 11rem;
+$card-height: 5rem;
+$card-min-width: 7.5rem;
 
-$nav-height: 4rem;
+$nav-height: 2.6rem;
 
 // ==============
 // Globals
@@ -45,7 +45,18 @@ input {
 h1 {
   padding: $spacing;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
+}
+h2 {
+  font-weight: bold;
+}
+h3 {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.7rem;
+}
+ul {
+  margin-left: 2 * $spacing;
 }
 
 .green {
@@ -72,50 +83,33 @@ h1 {
   > * + * {
     margin-left: 3 * $spacing;
   }
+}
 
-  .row--title {
-    font-weight: bold;
-  }
+.actions {
+  padding: 0;
+  display: flex;
 
-  .row--subtitle {
-    font-weight: normal;
-    font-style: italic;
-    font-size: 0.7rem;
-  }
-
-  .row--actions {
-    padding: 0;
-    display: flex;
-
-    button {
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    > * + * {
-      // margin-left: 2 * $spacing;
-    }
+  button {
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 2 * $spacing;
   }
 }
 
-.player-row,
-.card-row {
-  height: $card-height;
+.player,
+.card {
+  min-height: $card-height;
 
-  .row--detail {
-    min-width: 0;
-  }
-
-  .row--title {
+  h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .row--subtitle {
+  h3 {
     white-space: pre-wrap;
   }
-  .row--actions {
+  .actions {
     flex-wrap: wrap;
   }
 }
@@ -125,8 +119,8 @@ h1 {
 // ==============
 .tabs {
   overflow-x: auto;
+  display: flex;
   -webkit-overflow-scrolling: touch;
-  height: $nav-height;
   line-height: $nav-height;
 
   .active {
@@ -138,12 +132,13 @@ h1 {
   }
 
   > * {
-    flex: 1 1 auto;
+    flex: 1 0 auto;
     text-align: center;
   }
 }
 
 .tabs.navigation {
+  height: $nav-height;
   position: fixed;
   top: 0;
   left: 0;
@@ -154,6 +149,7 @@ h1 {
 }
 
 .tabs.actions {
+  height: $nav-height;
   border-top: 1px solid black;
   margin-top: auto;
 }
@@ -163,7 +159,11 @@ h1 {
 // ==============
 .grid {
   display: grid;
-  grid-gap: $spacing;
+
+  $grid-spacing: $spacing;
+  grid-gap: $grid-spacing;
+  padding: $grid-spacing;
+
   grid-template-columns: repeat(auto-fill, minmax($card-min-width, 1fr));
   align-items: start;
 }
@@ -172,8 +172,6 @@ h1 {
 // Prompt
 // ==============
 .prompt {
-  padding: 4 * $spacing 0 4 * $spacing;
-  margin-bottom: 4 * $spacing;
   border-bottom: 1px solid black;
 }
 
@@ -189,4 +187,9 @@ h1 {
   > * {
     flex: 0 0 auto;
   }
+}
+
+.night-kills {
+  text-align: center;
+  margin: 2 * $spacing;
 }

@@ -47,8 +47,10 @@ export const makeActionButton = (
         done(performAction(game, { type, target: player.name }))
       }}>
       {type === 'sudo kill' || type === 'kill'
-        ? player.alive ? type : `un-${type}`
-        : player[action.playerProp] ? `un-${type}` : type}
+        ? player.alive ? 'kill' : `revive`
+        : type === 'transform'
+          ? type
+          : player[action.playerProp] ? `un-${type}` : type}
     </Button>
   )
 }

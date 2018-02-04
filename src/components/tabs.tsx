@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { Row } from 'components/layout'
 
 interface Props {
   className?: string
@@ -14,7 +13,7 @@ export const Tabs: React.SFC<Props> = ({
   actions,
   navigation,
 }) => (
-  <Row className={cx('tabs', className, { actions, navigation })}>
+  <div className={cx('tabs', className, { actions, navigation })}>
     {children}
-  </Row>
+  </div>
 )

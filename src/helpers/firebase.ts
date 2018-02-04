@@ -25,7 +25,7 @@ export const defaultFirebaseState: FirebaseState = {
   game: null,
 }
 
-export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) =>
+export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
   database.ref().update(
     toPairs<string, any>(props).reduce(
       (acc, [key, val]) => ({
@@ -35,5 +35,14 @@ export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) =>
       {}
     )
   )
+
+  const prev = JSON.parse(
+    localStorage.getItem('wt-werewolf') || JSON.stringify(defaultFirebaseState)
+  )
+  localStorage.setItem(
+    'wt-werewolf',
+    JSON.stringify({ ...prev, ...(props as object) })
+  )
+}
 
 export const database = firebase.database()

@@ -71,6 +71,7 @@ export interface Game {
   cards: Card[]
   prompts: Prompt[] | null
   nightPrompts: Prompt[] | null
+  nightKills: Id[] | null
 }
 
 export interface SetupPrompt {
@@ -340,21 +341,26 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
         })
       }
 
-      const linkedLivingPlayers = (player.links || []).filter(name =>
-        isPlayerAlive(game, name)
-      )
-      if (linkedLivingPlayers.length) {
-        game = addPrompt(game, {
-          message: `${
-            player.name
-          } has died and was linked to ${linkedLivingPlayers.join(
-            ', '
-          )}, be sure to kill them too.`,
-        })
-      }
+      // Add prompts to kill linked player
+      game = (player.links || [])
+        .filter(name => isPlayerAlive(game, name))
+        .reduce((game, linkedPlayer) => {
+          return addPrompt(game, {
+            message: `${
+              player.name
+            } has died and was linked to ${linkedPlayer}`,
+            actions: ['kill'],
+            target: linkedPlayer,
+          })
+        }, game)
 
       if (action.type !== 'sudo kill') {
         game = addPrompt(game, deathAction(player))
+      }
+
+      game = {
+        ...game,
+        nightKills: (game.nightKills || []).concat(player.name),
       }
 
       return updatePlayer(game, player.name, { alive: false })

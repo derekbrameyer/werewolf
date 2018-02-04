@@ -155,7 +155,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['aura seer']: return 3
     case Roles['lycan']: return -1
     case Roles['priest']: return 3
-    case Roles['vampire']: return -8
+    case Roles['vampire']: return -7
   }
 }
 

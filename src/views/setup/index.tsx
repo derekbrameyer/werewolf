@@ -49,6 +49,7 @@ export class SetupGame extends React.Component<Props, State> {
         prompts: [],
         cards: this.props.cards,
         nightPrompts: null,
+        nightKills: null,
       },
       promptsRemaining: setups.slice(1),
       currentPrompt: setups[0],

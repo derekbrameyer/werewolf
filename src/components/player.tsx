@@ -1,14 +1,7 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Player } from 'interfaces/player'
-import {
-  Row,
-  RowActions,
-  RowImg,
-  RowDetail,
-  RowTitle,
-  RowSbuTitle,
-} from 'components/layout'
+import { Actions } from 'components/layout'
 import { getRoleEmoji } from 'interfaces/roles'
 
 interface Props {
@@ -17,23 +10,17 @@ interface Props {
 
 export const PlayerRow: React.SFC<Props> = ({ player, children }) => {
   return (
-    <Row className="player-row">
-      <RowImg className={cx({ dim: !player.alive })}>
-        {getRoleEmoji(player.role)}
-      </RowImg>
-      <RowDetail>
-        <RowTitle>
-          <span className={cx({ grey: !player.alive })}>{player.name}</span>
-          {player.role && <RowSbuTitle>{player.role}</RowSbuTitle>}
-          {player.links && (
-            <RowSbuTitle>links to: {player.links.join(', ')}</RowSbuTitle>
-          )}
-          {player.copiedBy && (
-            <RowSbuTitle>doppleganged by: {player.copiedBy}</RowSbuTitle>
-          )}
-        </RowTitle>
-        <RowActions>{children}</RowActions>
-      </RowDetail>
-    </Row>
+    <div className={cx('player', { dim: !player.alive })}>
+      <h2>
+        {player.role && getRoleEmoji(player.role)}
+        {player.name}
+      </h2>
+
+      {player.role && <h3>{player.role}</h3>}
+      {player.links && <h3>links to: {player.links.join(', ')}</h3>}
+      {player.copiedBy && <h3>doppleganged by: {player.copiedBy}</h3>}
+
+      <Actions>{children}</Actions>
+    </div>
   )
 }

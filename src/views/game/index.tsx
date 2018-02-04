@@ -25,6 +25,7 @@ export class GameView extends React.Component<Props, State> {
       updateFirebase({
         game: {
           ...this.props.game,
+          nightKills: [],
           prompts: (this.props.game.prompts || []).concat(
             this.props.game.cards
               .sort((a, b) => b.weight - a.weight)
@@ -87,6 +88,12 @@ export class GameView extends React.Component<Props, State> {
             </div>
           )}
         </Tabs>
+
+        {this.props.game.nightKills && (
+          <h3 className="night-kills">
+            Killed tonight: {this.props.game.nightKills.join(', ')}
+          </h3>
+        )}
 
         {(this.props.game.prompts || []).map(prompt => (
           <PromptView

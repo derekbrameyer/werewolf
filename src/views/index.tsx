@@ -9,7 +9,6 @@ import { Tabs } from 'components/tabs'
 import { Overview } from 'views/overview'
 import { Weight } from 'components/weight'
 import { GameView } from 'views/game'
-import { RowSbuTitle } from 'components/layout'
 import { FirebaseState, defaultFirebaseState, database } from 'helpers/firebase'
 
 interface Props {}
@@ -19,7 +18,13 @@ interface State extends FirebaseState {
 }
 
 export class App extends React.Component<Props, State> {
-  state: State = { ...defaultFirebaseState, view: 'menu' }
+  state: State = {
+    ...JSON.parse(
+      localStorage.getItem('wt-werewolf') ||
+        JSON.stringify(defaultFirebaseState)
+    ),
+    view: 'menu',
+  }
 
   componentWillMount() {
     database.ref('/').on('value', snapshot => {
@@ -47,17 +52,16 @@ export class App extends React.Component<Props, State> {
             className={cx({ active: this.state.view === 'deck' })}
             onClick={() => this.setState({ view: 'deck' })}>
             build deck
-            <RowSbuTitle>
+            <h3>
               cards: {this.state.cards.length}, balance:{' '}
               <Weight weight={getDeckWeight(this.state.cards)} />
-            </RowSbuTitle>
+            </h3>
           </button>
 
           <button
             className={cx({ active: this.state.view === 'players' })}
             onClick={() => this.setState({ view: 'players' })}>
-            manage players{' '}
-            <RowSbuTitle>players: {this.state.players.length}</RowSbuTitle>
+            manage players <h3>players: {this.state.players.length}</h3>
           </button>
 
           <button

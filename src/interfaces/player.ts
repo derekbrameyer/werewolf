@@ -5,6 +5,7 @@ type Id = string
 export interface Player {
   name: Id
   role: Roles | null
+  originalRole: Roles | null
   alive: boolean
   links: Id[] | null
   copiedBy: Id | null
@@ -22,4 +23,5 @@ export const defaultPlayer: Player = {
   bitten: false,
   blessed: false,
   role: null,
+  originalRole: null,
 }

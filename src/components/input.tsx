@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Row } from 'components/layout'
 
 interface Props {
   onSubmit: (value: any) => void
@@ -18,7 +17,7 @@ export const Input: React.SFC<Props> = ({
   label,
   id,
 }) => (
-  <Row className="input-container">
+  <div className="input-container">
     <label htmlFor={id}>{label}</label>
     <input
       id={id}
@@ -26,5 +25,5 @@ export const Input: React.SFC<Props> = ({
       onChange={e => onChange(e.target.value)}
       onKeyPress={e => e.key === 'Enter' && onSubmit(value)}
     />
-  </Row>
+  </div>
 )
