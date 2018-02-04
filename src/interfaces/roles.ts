@@ -1,4 +1,4 @@
-import { Action } from 'interfaces/game'
+import { Actions } from 'interfaces/actions'
 
 export enum Team {
   'wolf' = 'wolf',
@@ -40,7 +40,7 @@ export interface Card {
   cardCount: number
   emoji: string
   wakesUp: boolean
-  actions: Action['type'][]
+  actions: Actions[]
 }
 
 export const doesRoleWakeUp = (role: Roles): boolean => {
@@ -190,9 +190,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
   }
 }
 
-export const getRoleActions = (
-  role: Roles | undefined | null
-): Action['type'][] => {
+export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
   // prettier-ignore
   if (!role) return []
 

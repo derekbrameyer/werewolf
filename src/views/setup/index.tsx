@@ -1,10 +1,5 @@
 import * as React from 'react'
-import {
-  Game,
-  setupRole,
-  SetupPrompt,
-  performPregameAction,
-} from 'interfaces/game'
+import { Game, setupRole, performPregameAction } from 'interfaces/game'
 import { Card, Roles, getRoleEmoji } from 'interfaces/roles'
 import { getRoles, getNumberOfARole, comparePlayersName } from 'helpers/index'
 import { sortBy, values, map } from 'ramda'
@@ -16,10 +11,13 @@ import { Button } from 'components/button'
 import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
+import { SetupPrompt } from 'interfaces/prompt'
 
 interface Props {
   players: Player[]
   cards: Card[]
+  noFlip: boolean
+  timeLimit: number
 }
 
 interface State {
@@ -45,6 +43,10 @@ export class SetupGame extends React.Component<Props, State> {
           (memo, player) => ({ ...memo, [player.name]: player }),
           {}
         ),
+        options: {
+          timeLimit: this.props.timeLimit,
+          noFlip: this.props.noFlip,
+        },
         roles: getRoles(this.props.cards),
         prompts: [],
         cards: this.props.cards,

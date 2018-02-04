@@ -1,14 +1,14 @@
 import { Roles } from 'interfaces/roles'
 
-type Id = string
+export type PlayerId = string
 
 export interface Player {
-  name: Id
+  name: PlayerId
   role: Roles | null
   originalRole: Roles | null
   alive: boolean
-  links: Id[] | null
-  copiedBy: Id | null
+  links: PlayerId[] | null
+  copiedBy: PlayerId | null
   protected: boolean
   bitten: boolean
   blessed: boolean

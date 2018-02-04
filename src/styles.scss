@@ -38,7 +38,7 @@ button {
   }
 }
 
-input {
+input:not([type='checkbox']) {
   width: 100%;
 }
 
@@ -177,6 +177,13 @@ ul {
 
 .input-container {
   padding: 5 * $spacing;
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+
+  label {
+    margin-right: 2 * $spacing;
+  }
 }
 
 .content {

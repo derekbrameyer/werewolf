@@ -1,12 +1,14 @@
 import * as React from 'react'
 
 interface Props {
-  onSubmit: (value: any) => void
-  onChange: (value: any) => void
+  onSubmit?: (value: any) => void
+  onChange?: (value: any) => void
   label: string
   id: string
   className?: string
-  value: any
+  type?: 'text' | 'tel' | 'checkbox'
+  value?: any
+  checked?: any
 }
 
 export const Input: React.SFC<Props> = ({
@@ -15,15 +17,19 @@ export const Input: React.SFC<Props> = ({
   onChange,
   onSubmit,
   label,
+  type,
+  checked,
   id,
 }) => (
   <div className="input-container">
     <label htmlFor={id}>{label}</label>
     <input
       id={id}
+      type={type}
       value={value}
-      onChange={e => onChange(e.target.value)}
-      onKeyPress={e => e.key === 'Enter' && onSubmit(value)}
+      checked={checked}
+      onChange={e => onChange && onChange(e)}
+      onKeyPress={e => e.key === 'Enter' && onSubmit && onSubmit(value)}
     />
   </div>
 )

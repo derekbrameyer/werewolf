@@ -10,11 +10,12 @@ import { Overview } from 'views/overview'
 import { Weight } from 'components/weight'
 import { GameView } from 'views/game'
 import { FirebaseState, defaultFirebaseState, database } from 'helpers/firebase'
+import { Options } from 'views/options'
 
 interface Props {}
 
 interface State extends FirebaseState {
-  view: 'menu' | 'deck' | 'players' | 'setup'
+  view: 'menu' | 'deck' | 'players' | 'setup' | 'options'
 }
 
 export class App extends React.Component<Props, State> {
@@ -65,6 +66,12 @@ export class App extends React.Component<Props, State> {
           </button>
 
           <button
+            className={cx({ active: this.state.view === 'options' })}
+            onClick={() => this.setState({ view: 'options' })}>
+            game options
+          </button>
+
+          <button
             className={cx({ active: this.state.view === 'setup' })}
             disabled={
               !this.state.cards.length ||
@@ -77,7 +84,12 @@ export class App extends React.Component<Props, State> {
         </Tabs>
 
         {this.state.view === 'menu' && (
-          <Overview cards={this.state.cards} players={this.state.players} />
+          <Overview
+            cards={this.state.cards}
+            players={this.state.players}
+            noFlip={this.state.noFlip}
+            timeLimit={this.state.timeLimit}
+          />
         )}
 
         {this.state.view === 'deck' && (
@@ -88,8 +100,20 @@ export class App extends React.Component<Props, State> {
           <Players cards={this.state.cards} players={this.state.players} />
         )}
 
+        {this.state.view === 'options' && (
+          <Options
+            timeLimit={this.state.timeLimit}
+            noFlip={this.state.noFlip}
+          />
+        )}
+
         {this.state.view === 'setup' && (
-          <SetupGame cards={this.state.cards} players={this.state.players} />
+          <SetupGame
+            cards={this.state.cards}
+            players={this.state.players}
+            noFlip={this.state.noFlip}
+            timeLimit={this.state.timeLimit}
+          />
         )}
       </div>
     )

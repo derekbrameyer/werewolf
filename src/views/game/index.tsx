@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { propEq, values } from 'ramda'
-import { Game, nightAction, Prompt, isRoleActive } from 'interfaces/game'
+import { Game, nightAction, isRoleActive, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
 import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/roles'
@@ -12,6 +12,7 @@ import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { gameHasRole, comparePlayersFull } from 'helpers'
+import { Prompt } from 'interfaces/prompt'
 
 interface Props {
   game: Game
@@ -22,36 +23,44 @@ interface State {}
 export class GameView extends React.Component<Props, State> {
   startNight = () => {
     if (!this.props.game.nightPrompts || !this.props.game.nightPrompts.length) {
+      const nightPrompts: Prompt[] = this.props.game.cards
+        .sort((a, b) => b.weight - a.weight)
+        .reduce<Prompt[]>((prompts, card, i) => {
+          const prompt = nightAction(card.role)
+          const active = isRoleActive(this.props.game, card.role)
+
+          return prompt &&
+            (this.props.game.options.noFlip ||
+              (!this.props.game.options.noFlip && active))
+            ? prompts.concat({
+                ...prompt,
+                key: `${i}.${Math.random()}).toString()`,
+                message: `${getRoleEmoji(card.role)} ${
+                  prompt.message
+                } ${getRoleEmoji(card.role)}`,
+                className: cx({
+                  dim: !active,
+                }),
+                actions: ['next role'],
+              })
+            : prompts
+        }, [])
+        .concat({
+          message: `${getRoleEmoji(
+            Roles.werewolf
+          )} werewolves wake up and kill someone ${getRoleEmoji(
+            Roles.werewolf
+          )}`,
+        })
+
+      const [firstPrompt, ...rest] = nightPrompts
+
       updateFirebase({
         game: {
           ...this.props.game,
           nightKills: [],
-          prompts: (this.props.game.prompts || []).concat(
-            this.props.game.cards
-              .sort((a, b) => b.weight - a.weight)
-              .reduce<Prompt[]>((prompts, card, i) => {
-                const prompt = nightAction(card.role)
-                return prompt
-                  ? prompts.concat({
-                      ...prompt,
-                      key: `${i}.${Math.random()}).toString()`,
-                      message: `${getRoleEmoji(card.role)} ${
-                        prompt.message
-                      } ${getRoleEmoji(card.role)}`,
-                      className: cx({
-                        dim: !isRoleActive(this.props.game, card.role),
-                      }),
-                    })
-                  : prompts
-              }, [])
-              .concat({
-                message: `${getRoleEmoji(
-                  Roles.werewolf
-                )} werewolves wake up and kill someone ${getRoleEmoji(
-                  Roles.werewolf
-                )}`,
-              })
-          ),
+          nightPrompts: rest,
+          prompts: (this.props.game.prompts || []).concat(firstPrompt),
         },
       })
     }
@@ -121,9 +130,20 @@ export class GameView extends React.Component<Props, State> {
             onClick={() => updateFirebase({ game: null })}>
             end game
           </Button>
-          <Button onClick={this.startNight}>
+          <Button
+            onClick={() =>
+              this.props.game.nightPrompts &&
+              this.props.game.nightPrompts.length
+                ? updateFirebase({
+                    game: performAction(this.props.game, {
+                      type: 'next role',
+                      target: null,
+                    }),
+                  })
+                : this.startNight()
+            }>
             {this.props.game.nightPrompts && this.props.game.nightPrompts.length
-              ? 'next role'
+              ? 'next'
               : 'start night'}
           </Button>
         </Tabs>

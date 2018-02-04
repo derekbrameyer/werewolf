@@ -29,9 +29,9 @@ export class Players extends React.Component<Props, State> {
           id="player-name"
           value={this.state.playerName}
           label="Player name:"
-          onChange={value => this.setState({ playerName: value })}
-          onSubmit={value => {
-            if (find(whereEq({ name: value }), this.props.players)) {
+          onChange={e => this.setState({ playerName: e.target.value })}
+          onSubmit={e => {
+            if (find(whereEq({ name: e.target.value }), this.props.players)) {
               return alert('Player already exists')
             }
 
@@ -40,10 +40,7 @@ export class Players extends React.Component<Props, State> {
             })
 
             updateFirebase({
-              players: [
-                ...this.props.players,
-                { ...defaultPlayer, name: value },
-              ],
+              players: [...this.props.players, { ...defaultPlayer, name: e }],
             })
           }}
         />

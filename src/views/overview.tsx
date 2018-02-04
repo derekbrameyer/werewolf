@@ -11,10 +11,23 @@ import { defaultFirebaseState, updateFirebase } from 'helpers/firebase'
 interface Props {
   players: Player[]
   cards: Card[]
+  noFlip: boolean
+  timeLimit: number
 }
 
-export const Overview: React.SFC<Props> = ({ players, cards }) => (
+export const Overview: React.SFC<Props> = ({
+  players,
+  cards,
+  noFlip,
+  timeLimit,
+}) => (
   <Content>
+    <h1>options:</h1>
+    <ul>
+      <li>Day time limit: {timeLimit}</li>
+      <li>Flips card on death: {noFlip ? 'no flip' : 'flip'}</li>
+    </ul>
+
     <h1>players: {players.length}</h1>
     <ul>{players.map(player => <li key={player.name}>{player.name}</li>)}</ul>
 

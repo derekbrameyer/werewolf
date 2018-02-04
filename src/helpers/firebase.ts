@@ -17,12 +17,16 @@ export interface FirebaseState {
   game: Game | null
   players: Player[]
   cards: Card[]
+  timeLimit: number
+  noFlip: boolean
 }
 
 export const defaultFirebaseState: FirebaseState = {
   cards: [],
   players: [],
   game: null,
+  timeLimit: 120,
+  noFlip: false,
 }
 
 export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {

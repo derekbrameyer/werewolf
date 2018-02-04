@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Prompt, Game } from 'interfaces/game'
+import { Game } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { removePrompt } from 'helpers/index'
 import { makeActionButton } from './buttons'
 import { Button } from 'components/button'
+import { Prompt } from 'interfaces/prompt'
 
 interface Props {
   prompt: Prompt
@@ -27,12 +28,14 @@ export const PromptView: React.SFC<Props> = ({
         dismiss
       </Button>
 
-      {target &&
-        actions.map(type =>
-          makeActionButton(game, game.players[target], type, game =>
-            done(removePrompt(game, message))
-          )
-        )}
+      {actions.map(type =>
+        makeActionButton(
+          game,
+          target ? game.players[target] : null,
+          type,
+          game => done(removePrompt(game, message))
+        )
+      )}
     </Tabs>
   </div>
 )

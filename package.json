@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "deploy": "npm run build && firebase deploy",
-    "build":
-      "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
+    "build": "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
     "start": "parcel ./src/index.html"
   },
   "devDependencies": {
@@ -19,16 +18,27 @@
     "ts-jest": "^22.0.1",
     "ts-node": "^4.1.0",
     "ts-node-dev": "^1.0.0-pre.9",
-    "typescript": "^2.7.0-rc"
+    "typescript": "^2.7.1"
   },
   "jest": {
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
-    "modulePaths": ["src/", "node_modules"],
-    "moduleDirectories": ["node_modules", "src"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "modulePaths": [
+      "src/",
+      "node_modules"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
   },
   "prettier": {
     "printWidth": 80,

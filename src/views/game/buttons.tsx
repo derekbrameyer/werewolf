@@ -1,56 +1,45 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Button } from 'components/button'
-import { Game, performAction, Action, ActionButton } from 'interfaces/game'
+import { Game, performAction } from 'interfaces/game'
 import { gameHasRole } from 'helpers/index'
 import { Roles, getRoleActions } from 'interfaces/roles'
 import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
-
-export const actionTypeToAction = (type: Action['type']): ActionButton => {
-  switch (type) {
-    case 'bite':
-      return { type: 'bite', playerProp: 'bitten', target: '' }
-    case 'bless':
-      return { type: 'bless', playerProp: 'blessed', target: '' }
-    case 'kill':
-      return { type: 'kill', playerProp: 'alive', target: '' }
-    case 'sudo kill':
-      return { type: 'sudo kill', playerProp: 'alive', target: '' }
-    case 'protect':
-      return { type: 'protect', playerProp: 'protected', target: '' }
-    case 'transform':
-      return { type: 'transform', playerProp: 'role', target: '' }
-  }
-}
+import { Actions } from 'interfaces/actions'
 
 export const makeActionButton = (
   game: Game,
-  player: Player,
-  type: Action['type'],
+  player: Player | null,
+  type: Actions,
   done: (game: Game) => void
 ) => {
-  const action = actionTypeToAction(type)
+  const action = Actions(type)
+  const playerProp = 'playerProp' in action ? action.playerProp : null
+  const attr = playerProp && player && player[playerProp]
 
   return (
     <Button
       key={type}
       className={cx({
-        green:
-          (type === 'protect' || type === 'bless') &&
-          !!player[action.playerProp],
-        red:
-          (type === 'bite' || type === 'transform') &&
-          !!player[action.playerProp],
+        green: (type === 'protect' || type === 'bless') && !!attr,
+        red: (type === 'bite' || type === 'transform') && !!attr,
       })}
       onClick={() => {
-        done(performAction(game, { type, target: player.name }))
+        done(
+          performAction(
+            game,
+            player
+              ? { type, target: player.name, playerProp: 'name' }
+              : { type, target: null }
+          )
+        )
       }}>
-      {type === 'sudo kill' || type === 'kill'
-        ? player.alive ? 'kill' : `revive`
-        : type === 'transform'
+      {type === 'kill'
+        ? player && player.alive ? 'kill' : `revive`
+        : type === 'sudo kill' || type === 'bypass protection'
           ? type
-          : player[action.playerProp] ? `un-${type}` : type}
+          : type === 'transform' ? type : attr ? `un-${type}` : type}
     </Button>
   )
 }
@@ -61,7 +50,11 @@ export const makeGameButtons = (game: Game, player: Player) => {
       <Button
         onClick={() =>
           updateFirebase({
-            game: performAction(game, { type: 'kill', target: player.name }),
+            game: performAction(game, {
+              type: 'kill',
+              target: player.name,
+              playerProp: 'name',
+            }),
           })
         }>
         {player.alive ? 'kill' : 'revive'}
@@ -89,7 +82,11 @@ export const makeGameButtons = (game: Game, player: Player) => {
             key={type}
             onClick={() =>
               updateFirebase({
-                game: performAction(game, { type, target: player.name }),
+                game: performAction(game, {
+                  type,
+                  target: player.name,
+                  playerProp: 'name',
+                }),
               })
             }>
             {type}
