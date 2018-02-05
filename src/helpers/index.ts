@@ -1,7 +1,8 @@
 import { reduce, uniq, findIndex, remove, propEq } from 'ramda'
 import { Card, Roles } from 'interfaces/roles'
-import { Game, Prompt } from 'interfaces/game'
+import { Game } from 'interfaces/game'
 import { Player } from 'interfaces/player'
+import { Prompt } from 'interfaces/prompt'
 
 export const getDeckWeight = (deck: Card[]): number =>
   reduce<Card, number>(
