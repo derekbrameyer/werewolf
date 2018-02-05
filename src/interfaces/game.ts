@@ -16,6 +16,7 @@ export interface Game {
   prompts: Prompt[] | null
   nightPrompts: Prompt[] | null
   nightKills: PlayerId[] | null
+  dayCount: number
 }
 
 export const setupRole = (
@@ -355,6 +356,12 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
         ...game,
         ...addPrompt(game, (game.nightPrompts || [])[0]),
         nightPrompts: (game.nightPrompts || []).slice(1),
+      }
+
+    case 'start day timer':
+      return {
+        ...game,
+        dayCount: game.dayCount + 1,
       }
   }
 }

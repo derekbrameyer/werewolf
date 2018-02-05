@@ -9,6 +9,7 @@ export type Actions =
   | 'bite'
   | 'transform'
   | 'next role'
+  | 'start day timer'
 
 export type Action =
   | { type: Actions; target: null }
@@ -30,6 +31,8 @@ export const Actions = (type: Actions): Action => {
       return { type: 'transform', playerProp: 'role', target: '' }
     case 'next role':
       return { type: 'next role', target: null }
+    case 'start day timer':
+      return { type: 'start day timer', target: null }
   }
 }
 

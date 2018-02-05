@@ -13,14 +13,13 @@ import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { gameHasRole, comparePlayersFull } from 'helpers'
 import { Prompt } from 'interfaces/prompt'
+import { Timer } from 'components/timer'
 
 interface Props {
   game: Game
 }
 
-interface State {}
-
-export class GameView extends React.Component<Props, State> {
+export class GameView extends React.Component<Props> {
   startNight = () => {
     if (!this.props.game.nightPrompts || !this.props.game.nightPrompts.length) {
       const nightPrompts: Prompt[] = this.props.game.cards
@@ -83,7 +82,7 @@ export class GameView extends React.Component<Props, State> {
 
     return (
       <Content>
-        <Tabs navigation>
+        <Tabs navigation className="stats">
           <div>All Players: {theLiving.length}</div>
           <div className="green">
             {getRoleEmoji(Roles.villager)}: {theLivingNonWolves}{' '}
@@ -96,6 +95,10 @@ export class GameView extends React.Component<Props, State> {
               {getRoleEmoji(Roles.vampire)}: {theLivingVampires}
             </div>
           )}
+          <Timer
+            key={this.props.game.dayCount}
+            timeLimit={this.props.game.options.timeLimit || 0}
+          />
         </Tabs>
 
         {this.props.game.nightKills && (
@@ -129,6 +132,17 @@ export class GameView extends React.Component<Props, State> {
             className="red"
             onClick={() => updateFirebase({ game: null })}>
             end game
+          </Button>
+          <Button
+            onClick={() =>
+              updateFirebase({
+                game: performAction(this.props.game, {
+                  type: 'start day timer',
+                  target: null,
+                }),
+              })
+            }>
+            reset timer
           </Button>
           <Button
             onClick={() =>

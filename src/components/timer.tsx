@@ -25,7 +25,9 @@ export class Timer extends React.Component<Props, State> {
   tick = () => {
     this.timer = setTimeout(() => {
       this.tick()
-      this.setState({ time: Math.max(this.state.time - this.interval, 0) })
+      this.setState({
+        time: Math.max(this.state.time - this.interval / 1000, 0),
+      })
       if (!this.state.time) {
         clearTimeout(this.timer)
       }
@@ -34,19 +36,22 @@ export class Timer extends React.Component<Props, State> {
 
   render() {
     return (
-      <div
-        className={cx('timer', this.props.className)}
-        style={{
-          width: `${this.state.time / this.props.timeLimit * 100}%`,
-          backgroundColor: 'red',
-          height: 4,
-          display: 'block',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          transition: `width ${this.interval}ms linear`,
-        }}
-      />
+      <React.Fragment>
+        <div
+          className={cx('timer', this.props.className)}
+          style={{
+            width: `${this.state.time / this.props.timeLimit * 100}%`,
+            transition: `width ${this.interval}ms linear`,
+          }}
+        />
+        <div
+          className={cx('timer-completed', this.props.className)}
+          style={{
+            width: `${100 - this.state.time / this.props.timeLimit * 100}%`,
+            transition: `width ${this.interval}ms linear`,
+          }}
+        />
+      </React.Fragment>
     )
   }
 }

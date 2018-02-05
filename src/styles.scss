@@ -5,9 +5,9 @@ $base-font-size: 1rem;
 $spacing: 0.2rem;
 
 $card-height: 5rem;
-$card-min-width: 7.5rem;
+$card-min-width: 6rem;
 
-$nav-height: 2.6rem;
+$nav-height: 3.5rem;
 
 // ==============
 // Globals
@@ -88,7 +88,11 @@ ul {
 .actions {
   padding: 0;
   display: flex;
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
 
+  text-overflow: ellipsis;
   button {
     padding-left: 0;
     padding-right: 0;
@@ -111,6 +115,12 @@ ul {
   }
   .actions {
     flex-wrap: wrap;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    button {
+      padding: 0;
+    }
   }
 }
 
@@ -152,6 +162,10 @@ ul {
   height: $nav-height;
   border-top: 1px solid black;
   margin-top: auto;
+}
+
+.tabs.stats {
+  border-bottom: none;
 }
 
 // ==============
@@ -199,4 +213,22 @@ ul {
 .night-kills {
   text-align: center;
   margin: 2 * $spacing;
+}
+
+.timer,
+.timer-completed {
+  height: 2px;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  z-index: 100;
+
+  &.timer-completed {
+    background-color: black;
+    right: 0;
+  }
+  &.timer {
+    background-color: red;
+    left: 0;
+  }
 }

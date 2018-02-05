@@ -18,7 +18,7 @@ export const PlayerRow: React.SFC<Props> = ({ player, children }) => {
 
       {player.role && <h3>{player.role}</h3>}
       {player.links && <h3>links to: {player.links.join(', ')}</h3>}
-      {player.copiedBy && <h3>doppleganged by: {player.copiedBy}</h3>}
+      {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}
 
       <Actions>{children}</Actions>
     </div>
