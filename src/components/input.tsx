@@ -29,7 +29,7 @@ export const Input: React.SFC<Props> = ({
       value={value}
       checked={checked}
       onChange={e => onChange && onChange(e)}
-      onKeyPress={e => e.key === 'Enter' && onSubmit && onSubmit(value)}
+      onKeyPress={e => e.key === 'Enter' && onSubmit && onSubmit(e)}
     />
   </div>
 )
