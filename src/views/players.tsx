@@ -40,7 +40,10 @@ export class Players extends React.Component<Props, State> {
             })
 
             updateFirebase({
-              players: [...this.props.players, { ...defaultPlayer, name: e }],
+              players: [
+                ...this.props.players,
+                { ...defaultPlayer, name: e.target.value },
+              ],
             })
           }}
         />
