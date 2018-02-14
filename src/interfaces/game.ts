@@ -17,6 +17,7 @@ export interface Game {
   nightPrompts: Prompt[] | null
   nightKills: PlayerId[] | null
   dayCount: number
+  activePlayer: string | null
 }
 
 export const setupRole = (
@@ -253,7 +254,7 @@ export const deathAction = (player: Player): Prompt | null => {
 }
 
 export const performAction = (cleanGame: Game, action: Action): Game => {
-  let game: Game = { ...cleanGame }
+  let game: Game = { ...cleanGame, activePlayer: null }
   const player = action.target ? game.players[action.target] : null
 
   switch (action.type) {

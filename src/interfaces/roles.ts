@@ -1,4 +1,5 @@
 import { Actions } from 'interfaces/actions'
+const images = require('../assets/*')
 
 export enum Team {
   'wolf' = 'wolf',
@@ -221,6 +222,12 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
   }
 }
 
+export const getRoleImage = (role: Roles | null | undefined): string =>
+  images[`${(role || 'unknown').replace(/\s/g, '-')}.png`]
+
+export const getRoleProfileImage = (role: Roles | null | undefined): string =>
+  images[`${(role || 'unknown').replace(/\s/g, '-')}-profile.png`]
+
 export const AllRoles = Object.keys(Roles)
 export const AllCards: Card[] = AllRoles.map((role: any) => ({
   role,
@@ -230,4 +237,6 @@ export const AllCards: Card[] = AllRoles.map((role: any) => ({
   emoji: getRoleEmoji(role),
   wakesUp: doesRoleWakeUp(role),
   actions: getRoleActions(role),
+  profileImg: getRoleProfileImage(role),
+  cardImg: getRoleImage(role),
 }))

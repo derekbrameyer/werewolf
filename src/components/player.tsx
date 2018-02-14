@@ -2,25 +2,54 @@ import * as React from 'react'
 import * as cx from 'classnames'
 import { Player } from 'interfaces/player'
 import { Actions } from 'components/layout'
-import { getRoleEmoji } from 'interfaces/roles'
+import { getRoleProfileImage } from 'interfaces/roles'
+import { Tabs } from './tabs'
 
 interface Props {
   player: Player
+  onClick?: () => void
+  isActive: boolean
 }
 
-export const PlayerRow: React.SFC<Props> = ({ player, children }) => {
+export const PlayerRow: React.SFC<Props> = ({
+  player,
+  children,
+  onClick,
+  isActive,
+}) => {
   return (
-    <div className={cx('player', { dim: !player.alive })}>
-      <h2>
-        {player.role && getRoleEmoji(player.role)}
-        {player.name}
-      </h2>
+    <React.Fragment>
+      <button
+        onClick={onClick}
+        className={cx('player', { dim: !player.alive })}>
+        <img className="role-profile" src={getRoleProfileImage(player.role)} />
+        <h2>
+          {player.protected && '🛡'}
+          {player.name}
+        </h2>
+      </button>
 
-      {player.role && <h3>{player.role}</h3>}
-      {player.links && <h3>links to: {player.links.join(', ')}</h3>}
-      {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}
+      {isActive && (
+        <div className="modal">
+          <Tabs navigation>
+            <h1>
+              {player.name} ({player.role})
+            </h1>
+          </Tabs>
+          <img
+            className="role-profile"
+            src={getRoleProfileImage(player.role)}
+          />
+          {player.links && <h3>links to: {player.links.join(', ')}</h3>}
+          {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}
 
-      <Actions>{children}</Actions>
-    </div>
+          {children}
+
+          <Tabs actions>
+            <button onClick={onClick}>close</button>
+          </Tabs>
+        </div>
+      )}
+    </React.Fragment>
   )
 }

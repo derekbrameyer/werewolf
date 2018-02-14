@@ -5,7 +5,7 @@ $base-font-size: 1rem;
 $spacing: 0.2rem;
 
 $card-height: 5rem;
-$card-min-width: 6rem;
+$card-min-width: 4rem;
 
 $nav-height: 3.5rem;
 
@@ -100,9 +100,14 @@ ul {
   }
 }
 
+.role-profile {
+  width: 100%;
+  max-width: 70px;
+}
+
 .player,
 .card {
-  min-height: $card-height;
+  text-align: center;
 
   h2 {
     overflow: hidden;
@@ -121,6 +126,28 @@ ul {
     button {
       padding: 0;
     }
+  }
+}
+
+.modal {
+  position: fixed;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  z-index: 10;
+  padding-top: $nav-height;
+
+  > * + * {
+    margin-top: 3 * $spacing;
+  }
+
+  button {
+    background-color: transparent;
   }
 }
 
@@ -162,6 +189,8 @@ ul {
   height: $nav-height;
   border-top: 1px solid black;
   margin-top: auto;
+  width: 100%;
+  background-color: white;
 }
 
 .tabs.stats {
@@ -174,7 +203,7 @@ ul {
 .grid {
   display: grid;
 
-  $grid-spacing: $spacing;
+  $grid-spacing: $spacing * 3;
   grid-gap: $grid-spacing;
   padding: $grid-spacing;
 

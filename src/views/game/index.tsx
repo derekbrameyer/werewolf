@@ -120,7 +120,21 @@ export class GameView extends React.Component<Props> {
           {values(this.props.game.players)
             .sort(comparePlayersFull)
             .map(player => (
-              <PlayerRow player={player} key={player.name}>
+              <PlayerRow
+                isActive={this.props.game.activePlayer === player.name}
+                onClick={() =>
+                  updateFirebase({
+                    game: {
+                      ...this.props.game,
+                      activePlayer:
+                        this.props.game.activePlayer === player.name
+                          ? null
+                          : player.name,
+                    },
+                  })
+                }
+                player={player}
+                key={player.name}>
                 {makeGameButtons(this.props.game, player)}
               </PlayerRow>
             ))}
