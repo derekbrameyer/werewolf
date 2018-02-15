@@ -151,7 +151,14 @@ export class SetupGame extends React.Component<Props, State> {
                         )) ||
                       player.role == currentPrompt.role
                     ) {
+                      const prompt = currentPrompt
+
+                      if (prompt.action && 'source' in prompt.action) {
+                        prompt.action.source = player.name
+                      }
+
                       this.setState({
+                        currentPrompt: prompt,
                         game: {
                           ...game,
                           ...updatePlayer(game, player.name, {

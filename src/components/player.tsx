@@ -27,13 +27,15 @@ export const PlayerRow: React.SFC<Props> = ({
           {player.protected && '🛡'}
           {player.name}
         </h2>
+        {player.links && <h3>links to: {player.links.join(', ')}</h3>}
+        {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}
       </button>
 
       {isActive && (
         <div className="modal">
           <Tabs navigation>
             <h1>
-              {player.name} ({player.role})
+              {player.name} {player.role && `(${player.role})`}
             </h1>
           </Tabs>
           <img
