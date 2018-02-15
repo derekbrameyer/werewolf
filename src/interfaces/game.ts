@@ -79,6 +79,7 @@ export const setupRole = (
     case Roles['vampire']:
     case Roles['aura seer']:
     case Roles['minion']:
+    case Roles['diseased']:
     case Roles['bodyguard']:
       return {
         role,
@@ -226,6 +227,12 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['wolf cub']:
       return {
         message: 'the wolf cub died, wolves get to kill two people next night',
+      }
+
+    case Roles['diseased']:
+      return {
+        message:
+          'if the diseased was killed by werewolf the werewolfs can not kill the next night',
       }
 
     case Roles['prince']:

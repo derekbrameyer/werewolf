@@ -32,6 +32,7 @@ export enum Roles {
   'minion' = 'minion',
   'vampire' = 'vampire',
   'priest' = 'priest',
+  'diseased' = 'diseased',
 }
 
 export interface Card {
@@ -71,6 +72,7 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['vampire']: return true
     case Roles['minion']: return false
     case Roles['priest']: return true
+    case Roles['diseased']: return false
   }
 }
 
@@ -99,6 +101,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['minion']: return 1
     case Roles['vampire']: return 8
     case Roles['priest']: return 1
+    case Roles['diseased']: return 1
   }
 }
 
@@ -129,6 +132,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['aura seer']: return Team.villager
     case Roles['priest']: return Team.villager
     case Roles['vampire']: return Team.vampire
+    case Roles['diseased']: return Team.villager
   }
 }
 
@@ -159,6 +163,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['lycan']: return -1
     case Roles['priest']: return 3
     case Roles['vampire']: return -7
+    case Roles['diseased']: return +3
   }
 }
 
@@ -190,6 +195,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['priest']: return '🙏'
     case Roles['minion']: return '😈'
     case Roles['vampire']: return '🧛‍♀️'
+    case Roles['diseased']: return '🤒'
   }
 }
 
@@ -221,6 +227,8 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['minion']: return []
     case Roles['priest']: return []
     case Roles['vampire']: return []
+    case Roles['diseased']: return []
+
   }
 }
 

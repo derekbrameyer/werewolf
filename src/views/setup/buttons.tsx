@@ -161,7 +161,7 @@ export const makePregameActionButton = (
                     }
                   : prompt,
               game: updatePlayer(game, player.name, {
-                role: player.role === prompt.role ? undefined : prompt.role,
+                role: player.role === prompt.role ? null : prompt.role,
               }),
             })
           }}>
