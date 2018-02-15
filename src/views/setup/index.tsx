@@ -12,7 +12,7 @@ import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { SetupPrompt } from 'interfaces/prompt'
-
+import { updatePlayer } from 'helpers/index'
 interface Props {
   players: Player[]
   cards: Card[]
@@ -24,6 +24,13 @@ interface State {
   game: Game
   promptsRemaining: SetupPrompt[] // The current role we are setting up
   currentPrompt: SetupPrompt | undefined | null // The remaining roles we need to setup
+}
+
+const areRolesSet = (role, game, cards) => {
+  return role
+    ? getNumberOfARole(role, values(game.players)) ===
+        getNumberOfARole(role, cards)
+    : true
 }
 
 export class SetupGame extends React.Component<Props, State> {
@@ -83,14 +90,7 @@ export class SetupGame extends React.Component<Props, State> {
     const hasAllKeys = <T extends object>(obj: T): boolean =>
       values(obj).reduce((valid, val) => valid && !!val, true)
 
-    const isActionComplete = !action
-      ? true
-      : hasAllKeys(action) && hasAllKeys(action.buttons)
-
-    const areRolesSet = role
-      ? getNumberOfARole(role, values(this.state.game.players)) ===
-        getNumberOfARole(role, this.props.cards)
-      : true
+    const isActionComplete = !action ? true : hasAllKeys(action.buttons)
 
     return (
       <Tabs actions>
@@ -106,7 +106,10 @@ export class SetupGame extends React.Component<Props, State> {
           skip
         </Button>
         <Button
-          disabled={!isActionComplete || !areRolesSet}
+          disabled={
+            !isActionComplete ||
+            !areRolesSet(role, this.state.game, this.props.cards)
+          }
           onClick={() => {
             this.setState({
               promptsRemaining: promptsRemaining.slice(1),
@@ -135,18 +138,55 @@ export class SetupGame extends React.Component<Props, State> {
         <Grid>
           {values(game.players)
             .sort(comparePlayersName)
-            .map(player => (
-              <PlayerRow player={player} key={player.name}>
-                {makePregameActionButton(
-                  this.state.game,
-                  player,
-                  currentPrompt,
-                  ({ game, prompt }) => {
-                    this.setState({ currentPrompt: prompt, game })
-                  }
-                )}
-              </PlayerRow>
-            ))}
+            .map(player => {
+              return (
+                <PlayerRow
+                  onClick={() => {
+                    if (
+                      !areRolesSet(
+                        currentPrompt.role,
+                        game,
+                        this.props.cards
+                      ) ||
+                      !currentPrompt.action
+                    ) {
+                      this.setState({
+                        game: {
+                          ...game,
+                          ...updatePlayer(game, player.name, {
+                            role:
+                              player.role === currentPrompt.role
+                                ? undefined
+                                : currentPrompt.role,
+                          }),
+                        },
+                      })
+                    } else {
+                      this.setState({
+                        game: {
+                          ...game,
+                          activePlayer:
+                            game.activePlayer === player.name
+                              ? null
+                              : player.name,
+                        },
+                      })
+                    }
+                  }}
+                  isActive={this.state.game.activePlayer === player.name}
+                  player={player}
+                  key={player.name}>
+                  {makePregameActionButton(
+                    this.state.game,
+                    player,
+                    currentPrompt,
+                    ({ game, prompt }) => {
+                      this.setState({ currentPrompt: prompt, game })
+                    }
+                  )}
+                </PlayerRow>
+              )
+            })}
         </Grid>
 
         {this.makeDoneButton()}
