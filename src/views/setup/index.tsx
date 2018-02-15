@@ -143,12 +143,13 @@ export class SetupGame extends React.Component<Props, State> {
                 <PlayerRow
                   onClick={() => {
                     if (
-                      !areRolesSet(
+                      (!areRolesSet(
                         currentPrompt.role,
                         game,
                         this.props.cards
                       ) ||
-                      !currentPrompt.action
+                        !currentPrompt.action) &&
+                      (player.role === currentPrompt.role || !player.role)
                     ) {
                       this.setState({
                         game: {
