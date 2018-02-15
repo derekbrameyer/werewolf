@@ -174,9 +174,8 @@ export class GameView extends React.Component<Props> {
           <Button
             disabled={
               !!(
-                (this.props.game.nightPrompts &&
-                  this.props.game.nightPrompts.length) ||
-                (this.props.game.prompts && this.props.game.prompts.length)
+                this.props.game.nightPrompts &&
+                this.props.game.nightPrompts.length
               )
             }
             onClick={() => this.startNight()}>
