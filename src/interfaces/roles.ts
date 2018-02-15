@@ -41,6 +41,8 @@ export interface Card {
   cardCount: number
   emoji: string
   wakesUp: boolean
+  profileImg: string
+  cardImg: string
   actions: Actions[]
 }
 
@@ -228,15 +230,20 @@ export const getRoleImage = (role: Roles | null | undefined): string =>
 export const getRoleProfileImage = (role: Roles | null | undefined): string =>
   images[`${(role || 'unknown').replace(/\s/g, '-')}-profile.png`]
 
-export const AllRoles = Object.keys(Roles)
-export const AllCards: Card[] = AllRoles.map((role: any) => ({
-  role,
-  team: getRoleTeam(role),
-  weight: getRoleWeight(role),
-  cardCount: getRoleCardCount(role),
-  emoji: getRoleEmoji(role),
-  wakesUp: doesRoleWakeUp(role),
-  actions: getRoleActions(role),
-  profileImg: getRoleProfileImage(role),
-  cardImg: getRoleImage(role),
-}))
+export const getCard = (maybeRole: Roles | null): Card => {
+  const role = maybeRole || Roles.villager
+  return {
+    role,
+    team: getRoleTeam(role),
+    weight: getRoleWeight(role),
+    cardCount: getRoleCardCount(role),
+    emoji: getRoleEmoji(role),
+    wakesUp: doesRoleWakeUp(role),
+    actions: getRoleActions(role),
+    profileImg: getRoleProfileImage(role),
+    cardImg: getRoleImage(role),
+  }
+}
+
+export const AllRoles = Object.keys(Roles) as Roles[]
+export const AllCards: Card[] = AllRoles.map(getCard)

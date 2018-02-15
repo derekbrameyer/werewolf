@@ -2,11 +2,17 @@ import * as React from 'react'
 import * as cx from 'classnames'
 import { Button } from 'components/button'
 import { Game, performAction } from 'interfaces/game'
-import { gameHasRole } from 'helpers/index'
-import { Roles, getRoleActions } from 'interfaces/roles'
+import { gameHasRole, updatePlayer } from 'helpers/index'
+import {
+  Roles,
+  getRoleActions,
+  AllRoles,
+  getRoleProfileImage,
+} from 'interfaces/roles'
 import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Actions } from 'interfaces/actions'
+import { Grid } from 'components/grid'
 
 export const makeActionButton = (
   game: Game,
@@ -42,6 +48,52 @@ export const makeActionButton = (
           : type === 'transform' ? type : attr ? `un-${type}` : type}
     </Button>
   )
+}
+
+class ChangeRoleButton extends React.Component<
+  { game: Game; player: Player | null; done: (game: Game) => void },
+  { open: boolean }
+> {
+  state = { open: false }
+
+  render() {
+    const { game, done, player } = this.props
+    if (!player) return null
+
+    return (
+      <React.Fragment>
+        <Button onClick={() => this.setState({ open: !this.state.open })}>
+          {this.state.open ? 'hide roles' : 'change role'}
+        </Button>
+        {this.state.open && (
+          <Grid>
+            {AllRoles.sort().map(
+              role =>
+                role === player.role ? null : (
+                  <Button
+                    key={role}
+                    onClick={() =>
+                      done({
+                        ...game,
+                        ...updatePlayer(game, player.name, {
+                          role: role as Roles,
+                        }),
+                        activePlayer: null,
+                      })
+                    }>
+                    <img
+                      className="role-profile"
+                      src={getRoleProfileImage(role as Roles)}
+                    />
+                    {role}
+                  </Button>
+                )
+            )}
+          </Grid>
+        )}
+      </React.Fragment>
+    )
+  }
 }
 
 export const makeGameButtons = (game: Game, player: Player) => {
@@ -92,6 +144,14 @@ export const makeGameButtons = (game: Game, player: Player) => {
             {type}
           </Button>
         ))}
+
+      {player.alive && (
+        <ChangeRoleButton
+          game={game}
+          player={player}
+          done={game => updateFirebase({ game })}
+        />
+      )}
     </React.Fragment>
   )
 }

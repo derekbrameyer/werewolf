@@ -7,6 +7,7 @@ export interface Prompt {
   target?: string
   actions?: (Actions)[]
   className?: string
+  required?: boolean
 }
 
 export interface SetupPrompt {

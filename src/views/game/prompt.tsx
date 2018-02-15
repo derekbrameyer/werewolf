@@ -13,20 +13,22 @@ interface Props {
 }
 
 export const PromptView: React.SFC<Props> = ({
-  prompt: { actions = [], message, className, target },
+  prompt: { actions = [], message, className, target, required },
   game,
   done,
 }) => (
   <div className="prompt">
     <h1 className={className}>{message}</h1>
     <Tabs>
-      <Button
-        className="red"
-        onClick={() => {
-          done(removePrompt(game, message))
-        }}>
-        dismiss
-      </Button>
+      {!required && (
+        <Button
+          className="red"
+          onClick={() => {
+            done(removePrompt(game, message))
+          }}>
+          dismiss
+        </Button>
+      )}
 
       {actions.map(type =>
         makeActionButton(

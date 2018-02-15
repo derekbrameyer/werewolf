@@ -73,6 +73,26 @@ ul {
 }
 
 // ==============
+// Grids
+// ==============
+.grid {
+  display: grid;
+  width: 100%;
+
+  $grid-spacing: $spacing * 3;
+  grid-gap: $grid-spacing;
+  padding: $grid-spacing;
+
+  grid-template-columns: repeat(auto-fill, minmax($card-min-width, 1fr));
+  align-items: start;
+
+  > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// ==============
 // Row
 // ==============
 .row {
@@ -136,11 +156,17 @@ ul {
   align-items: center;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 100%;
-  min-height: 100%;
   background-color: rgba(255, 255, 255, 0.95);
   z-index: 10;
   padding-top: $nav-height;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+
+  > * {
+    flex: 0 0 auto;
+  }
 
   > * + * {
     margin-top: 3 * $spacing;
@@ -195,20 +221,6 @@ ul {
 
 .tabs.stats {
   border-bottom: none;
-}
-
-// ==============
-// Grids
-// ==============
-.grid {
-  display: grid;
-
-  $grid-spacing: $spacing * 3;
-  grid-gap: $grid-spacing;
-  padding: $grid-spacing;
-
-  grid-template-columns: repeat(auto-fill, minmax($card-min-width, 1fr));
-  align-items: start;
 }
 
 // ==============

@@ -1,10 +1,16 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { propEq, values } from 'ramda'
+import { propEq, values, find, whereEq } from 'ramda'
 import { Game, nightAction, isRoleActive, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
-import { getRoleTeam, Roles, Team, getRoleEmoji } from 'interfaces/roles'
+import {
+  getRoleTeam,
+  Roles,
+  Team,
+  getRoleEmoji,
+  getCard,
+} from 'interfaces/roles'
 import { PromptView } from 'views/game/prompt'
 import { makeGameButtons } from 'views/game/buttons'
 import { Grid } from 'components/grid'
@@ -21,16 +27,22 @@ interface Props {
 
 export class GameView extends React.Component<Props> {
   startNight = () => {
-    if (!this.props.game.nightPrompts || !this.props.game.nightPrompts.length) {
-      const nightPrompts: Prompt[] = this.props.game.cards
+    const game = this.props.game
+    if (!game.nightPrompts || !game.nightPrompts.length) {
+      const extraCards = values(game.players)
+        .filter(player => !find(whereEq({ role: player.role }), game.cards))
+        .map(player => getCard(player.role))
+
+      const cards = game.cards.concat(extraCards)
+
+      const nightPrompts: Prompt[] = cards
         .sort((a, b) => b.weight - a.weight)
         .reduce<Prompt[]>((prompts, card, i) => {
           const prompt = nightAction(card.role)
-          const active = isRoleActive(this.props.game, card.role)
+          const active = isRoleActive(game, card.role)
 
           return prompt &&
-            (this.props.game.options.noFlip ||
-              (!this.props.game.options.noFlip && active))
+            (game.options.noFlip || (!game.options.noFlip && active))
             ? prompts.concat({
                 ...prompt,
                 key: `${i}.${Math.random()}).toString()`,
@@ -41,6 +53,7 @@ export class GameView extends React.Component<Props> {
                   dim: !active,
                 }),
                 actions: ['next role'],
+                required: true,
               })
             : prompts
         }, [])
@@ -159,20 +172,15 @@ export class GameView extends React.Component<Props> {
             reset timer
           </Button>
           <Button
-            onClick={() =>
-              this.props.game.nightPrompts &&
-              this.props.game.nightPrompts.length
-                ? updateFirebase({
-                    game: performAction(this.props.game, {
-                      type: 'next role',
-                      target: null,
-                    }),
-                  })
-                : this.startNight()
-            }>
-            {this.props.game.nightPrompts && this.props.game.nightPrompts.length
-              ? 'next'
-              : 'start night'}
+            disabled={
+              !!(
+                (this.props.game.nightPrompts &&
+                  this.props.game.nightPrompts.length) ||
+                (this.props.game.prompts && this.props.game.prompts.length)
+              )
+            }
+            onClick={() => this.startNight()}>
+            start night
           </Button>
         </Tabs>
       </Content>
