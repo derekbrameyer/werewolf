@@ -157,7 +157,7 @@ export class SetupGame extends React.Component<Props, State> {
                           ...updatePlayer(game, player.name, {
                             role:
                               player.role === currentPrompt.role
-                                ? undefined
+                                ? null
                                 : currentPrompt.role,
                           }),
                         },
