@@ -10,6 +10,7 @@ export interface Player {
   links: PlayerId[] | null
   copiedBy: PlayerId | null
   protected: boolean
+  indoctrinated: boolean
   bitten: boolean
   blessed: boolean
 }
@@ -22,6 +23,7 @@ export const defaultPlayer: Player = {
   protected: false,
   bitten: false,
   blessed: false,
+  indoctrinated: false,
   role: null,
   originalRole: null,
 }

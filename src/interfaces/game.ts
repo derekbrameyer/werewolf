@@ -20,6 +20,20 @@ export interface Game {
   activePlayer: string | null
 }
 
+const makeIndoctrinatePrompt = (game: Game): Game => {
+  if (
+    values(game.players)
+      .filter(p => p.role !== Roles['cult leader'])
+      .filter(p => p.alive)
+      .every(p => p.indoctrinated)
+  ) {
+    game = addPrompt(game, {
+      message: 'All the living players are in the cult, the cult leader wins!',
+    })
+  }
+  return game
+}
+
 export const setupRole = (
   role: Roles | undefined | null
 ): SetupPrompt | null => {
@@ -103,6 +117,7 @@ export const setupRole = (
     case Roles['werewolf']:
     case Roles['big bad wolf']:
     case Roles['lycan']:
+    case Roles['cult leader']:
     case Roles['sorceress']:
     case Roles['wolf cub']:
     case Roles['tanner']:
@@ -145,6 +160,7 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
       return {
         message: `${role}, look for the seer`,
       }
+
     case Roles['bodyguard']:
       return {
         message: `${role}, protect someone`,
@@ -163,6 +179,11 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
     case Roles['vampire']:
       return {
         message: `${role}, bite someone, if that person gets two nominations from now on, they die`,
+      }
+
+    case Roles['cult leader']:
+      return {
+        message: `${role}, indoctrinate someone, they are now part of your cult`,
       }
 
     case Roles['wolf cub']:
@@ -228,6 +249,7 @@ export const preDeathAction = (
     case Roles['va wolf']:
     case Roles['big bad wolf']:
     case Roles['aura seer']:
+    case Roles['cult leader']:
     case Roles['minion']:
     case Roles['pi']:
     case Roles['priest']:
@@ -272,6 +294,7 @@ export const deathAction = (player: Player): Prompt | null => {
       }
 
     case Roles['prince']:
+    case Roles['cult leader']:
     case Roles['cursed']:
     case Roles['seer']:
     case Roles['va wolf']:
@@ -376,7 +399,10 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
       }
 
       // Kill the player
-      return updatePlayer(game, player.name, { alive: false })
+      game = updatePlayer(game, player.name, { alive: false })
+
+      game = makeIndoctrinatePrompt(game)
+      return game
 
     case 'bless':
       return player
@@ -390,6 +416,14 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
       return player
         ? updatePlayer(game, player.name, { bitten: !player.bitten })
         : game
+    case 'indoctrinate':
+      game = player
+        ? updatePlayer(game, player.name, {
+            indoctrinated: !player.indoctrinated,
+          })
+        : game
+      game = makeIndoctrinatePrompt(game)
+      return game
     case 'transform':
       return player
         ? updatePlayer(game, player.name, {

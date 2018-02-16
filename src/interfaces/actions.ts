@@ -10,6 +10,7 @@ export type Actions =
   | 'bite'
   | 'transform'
   | 'next role'
+  | 'indoctrinate'
   | 'start day timer'
 
 export type Action =
@@ -34,6 +35,8 @@ export const Actions = (type: Actions): Action => {
       return { type: 'next role', target: null }
     case 'start day timer':
       return { type: 'start day timer', target: null }
+    case 'indoctrinate':
+      return { type: 'indoctrinate', playerProp: 'indoctrinated', target: '' }
   }
 }
 

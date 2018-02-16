@@ -29,7 +29,11 @@ export const makeActionButton = (
       key={type}
       className={cx({
         green: (type === 'protect' || type === 'bless') && !!attr,
-        red: (type === 'bite' || type === 'transform') && !!attr,
+        red:
+          (type === 'bite' ||
+            type === 'transform' ||
+            type === 'indoctrinate') &&
+          !!attr,
       })}
       onClick={() => {
         done(
@@ -120,6 +124,11 @@ export const makeGameButtons = (game: Game, player: Player) => {
       {player.alive &&
         gameHasRole(game, Roles.vampire) &&
         makeActionButton(game, player, 'bite', game =>
+          updateFirebase({ game })
+        )}
+      {player.alive &&
+        gameHasRole(game, Roles['cult leader']) &&
+        makeActionButton(game, player, 'indoctrinate', game =>
           updateFirebase({ game })
         )}
       {player.alive &&

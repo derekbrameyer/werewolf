@@ -7,6 +7,7 @@ export enum Team {
   'villager' = 'villager',
   'tanner' = 'tanner',
   'vampire' = 'vampire',
+  'cult leader' = 'cult leader',
 }
 
 export enum Roles {
@@ -35,6 +36,7 @@ export enum Roles {
   'diseased' = 'diseased',
   'direwolf' = 'direwolf',
   'va wolf' = 'va wolf',
+  'cult leader' = 'cult leader',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -74,6 +76,7 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['lycan']: return false
     case Roles['vampire']: return true
     case Roles['minion']: return false
+    case Roles['cult leader']: return true
     case Roles['va wolf']: return false
     case Roles['priest']: return true
     case Roles['diseased']: return false
@@ -109,6 +112,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['priest']: return 1
     case Roles['diseased']: return 1
     case Roles['direwolf']: return 1
+    case Roles['cult leader']: return 1
   }
 }
 
@@ -128,6 +132,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['big bad wolf']: return Team.wolf
     case Roles['cupid']: return Team.villager
     case Roles['mason']: return Team.villager
+    case Roles['cult leader']: return Team["cult leader"]
     case Roles['villager']: return Team.villager
     case Roles['va wolf']: return Team.villager
     case Roles['hunter']: return Team.villager
@@ -170,6 +175,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['pi']: return 3
     case Roles['prince']: return 3
     case Roles['minion']: return -6
+    case Roles['cult leader']: return 1
     case Roles['aura seer']: return 3
     case Roles['lycan']: return -1
     case Roles['priest']: return 3
@@ -200,6 +206,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['werewolf']: return '🐺'
     case Roles['wolf cub']: return '🐶'
     case Roles['tanner']: return '😭'
+    case Roles['cult leader']: return '🍷'
     case Roles['pi']: return '👻'
     case Roles['prince']: return '🤴'
     case Roles['lycan']: return '🦊'
@@ -225,6 +232,7 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['cursed']: return ['transform']
     case Roles['doppleganger']: return []
     case Roles['direwolf']: return []
+    case Roles['cult leader']: return []
     case Roles['hunter']: return []
     case Roles['mason']: return []
     case Roles['sorceress']: return []

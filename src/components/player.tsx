@@ -25,6 +25,8 @@ export const PlayerRow: React.SFC<Props> = ({
         <h2>
           {player.protected && '🛡'}
           {player.blessed && '🙏'}
+          {player.bitten && '🦇'}
+          {player.indoctrinated && '🍷'}
           {player.name}
         </h2>
       </button>
