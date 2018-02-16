@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Player } from 'interfaces/player'
-import { Actions } from 'components/layout'
 import { getRoleProfileImage } from 'interfaces/roles'
 import { Tabs } from './tabs'
 

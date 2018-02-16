@@ -50,7 +50,7 @@ export class Players extends React.Component<Props, State> {
 
         <Grid>
           {this.props.players.sort(comparePlayersName).map(player => (
-            <PlayerRow player={player} key={player.name}>
+            <PlayerRow player={player} key={player.name} isActive={false}>
               <button
                 onClick={() => {
                   updateFirebase({
