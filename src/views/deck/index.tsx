@@ -17,7 +17,28 @@ interface Props {
 
 export class BuildDeck extends React.Component<Props> {
   renderCard = (card: Card) => (
-    <CardRow deck={this.props.cards} card={card} id={card.role} key={card.role}>
+    <CardRow
+      deck={this.props.cards}
+      card={card}
+      id={card.role}
+      key={card.role}
+      onAdd={() => {
+        console.log('...')
+        if (card.cardCount > getNumberOfARole(card.role, this.props.cards)) {
+          updateFirebase({
+            cards: this.props.cards.concat(card),
+          })
+        } else {
+          updateFirebase({
+            cards: this.props.cards.filter(c => c.role !== card.role),
+          })
+        }
+      }}
+      onRemove={() => {
+        updateFirebase({
+          cards: this.props.cards.filter(c => c.role !== card.role),
+        })
+      }}>
       <button
         onClick={() =>
           updateFirebase({

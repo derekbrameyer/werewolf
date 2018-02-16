@@ -24,10 +24,9 @@ export const PlayerRow: React.SFC<Props> = ({
         <img className="role-profile" src={getRoleProfileImage(player.role)} />
         <h2>
           {player.protected && '🛡'}
+          {player.blessed && '🙏'}
           {player.name}
         </h2>
-        {player.links && <h3>links to: {player.links.join(', ')}</h3>}
-        {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}
       </button>
 
       {isActive && (

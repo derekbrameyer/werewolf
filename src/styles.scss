@@ -68,6 +68,9 @@ ul {
 .grey {
   color: lightgrey;
 }
+.white {
+  color: white;
+}
 .dim {
   opacity: 0.3;
 }
@@ -123,6 +126,22 @@ ul {
 .role-profile {
   width: 100%;
   max-width: 70px;
+}
+
+.card {
+  .profile-container {
+    position: relative;
+  }
+
+  .count {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    margin-top: -0.5em;
+    text-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+  }
 }
 
 .player,

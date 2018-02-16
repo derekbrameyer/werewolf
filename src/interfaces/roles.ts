@@ -88,13 +88,13 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['doppleganger']: return 1
     case Roles['cursed']: return 1
     case Roles['sorceress']: return 1
-    case Roles['werewolf']: return 12
+    case Roles['werewolf']: return 3
     case Roles['wolf cub']: return 1
     case Roles['witch']: return 1
     case Roles['big bad wolf']: return 1
     case Roles['cupid']: return 1
     case Roles['mason']: return 3
-    case Roles['villager']: return 20
+    case Roles['villager']: return 10
     case Roles['hunter']: return 1
     case Roles['seer']: return 1
     case Roles['apprentice seer']: return 1
