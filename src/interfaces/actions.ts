@@ -1,4 +1,5 @@
 import { Player, PlayerId } from './player'
+import { LinkRoles } from './roles'
 
 export type Actions =
   | 'kill'
@@ -55,6 +56,7 @@ export type PregameAction =
     }
   | {
       type: 'link'
+      card: LinkRoles
       id: string
       source: PlayerId
       buttons: {

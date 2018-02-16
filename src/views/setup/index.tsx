@@ -26,7 +26,7 @@ interface State {
   currentPrompt: SetupPrompt | undefined | null // The remaining roles we need to setup
 }
 
-const areRolesSet = (role, game, cards) => {
+const areRolesSet = (role: Roles, game: Game, cards: Card[]) => {
   return role
     ? getNumberOfARole(role, values(game.players)) ===
         getNumberOfARole(role, cards)

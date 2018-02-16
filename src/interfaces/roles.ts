@@ -33,7 +33,11 @@ export enum Roles {
   'vampire' = 'vampire',
   'priest' = 'priest',
   'diseased' = 'diseased',
+  'direwolf' = 'direwolf',
+  'va wolf' = 'va wolf',
 }
+
+export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
 
 export interface Card {
   role: Roles
@@ -43,7 +47,6 @@ export interface Card {
   emoji: string
   wakesUp: boolean
   profileImg: string
-  cardImg: string
   actions: Actions[]
 }
 
@@ -71,8 +74,10 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['lycan']: return false
     case Roles['vampire']: return true
     case Roles['minion']: return false
+    case Roles['va wolf']: return false
     case Roles['priest']: return true
     case Roles['diseased']: return false
+    case Roles['direwolf']: return true
   }
 }
 
@@ -95,6 +100,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['apprentice seer']: return 1
     case Roles['bodyguard']: return 1
     case Roles['pi']: return 1
+    case Roles['va wolf']: return 1
     case Roles['prince']: return 1
     case Roles['lycan']: return 1
     case Roles['aura seer']: return 1
@@ -102,6 +108,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['vampire']: return 8
     case Roles['priest']: return 1
     case Roles['diseased']: return 1
+    case Roles['direwolf']: return 1
   }
 }
 
@@ -115,12 +122,14 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['cursed']: return Team.minion
     case Roles['sorceress']: return Team.minion
     case Roles['werewolf']: return Team.wolf
+    case Roles['direwolf']: return Team.wolf
     case Roles['wolf cub']: return Team.wolf
     case Roles['witch']: return Team.villager
     case Roles['big bad wolf']: return Team.wolf
     case Roles['cupid']: return Team.villager
     case Roles['mason']: return Team.villager
     case Roles['villager']: return Team.villager
+    case Roles['va wolf']: return Team.villager
     case Roles['hunter']: return Team.villager
     case Roles['seer']: return Team.villager
     case Roles['apprentice seer']: return Team.villager
@@ -143,9 +152,11 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
   switch (role) {
     case Roles['tanner']: return 1
     case Roles['doppleganger']: return -2
+    case Roles['va wolf']: return -2
     case Roles['cursed']: return -3
     case Roles['sorceress']: return -3
     case Roles['werewolf']: return -6
+    case Roles['direwolf']: return -4
     case Roles['wolf cub']: return -8
     case Roles['witch']: return 4
     case Roles['big bad wolf']: return -9
@@ -185,12 +196,14 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['villager']: return '👨‍🌾'
     case Roles['witch']: return '🧙‍♂️'
     case Roles['big bad wolf']: return '🐗'
+    case Roles['direwolf']: return '🐩'
     case Roles['werewolf']: return '🐺'
     case Roles['wolf cub']: return '🐶'
     case Roles['tanner']: return '😭'
     case Roles['pi']: return '👻'
     case Roles['prince']: return '🤴'
     case Roles['lycan']: return '🦊'
+    case Roles['va wolf']: return '👵'
     case Roles['aura seer']: return '😇'
     case Roles['priest']: return '🙏'
     case Roles['minion']: return '😈'
@@ -211,9 +224,11 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['cupid']: return []
     case Roles['cursed']: return ['transform']
     case Roles['doppleganger']: return []
+    case Roles['direwolf']: return []
     case Roles['hunter']: return []
     case Roles['mason']: return []
     case Roles['sorceress']: return []
+    case Roles['va wolf']: return []
     case Roles['villager']: return []
     case Roles['witch']: return []
     case Roles['big bad wolf']: return []
@@ -249,7 +264,6 @@ export const getCard = (maybeRole: Roles | null): Card => {
     wakesUp: doesRoleWakeUp(role),
     actions: getRoleActions(role),
     profileImg: getRoleProfileImage(role),
-    cardImg: getRoleImage(role),
   }
 }
 

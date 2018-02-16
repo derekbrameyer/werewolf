@@ -62,6 +62,36 @@ export const setupRole = (
         },
       }
 
+    case Roles['va wolf']:
+      return {
+        role,
+        message: 'wake up and point at someone, when you die they die.',
+        action: {
+          type: 'link',
+          card: Roles['va wolf'],
+          source: '',
+          id: Math.random().toString(),
+          buttons: {
+            link: '',
+          },
+        },
+      }
+
+    case Roles['direwolf']:
+      return {
+        role,
+        message: 'wake up and point at someone, when they die you die.',
+        action: {
+          type: 'link',
+          card: Roles.direwolf,
+          source: '',
+          id: Math.random().toString(),
+          buttons: {
+            link: '',
+          },
+        },
+      }
+
     case Roles['cursed']:
     case Roles['priest']:
     case Roles['hunter']:
@@ -136,8 +166,11 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
       }
 
     case Roles['wolf cub']:
+    case Roles['direwolf']:
     case Roles['prince']:
+    case Roles['diseased']:
     case Roles['minion']:
+    case Roles['va wolf']:
     case Roles['werewolf']:
     case Roles['big bad wolf']:
     case Roles['tanner']:
@@ -189,7 +222,10 @@ export const preDeathAction = (
     case Roles['hunter']:
     case Roles['tanner']:
     case Roles['wolf cub']:
+    case Roles['direwolf']:
+    case Roles['diseased']:
     case Roles['seer']:
+    case Roles['va wolf']:
     case Roles['big bad wolf']:
     case Roles['aura seer']:
     case Roles['minion']:
@@ -238,12 +274,14 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['prince']:
     case Roles['cursed']:
     case Roles['seer']:
+    case Roles['va wolf']:
     case Roles['big bad wolf']:
     case Roles['aura seer']:
     case Roles['minion']:
     case Roles['pi']:
     case Roles['priest']:
     case Roles['apprentice seer']:
+    case Roles['direwolf']:
     case Roles['witch']:
     case Roles['werewolf']:
     case Roles['sorceress']:
@@ -387,9 +425,20 @@ export const performPregameAction = (
       }))
 
     case 'link':
-      return updatePlayer(game, action.source, ({ links }) => ({
-        links: (links || []).concat(action.buttons.link),
-      }))
+      switch (action.card) {
+        case Roles.direwolf:
+          return updatePlayer(game, action.buttons.link, ({ links }) => ({
+            links: (links || []).concat(action.source),
+          }))
+
+        case Roles['va wolf']:
+          return updatePlayer(game, action.source, ({ links }) => ({
+            links: (links || []).concat(action.buttons.link),
+          }))
+
+        default:
+          return game
+      }
 
     case 'cupid':
       const updatedGame = updatePlayer(
