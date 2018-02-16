@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Card, AllCards } from 'interfaces/roles'
 import { getNumberOfARole } from 'helpers/index'
-import { remove, findIndex, propEq } from 'ramda'
 import { CardRow } from 'views/deck/card'
 import { Tabs } from 'components/tabs'
 import { Player } from 'interfaces/player'
@@ -23,7 +22,6 @@ export class BuildDeck extends React.Component<Props> {
       id={card.role}
       key={card.role}
       onAdd={() => {
-        console.log('...')
         if (card.cardCount > getNumberOfARole(card.role, this.props.cards)) {
           updateFirebase({
             cards: this.props.cards.concat(card),
@@ -38,32 +36,8 @@ export class BuildDeck extends React.Component<Props> {
         updateFirebase({
           cards: this.props.cards.filter(c => c.role !== card.role),
         })
-      }}>
-      <button
-        onClick={() =>
-          updateFirebase({
-            cards: remove(
-              findIndex(propEq('role', card.role), this.props.cards),
-              1,
-              this.props.cards
-            ),
-          })
-        }
-        disabled={!getNumberOfARole(card.role, this.props.cards)}>
-        remove
-      </button>
-      <button
-        onClick={() =>
-          updateFirebase({
-            cards: this.props.cards.concat(card),
-          })
-        }
-        disabled={
-          !(card.cardCount - getNumberOfARole(card.role, this.props.cards))
-        }>
-        add
-      </button>
-    </CardRow>
+      }}
+    />
   )
 
   render() {
