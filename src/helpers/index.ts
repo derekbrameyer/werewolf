@@ -1,4 +1,4 @@
-import { reduce, uniq, findIndex, remove, propEq } from 'ramda'
+import { reduce, uniq, findIndex, remove, propEq, values } from 'ramda'
 import { Card, Roles } from 'interfaces/roles'
 import { Game } from 'interfaces/game'
 import { Player } from 'interfaces/player'
@@ -32,7 +32,8 @@ export const removeFirst = <T extends object>(
 ): T[] => remove(findIndex(predicate, list), 1, list)
 
 export const gameHasRole = (game: Game, role: Roles): boolean =>
-  game.roles.indexOf(role) > -1
+  game.roles.indexOf(role) > -1 ||
+  !!values(game.players).find(p => p.role === role)
 
 export const updatePlayer = (
   game: Game,
