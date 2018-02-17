@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { Player } from 'interfaces/player'
-import { getRoleProfileImage } from 'interfaces/roles'
+import { getRoleImage } from 'interfaces/roles'
 import { Tabs } from './tabs'
 
 interface Props {
@@ -21,7 +21,7 @@ export const PlayerRow: React.SFC<Props> = ({
       <button
         onClick={onClick}
         className={cx('player', { dim: !player.alive })}>
-        <img className="role-profile" src={getRoleProfileImage(player.role)} />
+        <img className="role-profile" src={getRoleImage(player.role)} />
         <h2>
           {player.protected && '🛡'}
           {player.blessed && '🙏'}
@@ -38,10 +38,7 @@ export const PlayerRow: React.SFC<Props> = ({
               {player.name} {player.role && `(${player.role})`}
             </h1>
           </Tabs>
-          <img
-            className="role-profile"
-            src={getRoleProfileImage(player.role)}
-          />
+          <img className="role-profile" src={getRoleImage(player.role)} />
           {player.links && <h3>links to: {player.links.join(', ')}</h3>}
           {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}
 

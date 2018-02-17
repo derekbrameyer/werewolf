@@ -3,12 +3,7 @@ import * as cx from 'classnames'
 import { Button } from 'components/button'
 import { Game, performAction } from 'interfaces/game'
 import { gameHasRole, updatePlayer } from 'helpers/index'
-import {
-  Roles,
-  getRoleActions,
-  AllRoles,
-  getRoleProfileImage,
-} from 'interfaces/roles'
+import { Roles, getRoleActions, AllRoles, getRoleImage } from 'interfaces/roles'
 import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Actions } from 'interfaces/actions'
@@ -87,7 +82,7 @@ class ChangeRoleButton extends React.Component<
                     }>
                     <img
                       className="role-profile"
-                      src={getRoleProfileImage(role as Roles)}
+                      src={getRoleImage(role as Roles)}
                     />
                     {role}
                   </Button>

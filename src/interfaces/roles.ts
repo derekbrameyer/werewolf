@@ -48,7 +48,7 @@ export interface Card {
   cardCount: number
   emoji: string
   wakesUp: boolean
-  profileImg: string
+  image: string
   actions: Actions[]
 }
 
@@ -258,9 +258,6 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
 export const getRoleImage = (role: Roles | null | undefined): string =>
   images[`${(role || 'unknown').replace(/\s/g, '-')}.png`]
 
-export const getRoleProfileImage = (role: Roles | null | undefined): string =>
-  images[`${(role || 'unknown').replace(/\s/g, '-')}-profile.png`]
-
 export const getCard = (maybeRole: Roles | null): Card => {
   const role = maybeRole || Roles.villager
   return {
@@ -271,7 +268,7 @@ export const getCard = (maybeRole: Roles | null): Card => {
     emoji: getRoleEmoji(role),
     wakesUp: doesRoleWakeUp(role),
     actions: getRoleActions(role),
-    profileImg: getRoleProfileImage(role),
+    image: getRoleImage(role),
   }
 }
 
