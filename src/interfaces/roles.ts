@@ -1,4 +1,3 @@
-import { getRoles } from '../helpers'
 import { Actions } from 'interfaces/actions'
 const images = require('../assets/*')
 
