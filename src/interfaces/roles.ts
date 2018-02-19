@@ -127,7 +127,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['spell caster']: return 1;
     case Roles['fang face']: return 1;
     case Roles['old hag']: return 1;
-    case Roles['village idiot']: return 1;
+    case Roles['village idiot']: return 1
   }
 }
 
@@ -205,7 +205,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['fang face']: return -5
     case Roles['fruit brute']: return -3
     case Roles['old hag']: return 1
-    case Roles['village idiot']: return -1
+    case Roles['village idiot']: return 2
   }
 }
 
