@@ -41,6 +41,7 @@ export enum Roles {
   'fang face' = 'fang face',
   'fruit brute' = 'fruit brute',
   'old hag' = 'old hag',
+  'village idiot' = 'village idiot',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -88,7 +89,8 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['spell caster']: return true;
     case Roles['fang face']: return true;
     case Roles['fruit brute']: return true;
-    case Roles['old hag']: return true
+    case Roles['old hag']: return true;
+    case Roles['village idiot']: return false;
   }
 }
 
@@ -122,9 +124,10 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['direwolf']: return 1
     case Roles['cult leader']: return 1
     case Roles['fruit brute']: return 1;
-    case Roles['spell caster']: return 1
-    case Roles['fang face']: return 1
-    case Roles['old hag']: return 1
+    case Roles['spell caster']: return 1;
+    case Roles['fang face']: return 1;
+    case Roles['old hag']: return 1;
+    case Roles['village idiot']: return 1;
   }
 }
 
@@ -163,6 +166,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['fang face']: return Team.wolf
     case Roles['fruit brute']: return Team.wolf
     case Roles['old hag']: return Team.villager
+    case Roles['village idiot']: return Team.villager
   }
 }
 
@@ -201,6 +205,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['fang face']: return -5
     case Roles['fruit brute']: return -3
     case Roles['old hag']: return 1
+    case Roles['village idiot']: return -1
   }
 }
 
@@ -240,6 +245,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['fang face']: return '😸'
     case Roles['fruit brute']: return '🥕'
     case Roles['old hag']: return '👵'
+    case Roles['village idiot']: return '🤡'
   }
 }
 
@@ -279,7 +285,7 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['fang face']: return []
     case Roles['fruit brute']: return []
     case Roles['old hag']: return []
-
+    case Roles['village idiot']: return []
   }
 }
 
