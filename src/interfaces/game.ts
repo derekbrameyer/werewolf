@@ -1,3 +1,4 @@
+import { getRoleTeam } from './roles'
 import { Roles, Card } from 'interfaces/roles'
 import {
   updatePlayer,
@@ -55,187 +56,22 @@ const makeIndoctrinatePrompt = (game: Game): Game => {
   return game
 }
 
-<<<<<<< HEAD
-=======
-export const setupRole = (
-  role: Roles | undefined | null
-): SetupPrompt | null => {
-  if (!role) return null
-
-  switch (role) {
-    case Roles['cupid']:
-      return {
-        role,
-        message:
-          'wake up and point at two players. when one dies, the other dies.',
-        action: {
-          type: 'cupid',
-          id: Math.random().toString(),
-          buttons: {
-            link1: '',
-            link2: '',
-          },
-        },
-      }
-
-    case Roles['mason']:
-      return {
-        role,
-        message: 'wake up and look for the other masons.',
-      }
-
-    case Roles['doppleganger']:
-      return {
-        role,
-        message:
-          'wake up and point at someone, when they die you become their role.',
-        action: {
-          type: 'copy',
-          source: '',
-          id: Math.random().toString(),
-          buttons: {
-            copy: '',
-          },
-        },
-      }
-
-    case Roles['va wolf']:
-      return {
-        role,
-        message: 'wake up and point at someone, when you die they die.',
-        action: {
-          type: 'link',
-          card: Roles['va wolf'],
-          source: '',
-          id: Math.random().toString(),
-          buttons: {
-            link: '',
-          },
-        },
-      }
-
-    case Roles['direwolf']:
-      return {
-        role,
-        message: 'wake up and point at someone, when they die you die.',
-        action: {
-          type: 'link',
-          card: Roles.direwolf,
-          source: '',
-          id: Math.random().toString(),
-          buttons: {
-            link: '',
-          },
-        },
-      }
-
-    case Roles['cursed']:
-    case Roles['priest']:
-    case Roles['hunter']:
-    case Roles['pi']:
-    case Roles['prince']:
-    case Roles['seer']:
-    case Roles['apprentice seer']:
-    case Roles['witch']:
-    case Roles['werewolf']:
-    case Roles['fang face']:
-    case Roles['big bad wolf']:
-    case Roles['lycan']:
-    case Roles['cult leader']:
-    case Roles['sorceress']:
-    case Roles['wolf cub']:
-    case Roles['tanner']:
-    case Roles['vampire']:
-    case Roles['aura seer']:
-    case Roles['minion']:
-    case Roles['diseased']:
-    case Roles['bodyguard']:
-    case Roles['spell caster']:
-      return {
-        role,
-        message: 'wake up and look at me.',
-      }
-
-    case Roles['villager']:
-      return null
+const makeFruitBrutePrompt = (game: Game): Game => {
+  if (
+    values(game.players)
+      .filter(p => p.alive)
+      .filter(p => getRoleTeam(p.role) === 'wolf')
+      .every(
+        p => p.role === Roles['fruit brute'] || p.role === Roles['fang face']
+      )
+  ) {
+    game = addPrompt(game, {
+      message:
+        'The fruit brute is currently the only werewolf active, they can not kill anyone.',
+    })
   }
-}
 
->>>>>>> :nerdface: lul
-export const nightAction = (role: Roles | undefined | null): Prompt | null => {
-  if (!role) return null
-
-  switch (role) {
-    case Roles['seer']:
-      return {
-        message: `${role}, inspect someone`,
-      }
-    case Roles['apprentice seer']:
-      return {
-        message: `${role}, inspect someone`,
-      }
-    case Roles['aura seer']:
-      return {
-        message: `${role}, inspect someone, if they have a special power I will say yes`,
-      }
-    case Roles['witch']:
-      return {
-        message: `${role}, thumbs up to save everyone, thumbs down and point to kill someone`,
-      }
-    case Roles['sorceress']:
-      return {
-        message: `${role}, look for the seer`,
-      }
-
-    case Roles['bodyguard']:
-      return {
-        message: `${role}, protect someone`,
-      }
-
-    case Roles['priest']:
-      return {
-        message: `${role}, bless someone. if they are ever killed you will bless another person next night`,
-      }
-
-    case Roles['pi']:
-      return {
-        message: `${role}, point at some one, if they or one of their neighbors are a wolf I will say yes`,
-      }
-
-    case Roles['vampire']:
-      return {
-        message: `${role}, bite someone, if that person gets two nominations from now on, they die`,
-      }
-
-    case Roles['cult leader']:
-      return {
-        message: `${role}, indoctrinate someone, they are now part of your cult`,
-      }
-
-    case Roles['spell caster']:
-      return {
-        message: `${role}, wake up and silence somone. They may not speak the following day`,
-      }
-
-    case Roles['wolf cub']:
-    case Roles['direwolf']:
-    case Roles['fang face']:
-    case Roles['prince']:
-    case Roles['diseased']:
-    case Roles['minion']:
-    case Roles['va wolf']:
-    case Roles['werewolf']:
-    case Roles['big bad wolf']:
-    case Roles['tanner']:
-    case Roles['cupid']:
-    case Roles['mason']:
-    case Roles['doppleganger']:
-    case Roles['lycan']:
-    case Roles['cursed']:
-    case Roles['hunter']:
-    case Roles['villager']:
-      return null
-  }
+  return game
 }
 
 export const preDeathAction = (
@@ -298,6 +134,7 @@ export const preDeathAction = (
     case Roles['villager']:
     case Roles['spell caster']:
     case Roles['fang face']:
+    case Roles['fruit brute']:
     case undefined:
     case null:
       return null
@@ -351,6 +188,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['villager']:
     case Roles['spell caster']:
     case Roles['fang face']:
+    case Roles['fruit brute']:
     case undefined:
     case null:
       return null
@@ -437,6 +275,8 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
       // Kill the player
       game = updatePlayer(game, player.name, { alive: false })
 
+      game = makeFruitBrutePrompt(game)
+
       game = makeIndoctrinatePrompt(game)
       return game
 
@@ -476,15 +316,9 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
         ...game,
         prompts: removeFirst(p => !!p.nightPrompt, game.prompts || []),
       }
-<<<<<<< HEAD
       game = addPrompt(game, (game.nightPrompts || [])[0])
       game = { ...game, nightPrompts: (game.nightPrompts || []).slice(1) }
       game = {
-=======
-
-    case 'start day timer':
-      return {
->>>>>>> lul
         ...game,
         dayCount: isNight(game) ? game.dayCount : game.dayCount + 1,
       }
