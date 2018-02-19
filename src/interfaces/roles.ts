@@ -42,6 +42,7 @@ export enum Roles {
   'fruit brute' = 'fruit brute',
   'old hag' = 'old hag',
   'village idiot' = 'village idiot',
+  'pacifist' = 'pacifist',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -86,11 +87,12 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['priest']: return true
     case Roles['diseased']: return false
     case Roles['direwolf']: return true
-    case Roles['spell caster']: return true;
-    case Roles['fang face']: return true;
-    case Roles['fruit brute']: return true;
-    case Roles['old hag']: return true;
-    case Roles['village idiot']: return false;
+    case Roles['spell caster']: return true
+    case Roles['fang face']: return true
+    case Roles['old hag']: return true
+    case Roles['fruit brute']: return true
+    case Roles['village idiot']: return false
+    case Roles['pacifist']: return false
   }
 }
 
@@ -128,6 +130,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['fang face']: return 1;
     case Roles['old hag']: return 1;
     case Roles['village idiot']: return 1
+    case Roles['pacifist']: return 1
   }
 }
 
@@ -167,6 +170,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['fruit brute']: return Team.wolf
     case Roles['old hag']: return Team.villager
     case Roles['village idiot']: return Team.villager
+    case Roles['pacifist']: return Team.villager
   }
 }
 
@@ -206,6 +210,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['fruit brute']: return -3
     case Roles['old hag']: return 1
     case Roles['village idiot']: return 2
+    case Roles['pacifist']: return -1
   }
 }
 
@@ -246,6 +251,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['fruit brute']: return '🥕'
     case Roles['old hag']: return '👵'
     case Roles['village idiot']: return '🤡'
+    case Roles['pacifist']: return '✌️'
   }
 }
 
@@ -286,6 +292,7 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['fruit brute']: return []
     case Roles['old hag']: return []
     case Roles['village idiot']: return []
+    case Roles['pacifist']: return []
   }
 }
 

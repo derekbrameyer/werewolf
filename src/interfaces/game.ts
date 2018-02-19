@@ -137,6 +137,7 @@ export const preDeathAction = (
     case Roles['fruit brute']:
     case Roles['old hag']:
     case Roles['village idiot']:
+    case Roles['pacifist']:
     case undefined:
     case null:
       return null
@@ -193,6 +194,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['fruit brute']:
     case Roles['old hag']:
     case Roles['village idiot']:
+    case Roles['pacifist']:
     case undefined:
     case null:
       return null
