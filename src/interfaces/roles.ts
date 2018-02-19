@@ -40,6 +40,7 @@ export enum Roles {
   'spell caster' = 'spell caster',
   'fang face' = 'fang face',
   'fruit brute' = 'fruit brute',
+  'old hag' = 'old hag',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -87,6 +88,7 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['spell caster']: return true;
     case Roles['fang face']: return true;
     case Roles['fruit brute']: return true;
+    case Roles['old hag']: return true
   }
 }
 
@@ -119,9 +121,10 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['diseased']: return 1
     case Roles['direwolf']: return 1
     case Roles['cult leader']: return 1
-    case Roles['spell caster']: return 1;
-    case Roles['fang face']: return 1;
     case Roles['fruit brute']: return 1;
+    case Roles['spell caster']: return 1
+    case Roles['fang face']: return 1
+    case Roles['old hag']: return 1
   }
 }
 
@@ -159,6 +162,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['spell caster']: return Team.villager
     case Roles['fang face']: return Team.wolf
     case Roles['fruit brute']: return Team.wolf
+    case Roles['old hag']: return Team.villager
   }
 }
 
@@ -196,6 +200,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['spell caster']: return 1
     case Roles['fang face']: return -5
     case Roles['fruit brute']: return -3
+    case Roles['old hag']: return 1
   }
 }
 
@@ -225,7 +230,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['pi']: return '👻'
     case Roles['prince']: return '🤴'
     case Roles['lycan']: return '🦊'
-    case Roles['va wolf']: return '👵'
+    case Roles['va wolf']: return '🙅‍♀️'
     case Roles['aura seer']: return '😇'
     case Roles['priest']: return '🙏'
     case Roles['minion']: return '😈'
@@ -234,6 +239,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['spell caster']: return '🧝‍♀️'
     case Roles['fang face']: return '😸'
     case Roles['fruit brute']: return '🥕'
+    case Roles['old hag']: return '👵'
   }
 }
 
@@ -272,6 +278,7 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['spell caster']: return []
     case Roles['fang face']: return []
     case Roles['fruit brute']: return []
+    case Roles['old hag']: return []
 
   }
 }

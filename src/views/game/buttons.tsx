@@ -135,6 +135,11 @@ export const makeGameButtons = (game: Game, player: Player) => {
         makeActionButton(game, player, 'bless', game =>
           updateFirebase({ game })
         )}
+      {player.alive &&
+        gameHasRole(game, Roles['old hag']) &&
+        makeActionButton(game, player, 'exile', game =>
+          updateFirebase({ game })
+        )}
 
       {player.alive &&
         getRoleActions(player.role).map(type => (

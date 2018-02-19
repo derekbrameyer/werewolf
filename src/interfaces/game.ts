@@ -135,6 +135,7 @@ export const preDeathAction = (
     case Roles['spell caster']:
     case Roles['fang face']:
     case Roles['fruit brute']:
+    case Roles['old hag']:
     case undefined:
     case null:
       return null
@@ -189,6 +190,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['spell caster']:
     case Roles['fang face']:
     case Roles['fruit brute']:
+    case Roles['old hag']:
     case undefined:
     case null:
       return null
@@ -295,6 +297,10 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
     case 'silence':
       return player
         ? updatePlayer(game, player.name, { silenced: !player.silenced })
+        : game
+    case 'exile':
+      return player
+        ? updatePlayer(game, player.name, { exiled: !player.exiled })
         : game
     case 'indoctrinate':
       game = player
