@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { propEq, values, find, whereEq } from 'ramda'
+import { propEq, values } from 'ramda'
 import { Game, nightAction, isRoleActive, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
@@ -20,6 +20,7 @@ import { Content } from 'components/layout'
 import { gameHasRole, comparePlayersFull, isNight, getGameRoles } from 'helpers'
 import { Prompt } from 'interfaces/prompt'
 import { Timer } from 'components/timer'
+import { updatePlayer } from 'helpers/index'
 
 interface Props {
   game: Game
@@ -29,7 +30,7 @@ export class GameView extends React.Component<Props> {
   startNight = () => {
     if (isNight(this.props.game)) return
 
-    const game = this.props.game
+    let game = this.props.game
 
     const cards = getGameRoles(game).map(getCard)
 
@@ -62,6 +63,16 @@ export class GameView extends React.Component<Props> {
           Roles.werewolf
         )} werewolves wake up and kill someone ${getRoleEmoji(Roles.werewolf)}`,
       })
+
+    const tempStatuses = values(game.players).filter(player => {
+      return !!player.silenced
+    })
+
+    tempStatuses.map(player => {
+      game = updatePlayer(game, player.name, {
+        silenced: false,
+      })
+    })
 
     const [firstPrompt, ...rest] = nightPrompts
 

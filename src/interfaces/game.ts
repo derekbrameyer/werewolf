@@ -366,9 +366,15 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
         ...game,
         prompts: removeFirst(p => !!p.nightPrompt, game.prompts || []),
       }
+<<<<<<< HEAD
       game = addPrompt(game, (game.nightPrompts || [])[0])
       game = { ...game, nightPrompts: (game.nightPrompts || []).slice(1) }
       game = {
+=======
+
+    case 'start day timer':
+      return {
+>>>>>>> lul
         ...game,
         dayCount: isNight(game) ? game.dayCount : game.dayCount + 1,
       }
