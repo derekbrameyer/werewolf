@@ -22,6 +22,7 @@ export const PlayerRow: React.SFC<Props> = ({
       {player.blessed && '🙏'}
       {player.bitten && '🦇'}
       {player.indoctrinated && '🍷'}
+      {player.silenced && '🤐'}
     </h2>
   )
 

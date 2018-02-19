@@ -1,3 +1,4 @@
+import { getRoles } from '../helpers'
 import { Actions } from 'interfaces/actions'
 const images = require('../assets/*')
 
@@ -37,6 +38,7 @@ export enum Roles {
   'direwolf' = 'direwolf',
   'va wolf' = 'va wolf',
   'cult leader' = 'cult leader',
+  'spell caster' = 'spell caster',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -81,6 +83,7 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['priest']: return true
     case Roles['diseased']: return false
     case Roles['direwolf']: return true
+    case Roles['spell caster']: return false;
   }
 }
 
@@ -113,6 +116,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['diseased']: return 1
     case Roles['direwolf']: return 1
     case Roles['cult leader']: return 1
+    case Roles['spell caster']: return 1;
   }
 }
 
@@ -147,6 +151,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['priest']: return Team.villager
     case Roles['vampire']: return Team.vampire
     case Roles['diseased']: return Team.villager
+    case Roles['spell caster']: return Team.villager
   }
 }
 
@@ -180,7 +185,8 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['lycan']: return -1
     case Roles['priest']: return 3
     case Roles['vampire']: return -7
-    case Roles['diseased']: return +3
+    case Roles['diseased']: return 3
+    case Roles['spell caster']: return 1
   }
 }
 
@@ -216,6 +222,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['minion']: return '😈'
     case Roles['vampire']: return '🧛‍♀️'
     case Roles['diseased']: return '🤒'
+    case Roles['spell caster']: return '🧝‍♀️'
   }
 }
 
@@ -251,6 +258,7 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['priest']: return []
     case Roles['vampire']: return []
     case Roles['diseased']: return []
+    case Roles['spell caster']: return []
 
   }
 }

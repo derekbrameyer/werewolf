@@ -105,6 +105,11 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
         message: `${role}, indoctrinate someone, they are now part of your cult`,
       }
 
+    case Roles['spell caster']:
+      return {
+        message: `${role}, wake up and silence somone. They may not speak the following day`,
+      }
+
     case Roles['wolf cub']:
     case Roles['direwolf']:
     case Roles['prince']:
@@ -183,6 +188,7 @@ export const preDeathAction = (
     case Roles['doppleganger']:
     case Roles['lycan']:
     case Roles['villager']:
+    case Roles['spell caster']:
     case undefined:
     case null:
       return null
@@ -234,6 +240,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['doppleganger']:
     case Roles['lycan']:
     case Roles['villager']:
+    case Roles['spell caster']:
     case undefined:
     case null:
       return null
@@ -334,6 +341,10 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
     case 'bite':
       return player
         ? updatePlayer(game, player.name, { bitten: !player.bitten })
+        : game
+    case 'silence':
+      return player
+        ? updatePlayer(game, player.name, { silenced: !player.silenced })
         : game
     case 'indoctrinate':
       game = player
