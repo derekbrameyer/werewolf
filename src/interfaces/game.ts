@@ -55,6 +55,113 @@ const makeIndoctrinatePrompt = (game: Game): Game => {
   return game
 }
 
+<<<<<<< HEAD
+=======
+export const setupRole = (
+  role: Roles | undefined | null
+): SetupPrompt | null => {
+  if (!role) return null
+
+  switch (role) {
+    case Roles['cupid']:
+      return {
+        role,
+        message:
+          'wake up and point at two players. when one dies, the other dies.',
+        action: {
+          type: 'cupid',
+          id: Math.random().toString(),
+          buttons: {
+            link1: '',
+            link2: '',
+          },
+        },
+      }
+
+    case Roles['mason']:
+      return {
+        role,
+        message: 'wake up and look for the other masons.',
+      }
+
+    case Roles['doppleganger']:
+      return {
+        role,
+        message:
+          'wake up and point at someone, when they die you become their role.',
+        action: {
+          type: 'copy',
+          source: '',
+          id: Math.random().toString(),
+          buttons: {
+            copy: '',
+          },
+        },
+      }
+
+    case Roles['va wolf']:
+      return {
+        role,
+        message: 'wake up and point at someone, when you die they die.',
+        action: {
+          type: 'link',
+          card: Roles['va wolf'],
+          source: '',
+          id: Math.random().toString(),
+          buttons: {
+            link: '',
+          },
+        },
+      }
+
+    case Roles['direwolf']:
+      return {
+        role,
+        message: 'wake up and point at someone, when they die you die.',
+        action: {
+          type: 'link',
+          card: Roles.direwolf,
+          source: '',
+          id: Math.random().toString(),
+          buttons: {
+            link: '',
+          },
+        },
+      }
+
+    case Roles['cursed']:
+    case Roles['priest']:
+    case Roles['hunter']:
+    case Roles['pi']:
+    case Roles['prince']:
+    case Roles['seer']:
+    case Roles['apprentice seer']:
+    case Roles['witch']:
+    case Roles['werewolf']:
+    case Roles['fang face']:
+    case Roles['big bad wolf']:
+    case Roles['lycan']:
+    case Roles['cult leader']:
+    case Roles['sorceress']:
+    case Roles['wolf cub']:
+    case Roles['tanner']:
+    case Roles['vampire']:
+    case Roles['aura seer']:
+    case Roles['minion']:
+    case Roles['diseased']:
+    case Roles['bodyguard']:
+    case Roles['spell caster']:
+      return {
+        role,
+        message: 'wake up and look at me.',
+      }
+
+    case Roles['villager']:
+      return null
+  }
+}
+
+>>>>>>> :nerdface: lul
 export const nightAction = (role: Roles | undefined | null): Prompt | null => {
   if (!role) return null
 
@@ -112,6 +219,7 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
 
     case Roles['wolf cub']:
     case Roles['direwolf']:
+    case Roles['fang face']:
     case Roles['prince']:
     case Roles['diseased']:
     case Roles['minion']:
@@ -189,6 +297,7 @@ export const preDeathAction = (
     case Roles['lycan']:
     case Roles['villager']:
     case Roles['spell caster']:
+    case Roles['fang face']:
     case undefined:
     case null:
       return null
@@ -241,6 +350,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['lycan']:
     case Roles['villager']:
     case Roles['spell caster']:
+    case Roles['fang face']:
     case undefined:
     case null:
       return null

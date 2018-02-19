@@ -39,6 +39,7 @@ export enum Roles {
   'va wolf' = 'va wolf',
   'cult leader' = 'cult leader',
   'spell caster' = 'spell caster',
+  'fang face' = 'fang face',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -83,7 +84,8 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['priest']: return true
     case Roles['diseased']: return false
     case Roles['direwolf']: return true
-    case Roles['spell caster']: return false;
+    case Roles['spell caster']: return true;
+    case Roles['fang face']: return true;
   }
 }
 
@@ -117,6 +119,7 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['direwolf']: return 1
     case Roles['cult leader']: return 1
     case Roles['spell caster']: return 1;
+    case Roles['fang face']: return 1;
   }
 }
 
@@ -152,6 +155,7 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['vampire']: return Team.vampire
     case Roles['diseased']: return Team.villager
     case Roles['spell caster']: return Team.villager
+    case Roles['fang face']: return Team.wolf
   }
 }
 
@@ -187,6 +191,7 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['vampire']: return -7
     case Roles['diseased']: return 3
     case Roles['spell caster']: return 1
+    case Roles['fang face']: return -5
   }
 }
 
@@ -223,6 +228,7 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['vampire']: return '🧛‍♀️'
     case Roles['diseased']: return '🤒'
     case Roles['spell caster']: return '🧝‍♀️'
+    case Roles['fang face']: return '😸'
   }
 }
 
@@ -259,6 +265,7 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['vampire']: return []
     case Roles['diseased']: return []
     case Roles['spell caster']: return []
+    case Roles['fang face']: return []
 
   }
 }

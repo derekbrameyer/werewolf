@@ -1,3 +1,4 @@
+import { isPlayerAlive } from '../../helpers'
 import * as React from 'react'
 import * as cx from 'classnames'
 import { propEq, values } from 'ramda'
@@ -34,6 +35,13 @@ export class GameView extends React.Component<Props> {
 
     const cards = getGameRoles(game).map(getCard)
 
+    const currentWolves = values(game.players)
+      .filter(player => isPlayerAlive(game, player.name))
+      .filter(player => getRoleTeam(player.role) === 'wolf')
+
+    const isFangFaceActive =
+      currentWolves.length == 1 && currentWolves[0].role === 'fang face'
+
     const nightPrompts: Prompt[] = cards
       .sort((a, b) => b.weight - a.weight)
       .reduce<Prompt[]>((prompts, card, i) => {
@@ -60,8 +68,14 @@ export class GameView extends React.Component<Props> {
         required: true,
         nightPrompt: true,
         message: `${getRoleEmoji(
-          Roles.werewolf
-        )} werewolves wake up and kill someone ${getRoleEmoji(Roles.werewolf)}`,
+          isFangFaceActive ? Roles['fang face'] : Roles.werewolf
+        )} ${
+          isFangFaceActive ? 'fangface' : 'werewolves'
+        } wake up and kill someone ${
+          isFangFaceActive
+            ? getRoleEmoji(Roles['fang face'])
+            : getRoleEmoji(Roles.werewolf)
+        }`,
       })
 
     const tempStatuses = values(game.players).filter(player => {
