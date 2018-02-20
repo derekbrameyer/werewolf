@@ -154,6 +154,7 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
     case Roles['fang face']:
     case Roles['pacifist']:
     case Roles['village idiot']:
+    case Roles['hoodlum']:
       return null
   }
 }
@@ -222,6 +223,7 @@ export const preDeathAction = (
     case Roles['old hag']:
     case Roles['village idiot']:
     case Roles['pacifist']:
+    case Roles['hoodlum']:
     case undefined:
     case null:
       return null
@@ -279,6 +281,7 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['old hag']:
     case Roles['village idiot']:
     case Roles['pacifist']:
+    case Roles['hoodlum']:
     case undefined:
     case null:
       return null

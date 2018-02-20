@@ -14,6 +14,7 @@ export interface Player {
   bitten: boolean
   blessed: boolean
   silenced: boolean
+  betOn: boolean
   exiled: boolean
 }
 
@@ -30,4 +31,5 @@ export const defaultPlayer: Player = {
   originalRole: null,
   silenced: false,
   exiled: false,
+  betOn: false,
 }

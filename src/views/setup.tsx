@@ -103,6 +103,23 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
+    case Roles['hoodlum']:
+      return {
+        role,
+        message: `${role}, wake up and look at me. You can only win with the villagers if you live and those two die`,
+        requiredPlayers: 1,
+        players: [],
+        requiredTargets: 2,
+        targets: [],
+        actionToString: (players, targets) => (
+          <React.Fragment>
+            {strong(players[0] || placeholder)} is the {role} and bet on{' '}
+            {strong(targets[0] || placeholder)} and{' '}
+            {strong(targets[1] || placeholder)}
+          </React.Fragment>
+        ),
+      }
+
     case Roles['seer']:
     case Roles['apprentice seer']:
     case Roles['bodyguard']:
@@ -175,6 +192,14 @@ const performAction = (_game: Game, action: Action): Game => {
     game = updatePlayer(game, action.targets[0], {
       copiedBy: action.players[0],
     })
+  }
+
+  if (action.role === Roles.hoodlum) {
+    game = action.targets.reduce(
+      (game, playerName) =>
+        updatePlayer(game, playerName, () => ({ betOn: true })),
+      game
+    )
   }
 
   // Link cupids lovers together
