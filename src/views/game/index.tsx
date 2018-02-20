@@ -17,7 +17,7 @@ import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
-import { gameHasRole, comparePlayersFull } from 'helpers'
+import { gameHasRole, comparePlayersFull, isNight, getGameRoles } from 'helpers'
 import { Prompt } from 'interfaces/prompt'
 import { Timer } from 'components/timer'
 
@@ -27,55 +27,52 @@ interface Props {
 
 export class GameView extends React.Component<Props> {
   startNight = () => {
+    if (isNight(this.props.game)) return
+
     const game = this.props.game
-    if (!game.nightPrompts || !game.nightPrompts.length) {
-      const extraCards = values(game.players)
-        .filter(player => !find(whereEq({ role: player.role }), game.cards))
-        .map(player => getCard(player.role))
 
-      const cards = game.cards.concat(extraCards)
+    const cards = getGameRoles(game).map(getCard)
 
-      const nightPrompts: Prompt[] = cards
-        .sort((a, b) => b.weight - a.weight)
-        .reduce<Prompt[]>((prompts, card, i) => {
-          const prompt = nightAction(card.role)
-          const active = isRoleActive(game, card.role)
+    const nightPrompts: Prompt[] = cards
+      .sort((a, b) => b.weight - a.weight)
+      .reduce<Prompt[]>((prompts, card, i) => {
+        const prompt = nightAction(card.role)
+        const active = isRoleActive(game, card.role)
 
-          return prompt &&
-            (game.options.noFlip || (!game.options.noFlip && active))
-            ? prompts.concat({
-                ...prompt,
-                key: `${i}.${Math.random()}).toString()`,
-                message: `${getRoleEmoji(card.role)} ${
-                  prompt.message
-                } ${getRoleEmoji(card.role)}`,
-                className: cx({
-                  dim: !active,
-                }),
-                actions: ['next role'],
-                required: true,
-              })
-            : prompts
-        }, [])
-        .concat({
-          message: `${getRoleEmoji(
-            Roles.werewolf
-          )} werewolves wake up and kill someone ${getRoleEmoji(
-            Roles.werewolf
-          )}`,
-        })
-
-      const [firstPrompt, ...rest] = nightPrompts
-
-      updateFirebase({
-        game: {
-          ...this.props.game,
-          nightKills: [],
-          nightPrompts: rest,
-          prompts: (this.props.game.prompts || []).concat(firstPrompt),
-        },
+        return prompt &&
+          (game.options.noFlip || (!game.options.noFlip && active))
+          ? prompts.concat({
+              ...prompt,
+              key: `${i}.${Math.random()}).toString()`,
+              message: `${getRoleEmoji(card.role)} ${
+                prompt.message
+              } ${getRoleEmoji(card.role)}`,
+              className: cx({
+                dim: !active,
+              }),
+              required: true,
+              nightPrompt: true,
+            })
+          : prompts
+      }, [])
+      .concat({
+        required: true,
+        nightPrompt: true,
+        message: `${getRoleEmoji(
+          Roles.werewolf
+        )} werewolves wake up and kill someone ${getRoleEmoji(Roles.werewolf)}`,
       })
-    }
+
+    const [firstPrompt, ...rest] = nightPrompts
+
+    updateFirebase({
+      game: {
+        ...this.props.game,
+        nightKills: [],
+        nightPrompts: rest,
+        prompts: (this.props.game.prompts || []).concat(firstPrompt),
+      },
+    })
   }
 
   render() {
@@ -162,24 +159,19 @@ export class GameView extends React.Component<Props> {
           </Button>
           <Button
             onClick={() =>
-              updateFirebase({
-                game: performAction(this.props.game, {
-                  type: 'start day timer',
-                  target: null,
-                }),
-              })
+              !isNight(this.props.game)
+                ? this.startNight()
+                : updateFirebase({
+                    game: performAction(this.props.game, {
+                      type: 'next role',
+                      target: null,
+                    }),
+                  })
             }>
-            reset timer
-          </Button>
-          <Button
-            disabled={
-              !!(
-                this.props.game.nightPrompts &&
-                this.props.game.nightPrompts.length
-              )
-            }
-            onClick={() => this.startNight()}>
-            start night
+            {!(this.props.game.nightPrompts || []).length &&
+            isNight(this.props.game)
+              ? 'end night'
+              : isNight(this.props.game) ? 'next role' : 'start night'}
           </Button>
         </Tabs>
       </Content>

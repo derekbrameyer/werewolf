@@ -11,12 +11,14 @@ export const getDeckWeight = (deck: Card[]): number =>
     deck
   )
 
-export const getRoles = (deck: (Card | Player)[]): Roles[] =>
-  uniq(
-    deck
-      .map(c => c.role)
-      .reduce((acc, role) => (role ? [...acc, role] : acc), [] as Roles[])
-  )
+export const getGameRoles = (game: Game): Roles[] => {
+  const playerRoles = getRoles(values(game.players))
+  const cardRoles = getRoles(game.cards)
+  return uniq([...playerRoles, ...cardRoles])
+}
+
+export const getRoles = (source: (Card | Player)[]): Roles[] =>
+  uniq(source.map(c => c.role)) as Roles[]
 
 export const getNumberOfARole = (
   role: Roles,
@@ -32,8 +34,7 @@ export const removeFirst = <T extends object>(
 ): T[] => remove(findIndex(predicate, list), 1, list)
 
 export const gameHasRole = (game: Game, role: Roles): boolean =>
-  game.roles.indexOf(role) > -1 ||
-  !!values(game.players).find(p => p.role === role)
+  getGameRoles(game).indexOf(role) > -1
 
 export const updatePlayer = (
   game: Game,
@@ -81,4 +82,11 @@ export const comparePlayersName = (a: Player, b: Player): number => {
   if (aName < bName) return -1
   else if (aName > bName) return 1
   else return 0
+}
+
+export const isNight = (game: Game): boolean => {
+  return (
+    !!(game.nightPrompts || []).length ||
+    !!(game.prompts || []).filter(p => p.nightPrompt).length
+  )
 }

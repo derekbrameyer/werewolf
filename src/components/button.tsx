@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 interface Props extends React.ButtonHTMLAttributes<any> {
-  confirm?: boolean
+  confirm?: boolean | string
 }
 interface State {
   confirmTimer?: any
@@ -34,7 +34,9 @@ export class Button extends React.Component<Props, State> {
     return (
       <button {...props} onClick={this.onClick}>
         {this.state.confirmTimer ? (
-          <React.Fragment>confirm: {children}</React.Fragment>
+          <React.Fragment>
+            {typeof confirm === 'string' ? confirm : `confirm: ${children}`}
+          </React.Fragment>
         ) : (
           children
         )}

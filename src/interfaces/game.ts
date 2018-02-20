@@ -1,13 +1,18 @@
 import { Roles, Card } from 'interfaces/roles'
-import { updatePlayer, addPrompt, isPlayerAlive } from 'helpers/index'
+import {
+  updatePlayer,
+  addPrompt,
+  isPlayerAlive,
+  removeFirst,
+  isNight,
+} from 'helpers/index'
 import { values } from 'ramda'
 import { Player, PlayerId } from 'interfaces/player'
-import { PregameAction, Action, Actions } from 'interfaces/actions'
-import { Prompt, SetupPrompt } from 'interfaces/prompt'
+import { Action, Actions } from 'interfaces/actions'
+import { Prompt } from 'interfaces/prompt'
 
 export interface Game {
   players: { [name: string]: Player }
-  roles: Roles[]
   cards: Card[]
   options: {
     noFlip: boolean
@@ -18,6 +23,20 @@ export interface Game {
   nightKills: PlayerId[] | null
   dayCount: number
   activePlayer: string | null
+}
+
+export const defaultGame: Game = {
+  players: {},
+  cards: [],
+  options: {
+    noFlip: false,
+    timeLimit: 0,
+  },
+  prompts: [],
+  nightPrompts: [],
+  nightKills: [],
+  activePlayer: null,
+  dayCount: 0,
 }
 
 const makeIndoctrinatePrompt = (game: Game): Game => {
@@ -32,108 +51,6 @@ const makeIndoctrinatePrompt = (game: Game): Game => {
     })
   }
   return game
-}
-
-export const setupRole = (
-  role: Roles | undefined | null
-): SetupPrompt | null => {
-  if (!role) return null
-
-  switch (role) {
-    case Roles['cupid']:
-      return {
-        role,
-        message:
-          'wake up and point at two players. when one dies, the other dies.',
-        action: {
-          type: 'cupid',
-          id: Math.random().toString(),
-          buttons: {
-            link1: '',
-            link2: '',
-          },
-        },
-      }
-
-    case Roles['mason']:
-      return {
-        role,
-        message: 'wake up and look for the other masons.',
-      }
-
-    case Roles['doppleganger']:
-      return {
-        role,
-        message:
-          'wake up and point at someone, when they die you become their role.',
-        action: {
-          type: 'copy',
-          source: '',
-          id: Math.random().toString(),
-          buttons: {
-            copy: '',
-          },
-        },
-      }
-
-    case Roles['va wolf']:
-      return {
-        role,
-        message: 'wake up and point at someone, when you die they die.',
-        action: {
-          type: 'link',
-          card: Roles['va wolf'],
-          source: '',
-          id: Math.random().toString(),
-          buttons: {
-            link: '',
-          },
-        },
-      }
-
-    case Roles['direwolf']:
-      return {
-        role,
-        message: 'wake up and point at someone, when they die you die.',
-        action: {
-          type: 'link',
-          card: Roles.direwolf,
-          source: '',
-          id: Math.random().toString(),
-          buttons: {
-            link: '',
-          },
-        },
-      }
-
-    case Roles['cursed']:
-    case Roles['priest']:
-    case Roles['hunter']:
-    case Roles['pi']:
-    case Roles['prince']:
-    case Roles['seer']:
-    case Roles['apprentice seer']:
-    case Roles['witch']:
-    case Roles['werewolf']:
-    case Roles['big bad wolf']:
-    case Roles['lycan']:
-    case Roles['cult leader']:
-    case Roles['sorceress']:
-    case Roles['wolf cub']:
-    case Roles['tanner']:
-    case Roles['vampire']:
-    case Roles['aura seer']:
-    case Roles['minion']:
-    case Roles['diseased']:
-    case Roles['bodyguard']:
-      return {
-        role,
-        message: 'wake up and look at me.',
-      }
-
-    case Roles['villager']:
-      return null
-  }
 }
 
 export const nightAction = (role: Roles | undefined | null): Prompt | null => {
@@ -432,59 +349,17 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
           })
         : game
     case 'next role':
-      return {
+      game = {
         ...game,
-        ...addPrompt(game, (game.nightPrompts || [])[0]),
-        nightPrompts: (game.nightPrompts || []).slice(1),
+        prompts: removeFirst(p => !!p.nightPrompt, game.prompts || []),
       }
-
-    case 'start day timer':
-      return {
+      game = addPrompt(game, (game.nightPrompts || [])[0])
+      game = { ...game, nightPrompts: (game.nightPrompts || []).slice(1) }
+      game = {
         ...game,
-        dayCount: game.dayCount + 1,
+        dayCount: isNight(game) ? game.dayCount : game.dayCount + 1,
       }
-  }
-}
-
-export const performPregameAction = (
-  game: Game,
-  action?: PregameAction
-): Game => {
-  if (!action) return game
-
-  switch (action.type) {
-    case 'copy':
-      return updatePlayer(game, action.buttons.copy, ({ copiedBy }) => ({
-        copiedBy: action.source,
-      }))
-
-    case 'link':
-      switch (action.card) {
-        case Roles.direwolf:
-          return updatePlayer(game, action.buttons.link, ({ links }) => ({
-            links: (links || []).concat(action.source),
-          }))
-
-        case Roles['va wolf']:
-          return updatePlayer(game, action.source, ({ links }) => ({
-            links: (links || []).concat(action.buttons.link),
-          }))
-
-        default:
-          return game
-      }
-
-    case 'cupid':
-      const updatedGame = updatePlayer(
-        game,
-        action.buttons.link1,
-        ({ links }) => ({
-          links: (links || []).concat(action.buttons.link2),
-        })
-      )
-      return updatePlayer(updatedGame, action.buttons.link2, ({ links }) => ({
-        links: (links || []).concat(action.buttons.link1),
-      }))
+      return game
   }
 }
 

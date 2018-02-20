@@ -16,19 +16,23 @@ export const PlayerRow: React.SFC<Props> = ({
   onClick,
   isActive,
 }) => {
+  const reminders = (
+    <h2>
+      {player.protected && '🛡'}
+      {player.blessed && '🙏'}
+      {player.bitten && '🦇'}
+      {player.indoctrinated && '🍷'}
+    </h2>
+  )
+
   return (
     <React.Fragment>
       <button
         onClick={onClick}
         className={cx('player', { dim: !player.alive })}>
         <img className="role-profile" src={getRoleImage(player.role)} />
-        <h2>
-          {player.protected && '🛡'}
-          {player.blessed && '🙏'}
-          {player.bitten && '🦇'}
-          {player.indoctrinated && '🍷'}
-          {player.name}
-        </h2>
+        <h2>{player.name}</h2>
+        {reminders}
       </button>
 
       {isActive && (
@@ -38,6 +42,7 @@ export const PlayerRow: React.SFC<Props> = ({
               {player.name} {player.role && `(${player.role})`}
             </h1>
           </Tabs>
+          {reminders}
           <img className="role-profile" src={getRoleImage(player.role)} />
           {player.links && <h3>links to: {player.links.join(', ')}</h3>}
           {player.copiedBy && <h3>copied by: {player.copiedBy}</h3>}

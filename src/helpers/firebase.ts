@@ -5,12 +5,12 @@ import { Player } from 'interfaces/player'
 import { toPairs } from 'ramda'
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyC2XK6ev0rkTjbX1DEuiUrQb9ohAaJjRYg',
-  authDomain: 'wt-werewolf.firebaseapp.com',
-  databaseURL: 'https://wt-werewolf.firebaseio.com',
-  projectId: 'wt-werewolf',
-  storageBucket: 'wt-werewolf.appspot.com',
-  messagingSenderId: '529798462395',
+  apiKey: 'AIzaSyBoJ83KQAemXzA6U04NV1I1sRvcDAz1I34',
+  authDomain: 'ww-dev-d5d0d.firebaseapp.com',
+  databaseURL: 'https://ww-dev-d5d0d.firebaseio.com',
+  projectId: 'ww-dev-d5d0d',
+  storageBucket: '',
+  messagingSenderId: '954677605618',
 })
 
 export interface FirebaseState {

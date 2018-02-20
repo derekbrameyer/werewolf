@@ -1,5 +1,4 @@
 import { Player, PlayerId } from './player'
-import { LinkRoles } from './roles'
 
 export type Actions =
   | 'kill'
@@ -11,7 +10,6 @@ export type Actions =
   | 'transform'
   | 'next role'
   | 'indoctrinate'
-  | 'start day timer'
 
 export type Action =
   | { type: Actions; target: null }
@@ -33,36 +31,7 @@ export const Actions = (type: Actions): Action => {
       return { type: 'transform', playerProp: 'role', target: '' }
     case 'next role':
       return { type: 'next role', target: null }
-    case 'start day timer':
-      return { type: 'start day timer', target: null }
     case 'indoctrinate':
       return { type: 'indoctrinate', playerProp: 'indoctrinated', target: '' }
   }
 }
-
-export type PregameAction =
-  | {
-      type: 'cupid'
-      id: string
-      buttons: {
-        link1: PlayerId
-        link2: PlayerId
-      }
-    }
-  | {
-      type: 'copy'
-      id: string
-      source: PlayerId
-      buttons: {
-        copy: PlayerId
-      }
-    }
-  | {
-      type: 'link'
-      card: LinkRoles
-      id: string
-      source: PlayerId
-      buttons: {
-        link: PlayerId
-      }
-    }
