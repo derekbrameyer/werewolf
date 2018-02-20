@@ -34,7 +34,7 @@ interface Action {
   actionToString: (players: string[], targets: string[]) => React.ReactNode
 }
 
-const roleToAction = (role: Roles, roleCount: number): Action => {
+const roleToAction = (role: Roles, roleCount: number): Action | null => {
   const placeholder = '_____'
 
   switch (role) {
@@ -111,7 +111,6 @@ const roleToAction = (role: Roles, roleCount: number): Action => {
     case Roles['hunter']:
     case Roles['mason']:
     case Roles['sorceress']:
-    case Roles['villager']:
     case Roles['witch']:
     case Roles['big bad wolf']:
     case Roles['werewolf']:
@@ -148,6 +147,8 @@ const roleToAction = (role: Roles, roleCount: number): Action => {
           )
         },
       }
+    case Roles['villager']:
+      return null
   }
 }
 
@@ -219,9 +220,9 @@ export class SetupGame extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const actions = getRoles(sortBy(card => card.team, this.props.cards)).map(
-      role => roleToAction(role, getNumberOfARole(role, props.cards))
-    )
+    const actions = getRoles(sortBy(card => card.team, this.props.cards))
+      .map(role => roleToAction(role, getNumberOfARole(role, props.cards)))
+      .filter(x => !!x) as Action[]
 
     this.state = {
       actionsRemaining: actions.slice(1),
@@ -325,7 +326,15 @@ export class SetupGame extends React.Component<Props, State> {
         </Grid>
 
         <Tabs actions>
-          <Button className="red" confirm>
+          <Button
+            className="red"
+            confirm
+            onClick={() => {
+              this.setState({
+                currentAction: this.state.actionsRemaining[0],
+                actionsRemaining: this.state.actionsRemaining.slice(1),
+              })
+            }}>
             skip
           </Button>
 
