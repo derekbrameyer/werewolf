@@ -20,7 +20,6 @@ import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { updatePlayer } from 'helpers/index'
-import { Input } from 'components/input'
 
 interface Action {
   role: Roles
@@ -125,6 +124,12 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case Roles['priest']:
     case Roles['vampire']:
     case Roles['diseased']:
+    case Roles['old hag']:
+    case Roles['fang face']:
+    case Roles['fruit brute']:
+    case Roles['pacifist']:
+    case Roles['spell caster']:
+    case Roles['village idiot']:
       return {
         role,
         message: `${role}, wake up and look at me`,
