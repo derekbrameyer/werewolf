@@ -13,6 +13,9 @@ export interface Player {
   indoctrinated: boolean
   bitten: boolean
   blessed: boolean
+  silenced: boolean
+  betOn: boolean
+  exiled: boolean
 }
 
 export const defaultPlayer: Player = {
@@ -26,4 +29,7 @@ export const defaultPlayer: Player = {
   indoctrinated: false,
   role: null,
   originalRole: null,
+  silenced: false,
+  exiled: false,
+  betOn: false,
 }

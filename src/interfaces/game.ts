@@ -1,3 +1,4 @@
+import { getRoleTeam } from './roles'
 import { Roles, Card } from 'interfaces/roles'
 import {
   updatePlayer,
@@ -55,6 +56,24 @@ const makeIndoctrinatePrompt = (game: Game): Game => {
   return game
 }
 
+const makeFruitBrutePrompt = (game: Game): Game => {
+  if (
+    values(game.players)
+      .filter(p => p.alive)
+      .filter(p => getRoleTeam(p.role) === 'wolf')
+      .every(
+        p => p.role === Roles['fruit brute'] || p.role === Roles['fang face']
+      )
+  ) {
+    game = addPrompt(game, {
+      message:
+        'The fruit brute is currently the only werewolf active, they can not kill anyone.',
+    })
+  }
+
+  return game
+}
+
 export const nightAction = (role: Roles | undefined | null): Prompt | null => {
   if (!role) return null
 
@@ -105,6 +124,16 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
         message: `${role}, indoctrinate someone, they are now part of your cult`,
       }
 
+    case Roles['old hag']:
+      return {
+        message: `${role}, banish someone, they cannot participate in the game until the next morning`,
+      }
+
+    case Roles['spell caster']:
+      return {
+        message: `${role}, wake up and silence someone, they cannot speak until the next morning`,
+      }
+
     case Roles['wolf cub']:
     case Roles['direwolf']:
     case Roles['prince']:
@@ -121,6 +150,11 @@ export const nightAction = (role: Roles | undefined | null): Prompt | null => {
     case Roles['cursed']:
     case Roles['hunter']:
     case Roles['villager']:
+    case Roles['fruit brute']:
+    case Roles['fang face']:
+    case Roles['pacifist']:
+    case Roles['village idiot']:
+    case Roles['hoodlum']:
       return null
   }
 }
@@ -183,6 +217,13 @@ export const preDeathAction = (
     case Roles['doppleganger']:
     case Roles['lycan']:
     case Roles['villager']:
+    case Roles['spell caster']:
+    case Roles['fang face']:
+    case Roles['fruit brute']:
+    case Roles['old hag']:
+    case Roles['village idiot']:
+    case Roles['pacifist']:
+    case Roles['hoodlum']:
     case undefined:
     case null:
       return null
@@ -234,6 +275,13 @@ export const deathAction = (player: Player): Prompt | null => {
     case Roles['doppleganger']:
     case Roles['lycan']:
     case Roles['villager']:
+    case Roles['spell caster']:
+    case Roles['fang face']:
+    case Roles['fruit brute']:
+    case Roles['old hag']:
+    case Roles['village idiot']:
+    case Roles['pacifist']:
+    case Roles['hoodlum']:
     case undefined:
     case null:
       return null
@@ -320,6 +368,8 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
       // Kill the player
       game = updatePlayer(game, player.name, { alive: false })
 
+      game = makeFruitBrutePrompt(game)
+
       game = makeIndoctrinatePrompt(game)
       return game
 
@@ -334,6 +384,14 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
     case 'bite':
       return player
         ? updatePlayer(game, player.name, { bitten: !player.bitten })
+        : game
+    case 'silence':
+      return player
+        ? updatePlayer(game, player.name, { silenced: !player.silenced })
+        : game
+    case 'exile':
+      return player
+        ? updatePlayer(game, player.name, { exiled: !player.exiled })
         : game
     case 'indoctrinate':
       game = player

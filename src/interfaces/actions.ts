@@ -10,6 +10,8 @@ export type Actions =
   | 'transform'
   | 'next role'
   | 'indoctrinate'
+  | 'silence'
+  | 'exile'
 
 export type Action =
   | { type: Actions; target: null }
@@ -33,5 +35,9 @@ export const Actions = (type: Actions): Action => {
       return { type: 'next role', target: null }
     case 'indoctrinate':
       return { type: 'indoctrinate', playerProp: 'indoctrinated', target: '' }
+    case 'silence':
+      return { type: 'silence', playerProp: 'silenced', target: '' }
+    case 'exile':
+      return { type: 'exile', playerProp: 'exiled', target: '' }
   }
 }

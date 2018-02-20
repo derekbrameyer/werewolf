@@ -110,7 +110,11 @@ export const makeGameButtons = (game: Game, player: Player) => {
         }>
         {player.alive ? 'kill' : 'revive'}
       </Button>
-
+      {player.alive &&
+        gameHasRole(game, Roles['spell caster']) &&
+        makeActionButton(game, player, 'silence', game =>
+          updateFirebase({ game })
+        )}
       {player.alive &&
         gameHasRole(game, Roles.bodyguard) &&
         makeActionButton(game, player, 'protect', game =>
@@ -129,6 +133,11 @@ export const makeGameButtons = (game: Game, player: Player) => {
       {player.alive &&
         gameHasRole(game, Roles.priest) &&
         makeActionButton(game, player, 'bless', game =>
+          updateFirebase({ game })
+        )}
+      {player.alive &&
+        gameHasRole(game, Roles['old hag']) &&
+        makeActionButton(game, player, 'exile', game =>
           updateFirebase({ game })
         )}
 

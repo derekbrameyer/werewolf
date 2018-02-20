@@ -37,6 +37,13 @@ export enum Roles {
   'direwolf' = 'direwolf',
   'va wolf' = 'va wolf',
   'cult leader' = 'cult leader',
+  'spell caster' = 'spell caster',
+  'fang face' = 'fang face',
+  'fruit brute' = 'fruit brute',
+  'old hag' = 'old hag',
+  'village idiot' = 'village idiot',
+  'pacifist' = 'pacifist',
+  'hoodlum' = 'hoodlum',
 }
 
 export type LinkRoles = typeof Roles.direwolf | typeof Roles['va wolf']
@@ -81,6 +88,13 @@ export const doesRoleWakeUp = (role: Roles): boolean => {
     case Roles['priest']: return true
     case Roles['diseased']: return false
     case Roles['direwolf']: return true
+    case Roles['spell caster']: return true
+    case Roles['fang face']: return true
+    case Roles['old hag']: return true
+    case Roles['fruit brute']: return true
+    case Roles['village idiot']: return false
+    case Roles['pacifist']: return false
+    case Roles['hoodlum']: return false
   }
 }
 
@@ -113,6 +127,13 @@ export const getRoleCardCount = (role: Roles): number => {
     case Roles['diseased']: return 1
     case Roles['direwolf']: return 1
     case Roles['cult leader']: return 1
+    case Roles['fruit brute']: return 1;
+    case Roles['spell caster']: return 1;
+    case Roles['fang face']: return 1;
+    case Roles['old hag']: return 1;
+    case Roles['village idiot']: return 1
+    case Roles['pacifist']: return 1
+    case Roles['hoodlum']: return 1
   }
 }
 
@@ -147,6 +168,13 @@ export const getRoleTeam = (role: Roles | null | undefined): Team => {
     case Roles['priest']: return Team.villager
     case Roles['vampire']: return Team.vampire
     case Roles['diseased']: return Team.villager
+    case Roles['spell caster']: return Team.villager
+    case Roles['fang face']: return Team.wolf
+    case Roles['fruit brute']: return Team.wolf
+    case Roles['old hag']: return Team.villager
+    case Roles['village idiot']: return Team.villager
+    case Roles['pacifist']: return Team.villager
+    case Roles['hoodlum']: return Team.villager
   }
 }
 
@@ -180,7 +208,14 @@ export const getRoleWeight = (role: Roles | null | undefined): number => {
     case Roles['lycan']: return -1
     case Roles['priest']: return 3
     case Roles['vampire']: return -7
-    case Roles['diseased']: return +3
+    case Roles['diseased']: return 3
+    case Roles['spell caster']: return 1
+    case Roles['fang face']: return -5
+    case Roles['fruit brute']: return -3
+    case Roles['old hag']: return 1
+    case Roles['village idiot']: return 2
+    case Roles['pacifist']: return -1
+    case Roles['hoodlum']: return 0
   }
 }
 
@@ -210,12 +245,19 @@ export const getRoleEmoji = (role: Roles | undefined | null): string => {
     case Roles['pi']: return '👻'
     case Roles['prince']: return '🤴'
     case Roles['lycan']: return '🦊'
-    case Roles['va wolf']: return '👵'
+    case Roles['va wolf']: return '🙅‍♀️'
     case Roles['aura seer']: return '😇'
     case Roles['priest']: return '🙏'
     case Roles['minion']: return '😈'
     case Roles['vampire']: return '🧛‍♀️'
     case Roles['diseased']: return '🤒'
+    case Roles['spell caster']: return '🧝‍♀️'
+    case Roles['fang face']: return '😸'
+    case Roles['fruit brute']: return '🥕'
+    case Roles['old hag']: return '👵'
+    case Roles['village idiot']: return '🤡'
+    case Roles['pacifist']: return '✌️'
+    case Roles['hoodlum']: return '🎰'
   }
 }
 
@@ -251,7 +293,13 @@ export const getRoleActions = (role: Roles | undefined | null): Actions[] => {
     case Roles['priest']: return []
     case Roles['vampire']: return []
     case Roles['diseased']: return []
-
+    case Roles['spell caster']: return []
+    case Roles['fang face']: return []
+    case Roles['fruit brute']: return []
+    case Roles['old hag']: return []
+    case Roles['village idiot']: return []
+    case Roles['pacifist']: return []
+    case Roles['hoodlum']: return []
   }
 }
 
