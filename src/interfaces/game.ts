@@ -74,6 +74,90 @@ const makeFruitBrutePrompt = (game: Game): Game => {
   return game
 }
 
+export const nightAction = (role: Roles | undefined | null): Prompt | null => {
+  if (!role) return null
+
+  switch (role) {
+    case Roles['seer']:
+      return {
+        message: `${role}, inspect someone`,
+      }
+    case Roles['apprentice seer']:
+      return {
+        message: `${role}, inspect someone`,
+      }
+    case Roles['aura seer']:
+      return {
+        message: `${role}, inspect someone, if they have a special power I will say yes`,
+      }
+    case Roles['witch']:
+      return {
+        message: `${role}, thumbs up to save everyone, thumbs down and point to kill someone`,
+      }
+    case Roles['sorceress']:
+      return {
+        message: `${role}, look for the seer`,
+      }
+
+    case Roles['bodyguard']:
+      return {
+        message: `${role}, protect someone`,
+      }
+
+    case Roles['priest']:
+      return {
+        message: `${role}, bless someone. if they are ever killed you will bless another person next night`,
+      }
+
+    case Roles['pi']:
+      return {
+        message: `${role}, point at some one, if they or one of their neighbors are a wolf I will say yes`,
+      }
+
+    case Roles['vampire']:
+      return {
+        message: `${role}, bite someone, if that person gets two nominations from now on, they die`,
+      }
+
+    case Roles['cult leader']:
+      return {
+        message: `${role}, indoctrinate someone, they are now part of your cult`,
+      }
+
+    case Roles['old hag']:
+      return {
+        message: `${role}, banish someone, they cannot participate in the game until the next morning`,
+      }
+
+    case Roles['spell caster']:
+      return {
+        message: `${role}, wake up and silence someone, they cannot speak until the next morning`,
+      }
+
+    case Roles['wolf cub']:
+    case Roles['direwolf']:
+    case Roles['prince']:
+    case Roles['diseased']:
+    case Roles['minion']:
+    case Roles['va wolf']:
+    case Roles['werewolf']:
+    case Roles['big bad wolf']:
+    case Roles['tanner']:
+    case Roles['cupid']:
+    case Roles['mason']:
+    case Roles['doppleganger']:
+    case Roles['lycan']:
+    case Roles['cursed']:
+    case Roles['hunter']:
+    case Roles['villager']:
+    case Roles['fruit brute']:
+    case Roles['fang face']:
+    case Roles['pacifist']:
+    case Roles['village idiot']:
+      return null
+  }
+}
+
 export const preDeathAction = (
   player: Player,
   action: Actions

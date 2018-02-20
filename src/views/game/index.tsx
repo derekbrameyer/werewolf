@@ -2,7 +2,7 @@ import { isPlayerAlive } from '../../helpers'
 import * as React from 'react'
 import * as cx from 'classnames'
 import { propEq, values } from 'ramda'
-import { Game, nightAction, isRoleActive, performAction } from 'interfaces/game'
+import { Game, isRoleActive, nightAction, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
 import {
