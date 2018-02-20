@@ -20,6 +20,7 @@ import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { updatePlayer } from 'helpers/index'
+import { Input } from 'components/input'
 
 interface Action {
   role: Roles
@@ -245,9 +246,16 @@ export class SetupGame extends React.Component<Props, State> {
 
   componentDidUpdate() {
     if (!this.state.currentAction) {
+      const passcode = Math.random()
+        .toString()
+        .slice(3)
+
+      localStorage.setItem('ww-passcode', passcode)
+
       updateFirebase({
         game: {
           ...this.state.game,
+          passcode,
           players: map(
             player => ({ role: Roles.villager, ...player }),
             this.state.game.players

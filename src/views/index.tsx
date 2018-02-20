@@ -11,6 +11,7 @@ import { Weight } from 'components/weight'
 import { GameView } from 'views/game'
 import { FirebaseState, defaultFirebaseState, database } from 'helpers/firebase'
 import { Options } from 'views/options'
+import { SpectateView } from 'views/game/spectate'
 
 interface Props {}
 
@@ -36,8 +37,15 @@ export class App extends React.Component<Props, State> {
   }
 
   render() {
-    if (this.state.game) {
+    if (
+      this.state.game &&
+      localStorage.getItem('ww-passcode') === this.state.game.passcode
+    ) {
       return <GameView game={this.state.game} />
+    }
+
+    if (this.state.game) {
+      return <SpectateView game={this.state.game} />
     }
 
     return (

@@ -12,6 +12,7 @@ import { Action, Actions } from 'interfaces/actions'
 import { Prompt } from 'interfaces/prompt'
 
 export interface Game {
+  passcode: string
   players: { [name: string]: Player }
   cards: Card[]
   options: {
@@ -26,6 +27,7 @@ export interface Game {
 }
 
 export const defaultGame: Game = {
+  passcode: '',
   players: {},
   cards: [],
   options: {
