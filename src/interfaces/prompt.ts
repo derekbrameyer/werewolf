@@ -6,6 +6,5 @@ export interface Prompt {
   target?: string
   actions?: (Actions)[]
   className?: string
-  required?: boolean
   nightPrompt?: boolean
 }

@@ -60,7 +60,6 @@ export class GameView extends React.Component<Props> {
 
     return {
       nightPrompt: true,
-      required: true,
       message: `${emoji} ${message} ${emoji}`,
     }
   }
@@ -70,9 +69,8 @@ export class GameView extends React.Component<Props> {
 
     let game = this.props.game
 
-    const cards = getGameRoles(game).map(getCard)
-
-    const nightPrompts: Prompt[] = cards
+    const nightPrompts: Prompt[] = getGameRoles(game)
+      .map(getCard)
       .sort((a, b) => b.weight - a.weight)
       .reduce<Prompt[]>((prompts, card, i) => {
         const active = isRoleActive(game, card.role)
@@ -82,31 +80,22 @@ export class GameView extends React.Component<Props> {
           ? prompts.concat({
               message: `${card.emoji} ${card.nightMessage} ${card.emoji}`,
               className: cx({ dim: !active }),
-              required: true,
               nightPrompt: true,
             })
           : prompts
       }, [])
       .concat(this.makeWerewolfPrompt())
 
-    const tempStatuses = values(game.players).filter(player => {
-      return !!player.silenced
+    values(game.players).forEach(player => {
+      game = updatePlayer(game, player.name, { silenced: false })
     })
-
-    tempStatuses.map(player => {
-      game = updatePlayer(game, player.name, {
-        silenced: false,
-      })
-    })
-
-    const [firstPrompt, ...rest] = nightPrompts
 
     updateFirebase({
       game: {
         ...this.props.game,
         nightKills: [],
-        nightPrompts: rest,
-        prompts: (this.props.game.prompts || []).concat(firstPrompt),
+        nightPrompts: nightPrompts.slice(1),
+        prompts: (this.props.game.prompts || []).concat(nightPrompts[0]),
       },
     })
   }

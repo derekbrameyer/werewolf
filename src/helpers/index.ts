@@ -19,8 +19,19 @@ export const getGameCards = (game: Game): Card[] =>
 
 export const getNumberOfARole = (
   role: Roles,
-  deck: (Card | Player)[]
-): number => reduce((acc, c) => (c.role === role ? acc + 1 : acc), 0, deck)
+  deck: (Card | Player | Roles)[]
+): number =>
+  reduce(
+    (acc, c) => {
+      if (typeof c === 'string') {
+        return c === role ? acc + 1 : acc
+      } else {
+        return c.role === role ? acc + 1 : acc
+      }
+    },
+    0,
+    deck
+  )
 
 export const isPlayerAlive = (game: Game, name: string): boolean =>
   game.players[name].alive
