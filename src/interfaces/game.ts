@@ -1,5 +1,4 @@
-import { getRoleTeam } from './roles'
-import { Roles, Card } from 'interfaces/roles'
+import { Roles, getCard } from 'interfaces/roles'
 import {
   updatePlayer,
   addPrompt,
@@ -15,7 +14,6 @@ import { Prompt } from 'interfaces/prompt'
 export interface Game {
   passcode: string
   players: { [name: string]: Player }
-  cards: Card[]
   options: {
     noFlip: boolean
     timeLimit: number | null
@@ -30,7 +28,6 @@ export interface Game {
 export const defaultGame: Game = {
   passcode: '',
   players: {},
-  cards: [],
   options: {
     noFlip: false,
     timeLimit: 0,
@@ -57,13 +54,15 @@ const makeIndoctrinatePrompt = (game: Game): Game => {
 }
 
 const makeFruitBrutePrompt = (game: Game): Game => {
+  const livingWolves = values(game.players)
+    .filter(p => p.alive)
+    .filter(p => getCard(p.role).team === 'wolf')
+
   if (
-    values(game.players)
-      .filter(p => p.alive)
-      .filter(p => getRoleTeam(p.role) === 'wolf')
-      .every(
-        p => p.role === Roles['fruit brute'] || p.role === Roles['fang face']
-      )
+    livingWolves.length &&
+    livingWolves.every(
+      p => p.role === Roles['fruit brute'] || p.role === Roles['fang face']
+    )
   ) {
     game = addPrompt(game, {
       message:
@@ -74,95 +73,12 @@ const makeFruitBrutePrompt = (game: Game): Game => {
   return game
 }
 
-export const nightAction = (role: Roles | undefined | null): Prompt | null => {
-  if (!role) return null
-
-  switch (role) {
-    case Roles['seer']:
-      return {
-        message: `${role}, inspect someone`,
-      }
-    case Roles['apprentice seer']:
-      return {
-        message: `${role}, inspect someone`,
-      }
-    case Roles['aura seer']:
-      return {
-        message: `${role}, inspect someone, if they have a special power I will say yes`,
-      }
-    case Roles['witch']:
-      return {
-        message: `${role}, thumbs up to save everyone, thumbs down and point to kill someone`,
-      }
-    case Roles['sorceress']:
-      return {
-        message: `${role}, look for the seer`,
-      }
-
-    case Roles['bodyguard']:
-      return {
-        message: `${role}, protect someone`,
-      }
-
-    case Roles['priest']:
-      return {
-        message: `${role}, bless someone. if they are ever killed you will bless another person next night`,
-      }
-
-    case Roles['pi']:
-      return {
-        message: `${role}, point at some one, if they or one of their neighbors are a wolf I will say yes`,
-      }
-
-    case Roles['vampire']:
-      return {
-        message: `${role}, bite someone, if that person gets two nominations from now on, they die`,
-      }
-
-    case Roles['cult leader']:
-      return {
-        message: `${role}, indoctrinate someone, they are now part of your cult`,
-      }
-
-    case Roles['old hag']:
-      return {
-        message: `${role}, banish someone, they cannot participate in the game until the next morning`,
-      }
-
-    case Roles['spell caster']:
-      return {
-        message: `${role}, wake up and silence someone, they cannot speak until the next morning`,
-      }
-
-    case Roles['wolf cub']:
-    case Roles['direwolf']:
-    case Roles['prince']:
-    case Roles['diseased']:
-    case Roles['minion']:
-    case Roles['va wolf']:
-    case Roles['werewolf']:
-    case Roles['big bad wolf']:
-    case Roles['tanner']:
-    case Roles['cupid']:
-    case Roles['mason']:
-    case Roles['doppleganger']:
-    case Roles['lycan']:
-    case Roles['cursed']:
-    case Roles['hunter']:
-    case Roles['villager']:
-    case Roles['fruit brute']:
-    case Roles['fang face']:
-    case Roles['pacifist']:
-    case Roles['village idiot']:
-    case Roles['hoodlum']:
-      return null
-  }
-}
-
 export const preDeathAction = (
   player: Player,
   action: Actions
 ): Prompt | null => {
+  const role = getCard(player.role)
+
   if (action === 'sudo kill') return null
 
   if (action === 'kill' && (player.protected || player.blessed)) {
@@ -174,118 +90,11 @@ export const preDeathAction = (
     }
   }
 
-  switch (player.role) {
-    case Roles['prince']:
-      return {
-        target: player.name,
-        message: `${player.name} is the ${
-          player.role
-        }, what would you like to do?`,
-        actions: ['sudo kill'],
-      }
-
-    case Roles['cursed']:
-      return {
-        target: player.name,
-        message: `${player.name} is the ${
-          player.role
-        }, what would you like to do?`,
-        actions: ['transform', 'sudo kill'],
-      }
-
-    case Roles['hunter']:
-    case Roles['tanner']:
-    case Roles['wolf cub']:
-    case Roles['direwolf']:
-    case Roles['diseased']:
-    case Roles['seer']:
-    case Roles['va wolf']:
-    case Roles['big bad wolf']:
-    case Roles['aura seer']:
-    case Roles['cult leader']:
-    case Roles['minion']:
-    case Roles['pi']:
-    case Roles['priest']:
-    case Roles['apprentice seer']:
-    case Roles['witch']:
-    case Roles['werewolf']:
-    case Roles['sorceress']:
-    case Roles['bodyguard']:
-    case Roles['cupid']:
-    case Roles['vampire']:
-    case Roles['mason']:
-    case Roles['doppleganger']:
-    case Roles['lycan']:
-    case Roles['villager']:
-    case Roles['spell caster']:
-    case Roles['fang face']:
-    case Roles['fruit brute']:
-    case Roles['old hag']:
-    case Roles['village idiot']:
-    case Roles['pacifist']:
-    case Roles['hoodlum']:
-    case undefined:
-    case null:
-      return null
+  if (role.preDeathAction) {
+    return role.preDeathAction(player)
   }
-}
 
-export const deathAction = (player: Player): Prompt | null => {
-  switch (player.role) {
-    case Roles['hunter']:
-      return {
-        message: 'the hunter has died, choose a player to kill',
-      }
-
-    case Roles['tanner']:
-      return {
-        message: 'if the tanner was lynched then they win',
-      }
-
-    case Roles['wolf cub']:
-      return {
-        message: 'the wolf cub died, wolves get to kill two people next night',
-      }
-
-    case Roles['diseased']:
-      return {
-        message:
-          'if the diseased was killed by werewolf the werewolfs can not kill the next night',
-      }
-
-    case Roles['prince']:
-    case Roles['cult leader']:
-    case Roles['cursed']:
-    case Roles['seer']:
-    case Roles['va wolf']:
-    case Roles['big bad wolf']:
-    case Roles['aura seer']:
-    case Roles['minion']:
-    case Roles['pi']:
-    case Roles['priest']:
-    case Roles['apprentice seer']:
-    case Roles['direwolf']:
-    case Roles['witch']:
-    case Roles['werewolf']:
-    case Roles['sorceress']:
-    case Roles['bodyguard']:
-    case Roles['cupid']:
-    case Roles['vampire']:
-    case Roles['mason']:
-    case Roles['doppleganger']:
-    case Roles['lycan']:
-    case Roles['villager']:
-    case Roles['spell caster']:
-    case Roles['fang face']:
-    case Roles['fruit brute']:
-    case Roles['old hag']:
-    case Roles['village idiot']:
-    case Roles['pacifist']:
-    case Roles['hoodlum']:
-    case undefined:
-    case null:
-      return null
-  }
+  return null
 }
 
 export const performAction = (cleanGame: Game, action: Action): Game => {
@@ -298,17 +107,18 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
     case 'bypass protection':
     case 'sudo kill':
       if (!player) return game
+      const role = getCard(player.role)
 
       // Revive the player
       if (!player.alive) {
         if (player.copiedBy) {
           game = updatePlayer(game, player.copiedBy, {
-            role: Roles.doppleganger,
+            role: 'doppleganger',
           })
         }
 
-        if (player.role === Roles.cursed) {
-          game = updatePlayer(game, player.name, { role: Roles.cursed })
+        if (player.role === 'cursed') {
+          game = updatePlayer(game, player.name, { role: 'cursed' })
         }
 
         game = {
@@ -357,7 +167,9 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
         }, game)
 
       // Add any prompts for when specific roles die
-      game = addPrompt(game, deathAction(player))
+      if (role.deathMessage) {
+        game = addPrompt(game, { message: role.deathMessage })
+      }
 
       // Update what players have been killed this night
       game = {
@@ -404,8 +216,7 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
     case 'transform':
       return player
         ? updatePlayer(game, player.name, {
-            role:
-              player.role === Roles.werewolf ? Roles.cursed : Roles.werewolf,
+            role: player.role === 'werewolf' ? 'cursed' : 'werewolf',
           })
         : game
     case 'next role':
@@ -427,7 +238,7 @@ export const isRoleActive = (game: Game, role: Roles): boolean => {
   const livingPlayers = values(game.players).filter(p => p.alive)
   const isRoleInGame = !!livingPlayers.filter(p => p.role === role).length
 
-  const isSeerInGame = !!livingPlayers.find(p => p.role === Roles.seer)
+  const isSeerInGame = !!livingPlayers.find(p => p.role === 'seer')
   const isApprenticeSeerInGame = !!livingPlayers.find(
     p => p.role === Roles['apprentice seer']
   )

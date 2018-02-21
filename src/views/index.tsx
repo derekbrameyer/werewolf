@@ -12,6 +12,7 @@ import { GameView } from 'views/game'
 import { FirebaseState, defaultFirebaseState, database } from 'helpers/firebase'
 import { Options } from 'views/options'
 import { SpectateView } from 'views/game/spectate'
+import { getCard } from 'interfaces/roles'
 
 interface Props {}
 
@@ -62,8 +63,8 @@ export class App extends React.Component<Props, State> {
             onClick={() => this.setState({ view: 'deck' })}>
             build deck
             <h3>
-              cards: {this.state.cards.length}, balance:{' '}
-              <Weight weight={getDeckWeight(this.state.cards)} />
+              cards: {this.state.roles.length}, balance:{' '}
+              <Weight weight={getDeckWeight(this.state.roles.map(getCard))} />
             </h3>
           </button>
 
@@ -82,7 +83,7 @@ export class App extends React.Component<Props, State> {
           <button
             className={cx({ active: this.state.view === 'setup' })}
             disabled={
-              !this.state.cards.length ||
+              !this.state.roles.length ||
               !this.state.players ||
               !this.state.players.length
             }
@@ -93,7 +94,7 @@ export class App extends React.Component<Props, State> {
 
         {this.state.view === 'menu' && (
           <Overview
-            cards={this.state.cards}
+            roles={this.state.roles}
             players={this.state.players}
             noFlip={this.state.noFlip}
             timeLimit={this.state.timeLimit}
@@ -101,11 +102,17 @@ export class App extends React.Component<Props, State> {
         )}
 
         {this.state.view === 'deck' && (
-          <BuildDeck cards={this.state.cards} players={this.state.players} />
+          <BuildDeck
+            cards={this.state.roles.map(getCard)}
+            players={this.state.players}
+          />
         )}
 
         {this.state.view === 'players' && (
-          <Players cards={this.state.cards} players={this.state.players} />
+          <Players
+            cards={this.state.roles.map(getCard)}
+            players={this.state.players}
+          />
         )}
 
         {this.state.view === 'options' && (
@@ -117,7 +124,7 @@ export class App extends React.Component<Props, State> {
 
         {this.state.view === 'setup' && (
           <SetupGame
-            cards={this.state.cards}
+            roles={this.state.roles}
             players={this.state.players}
             noFlip={this.state.noFlip}
             timeLimit={this.state.timeLimit}

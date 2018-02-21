@@ -1,7 +1,10 @@
 import * as React from 'react'
-import { Player, defaultPlayer } from 'interfaces/player'
+import {
+  defaultPlayer,
+  SetupPlayer,
+  defaultSetupPlayer,
+} from 'interfaces/player'
 import { find, whereEq, remove, findIndex } from 'ramda'
-import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'
 import { Card } from 'interfaces/roles'
@@ -10,9 +13,10 @@ import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { comparePlayersName } from 'helpers'
+import { PlayerSetupRow } from 'components/setupPlayer'
 
 interface Props {
-  players: Player[]
+  players: SetupPlayer[]
   cards: Card[]
 }
 interface State {
@@ -44,7 +48,7 @@ export class Players extends React.Component<Props, State> {
             updateFirebase({
               players: [
                 ...this.props.players,
-                { ...defaultPlayer, name: this.state.playerName },
+                { ...defaultSetupPlayer, name: this.state.playerName },
               ],
             })
           }}
@@ -52,10 +56,9 @@ export class Players extends React.Component<Props, State> {
 
         <Grid>
           {this.props.players.sort(comparePlayersName).map(player => (
-            <PlayerRow
+            <PlayerSetupRow
               player={player}
               key={player.name}
-              isActive={false}
               onClick={() => {
                 updateFirebase({
                   players: remove(

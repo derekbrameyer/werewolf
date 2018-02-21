@@ -1,21 +1,21 @@
 import * as React from 'react'
-import { Card, AllCards } from 'interfaces/roles'
+import { Roles, AllCards, Card, getCard } from 'interfaces/roles'
 import { getNumberOfARole } from 'helpers/index'
 import { CardRow } from 'views/deck/card'
 import { Tabs } from 'components/tabs'
-import { Player } from 'interfaces/player'
+import { SetupPlayer } from 'interfaces/player'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 
 interface Props {
-  players: Player[]
-  cards: Card[]
+  players: SetupPlayer[]
+  cards: Card<Roles>[]
 }
 
 export class BuildDeck extends React.Component<Props> {
-  renderCard = (card: Card) => (
+  renderCard = (card: Card<Roles>) => (
     <CardRow
       deck={this.props.cards}
       card={card}
@@ -24,17 +24,21 @@ export class BuildDeck extends React.Component<Props> {
       onAdd={() => {
         if (card.cardCount > getNumberOfARole(card.role, this.props.cards)) {
           updateFirebase({
-            cards: this.props.cards.concat(card),
+            roles: this.props.cards.concat(card).map(card => card.role),
           })
         } else {
           updateFirebase({
-            cards: this.props.cards.filter(c => c.role !== card.role),
+            roles: this.props.cards
+              .map(card => card.role)
+              .filter(role => role !== card.role),
           })
         }
       }}
       onRemove={() => {
         updateFirebase({
-          cards: this.props.cards.filter(c => c.role !== card.role),
+          roles: this.props.cards
+            .map(card => card.role)
+            .filter(role => role !== card.role),
         })
       }}
     />
@@ -61,7 +65,7 @@ export class BuildDeck extends React.Component<Props> {
             confirm
             className="red"
             disabled={!this.props.cards.length}
-            onClick={() => updateFirebase({ cards: [] })}>
+            onClick={() => updateFirebase({ roles: [] })}>
             reset deck
           </Button>
         </Tabs>

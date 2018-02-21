@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Game, defaultGame } from 'interfaces/game'
-import { Card, Roles, getRoleEmoji } from 'interfaces/roles'
-import { getRoles, getNumberOfARole, comparePlayersName } from 'helpers/index'
+import { Roles, getCard } from 'interfaces/roles'
+import { getNumberOfARole, comparePlayersName } from 'helpers/index'
 import {
   sortBy,
   values,
@@ -16,10 +16,11 @@ import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
-import { Player } from 'interfaces/player'
+import { SetupPlayer, defaultPlayer } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { updatePlayer } from 'helpers/index'
+import { PlayerSetupRow } from 'components/setupPlayer'
 
 interface Action {
   role: Roles
@@ -38,7 +39,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
   const placeholder = '_____'
 
   switch (role) {
-    case Roles['direwolf']:
+    case 'direwolf':
       return {
         role,
         message: `${role}, wake up and look at me. Point someone, when they die you die.`,
@@ -54,7 +55,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
-    case Roles['va wolf']:
+    case 'va wolf':
       return {
         role,
         message: `${role}, wake up and look at me. Point at someone, when you die they die.`,
@@ -70,7 +71,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
-    case Roles['doppleganger']:
+    case 'doppleganger':
       return {
         role,
         message: `${role}, wake up and look at me. Point at someone, when they die you become their role.`,
@@ -86,7 +87,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
-    case Roles['cupid']:
+    case 'cupid':
       return {
         role,
         message: `${role}, wake up and look at me. Point at two people, when one dies the other dies too.`,
@@ -103,7 +104,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
-    case Roles['hoodlum']:
+    case 'hoodlum':
       return {
         role,
         message: `${role}, wake up and look at me. You can only win with the villagers if you live and those two die`,
@@ -120,33 +121,33 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
-    case Roles['seer']:
-    case Roles['apprentice seer']:
-    case Roles['bodyguard']:
-    case Roles['cursed']:
-    case Roles['cult leader']:
-    case Roles['hunter']:
-    case Roles['mason']:
-    case Roles['sorceress']:
-    case Roles['witch']:
-    case Roles['big bad wolf']:
-    case Roles['werewolf']:
-    case Roles['wolf cub']:
-    case Roles['tanner']:
-    case Roles['pi']:
-    case Roles['prince']:
-    case Roles['lycan']:
-    case Roles['aura seer']:
-    case Roles['minion']:
-    case Roles['priest']:
-    case Roles['vampire']:
-    case Roles['diseased']:
-    case Roles['old hag']:
-    case Roles['fang face']:
-    case Roles['fruit brute']:
-    case Roles['pacifist']:
-    case Roles['spell caster']:
-    case Roles['village idiot']:
+    case 'seer':
+    case 'apprentice seer':
+    case 'bodyguard':
+    case 'cursed':
+    case 'cult leader':
+    case 'hunter':
+    case 'mason':
+    case 'sorceress':
+    case 'witch':
+    case 'big bad wolf':
+    case 'werewolf':
+    case 'wolf cub':
+    case 'tanner':
+    case 'pi':
+    case 'prince':
+    case 'lycan':
+    case 'aura seer':
+    case 'minion':
+    case 'priest':
+    case 'vampire':
+    case 'diseased':
+    case 'old hag':
+    case 'fang face':
+    case 'fruit brute':
+    case 'pacifist':
+    case 'spell caster':
+    case 'village idiot':
       return {
         role,
         message: `${role}, wake up and look at me`,
@@ -170,7 +171,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
           )
         },
       }
-    case Roles['villager']:
+    case 'villager':
       return null
   }
 }
@@ -188,13 +189,13 @@ const performAction = (_game: Game, action: Action): Game => {
   )
 
   // Set the target to be copied by the doppleganger
-  if (action.role === Roles.doppleganger) {
+  if (action.role === 'doppleganger') {
     game = updatePlayer(game, action.targets[0], {
       copiedBy: action.players[0],
     })
   }
 
-  if (action.role === Roles.hoodlum) {
+  if (action.role === 'hoodlum') {
     game = action.targets.reduce(
       (game, playerName) =>
         updatePlayer(game, playerName, () => ({ betOn: true })),
@@ -203,7 +204,7 @@ const performAction = (_game: Game, action: Action): Game => {
   }
 
   // Link cupids lovers together
-  if (action.role === Roles.cupid) {
+  if (action.role === 'cupid') {
     game = action.targets.reduce(
       (game, playerName) =>
         updatePlayer(game, playerName, ({ links }) => ({
@@ -216,14 +217,14 @@ const performAction = (_game: Game, action: Action): Game => {
   }
 
   // Link the direwolf to its target
-  if (action.role === Roles.direwolf) {
+  if (action.role === 'cupid') {
     game = updatePlayer(game, action.targets[0], ({ links }) => ({
       links: uniq((links || []).concat(action.players[0])),
     }))
   }
 
   // Link the target to va wolf
-  if (action.role === Roles['va wolf']) {
+  if (action.role === 'va wolf') {
     game = updatePlayer(game, action.players[0], ({ links }) => ({
       links: uniq((links || []).concat(action.targets[0])),
     }))
@@ -233,8 +234,8 @@ const performAction = (_game: Game, action: Action): Game => {
 }
 
 interface Props {
-  players: Player[]
-  cards: Card[]
+  players: SetupPlayer[]
+  roles: Roles[]
   noFlip: boolean
   timeLimit: number
 }
@@ -251,8 +252,9 @@ export class SetupGame extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const actions = getRoles(sortBy(card => card.team, this.props.cards))
-      .map(role => roleToAction(role, getNumberOfARole(role, props.cards)))
+    const cards = props.roles.map(getCard)
+    const actions = sortBy(card => card.team, cards)
+      .map(({ role }) => roleToAction(role, getNumberOfARole(role, cards)))
       .filter(x => !!x) as Action[]
 
     this.state = {
@@ -261,7 +263,6 @@ export class SetupGame extends React.Component<Props, State> {
 
       game: {
         ...defaultGame,
-        cards: props.cards,
         players: props.players.reduce(
           (memo, player) => ({ ...memo, [player.name]: player }),
           {}
@@ -287,7 +288,7 @@ export class SetupGame extends React.Component<Props, State> {
           ...this.state.game,
           passcode,
           players: map(
-            player => ({ role: Roles.villager, ...player }),
+            player => ({ ...defaultPlayer, role: 'villager', ...player }),
             this.state.game.players
           ),
         },
@@ -303,8 +304,8 @@ export class SetupGame extends React.Component<Props, State> {
     return (
       <Content>
         <h1 className="prompt">
-          {getRoleEmoji(currentAction.role)} {currentAction.message}{' '}
-          {getRoleEmoji(currentAction.role)}
+          {getCard(currentAction.role).emoji} {currentAction.message}{' '}
+          {getCard(currentAction.role).emoji}
         </h1>
 
         <div style={{ paddingTop: '1rem', textAlign: 'center' }}>
@@ -319,13 +320,12 @@ export class SetupGame extends React.Component<Props, State> {
             .sort(comparePlayersName)
             .map(player => {
               return (
-                <PlayerRow
-                  isActive={false}
+                <PlayerSetupRow
                   player={{
+                    name: player.name,
                     role: currentAction.players.find(equals(player.name))
                       ? currentAction.role
-                      : null,
-                    ...player,
+                      : player.role,
                   }}
                   key={player.name}
                   onClick={() => {

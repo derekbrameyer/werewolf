@@ -1,17 +1,11 @@
 import { isPlayerAlive } from '../../helpers'
 import * as React from 'react'
 import * as cx from 'classnames'
-import { propEq, values } from 'ramda'
-import { Game, isRoleActive, nightAction, performAction } from 'interfaces/game'
+import { propEq, values, contains } from 'ramda'
+import { Game, isRoleActive, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
-import {
-  getRoleTeam,
-  Roles,
-  Team,
-  getRoleEmoji,
-  getCard,
-} from 'interfaces/roles'
+import { getCard } from 'interfaces/roles'
 import { PromptView } from 'views/game/prompt'
 import { makeGameButtons } from 'views/game/buttons'
 import { Grid } from 'components/grid'
@@ -28,6 +22,49 @@ interface Props {
 }
 
 export class GameView extends React.Component<Props> {
+  makeWerewolfPrompt = (): Prompt => {
+    const livingWolves = values(this.props.game.players)
+      .filter(player => isPlayerAlive(this.props.game, player.name))
+      .filter(player => getCard(player.role).team === 'wolf')
+      .map(player => player.role)
+
+    const isFangFaceInGame = contains('fang face', livingWolves)
+    const isBigBadWolfInGame = contains('big bad wolf', livingWolves)
+
+    const isOnlyFangFace = livingWolves === ['fang face']
+    const isOnlyFruitBrute = livingWolves === ['fruit brute']
+
+    const wasWolfCubKilled = !!(this.props.game.nightKills || []).find(
+      playerName => this.props.game.players[playerName].role === 'wolf cub'
+    )
+
+    // prettier-ignore
+    const emoji =
+        wasWolfCubKilled        ? getCard('wolf cub').emoji :
+        isBigBadWolfInGame      ? getCard('big bad wolf').emoji :
+        livingWolves.length > 1 ? getCard('werewolf').emoji :
+                                  getCard(livingWolves[0]).emoji
+
+    // prettier-ignore
+    const wakeUpAndKillPeople = 'wake up and kill ' +
+        wasWolfCubKilled && isBigBadWolfInGame ? 'three people' :
+        wasWolfCubKilled || isBigBadWolfInGame ? 'two people' :
+                                                 'someone'
+
+    // prettier-ignore
+    const message =
+        isOnlyFruitBrute ? `fruit brute wake up and eat some fruit` :
+        isOnlyFangFace   ? `fang face ${wakeUpAndKillPeople}` :
+        isFangFaceInGame ? `werewolves except fang face, ${wakeUpAndKillPeople}` :
+                           `werewolves, ${wakeUpAndKillPeople}`
+
+    return {
+      nightPrompt: true,
+      required: true,
+      message: `${emoji} ${message} ${emoji}`,
+    }
+  }
+
   startNight = () => {
     if (isNight(this.props.game)) return
 
@@ -35,48 +72,22 @@ export class GameView extends React.Component<Props> {
 
     const cards = getGameRoles(game).map(getCard)
 
-    const currentWolves = values(game.players)
-      .filter(player => isPlayerAlive(game, player.name))
-      .filter(player => getRoleTeam(player.role) === 'wolf')
-
-    const isFangFaceActive =
-      currentWolves.length == 1 && currentWolves[0].role === 'fang face'
-
     const nightPrompts: Prompt[] = cards
       .sort((a, b) => b.weight - a.weight)
       .reduce<Prompt[]>((prompts, card, i) => {
-        const prompt = nightAction(card.role)
         const active = isRoleActive(game, card.role)
 
-        return prompt &&
+        return card.nightMessage &&
           (game.options.noFlip || (!game.options.noFlip && active))
           ? prompts.concat({
-              ...prompt,
-              key: `${i}.${Math.random()}).toString()`,
-              message: `${getRoleEmoji(card.role)} ${
-                prompt.message
-              } ${getRoleEmoji(card.role)}`,
-              className: cx({
-                dim: !active,
-              }),
+              message: `${card.emoji} ${card.nightMessage} ${card.emoji}`,
+              className: cx({ dim: !active }),
               required: true,
               nightPrompt: true,
             })
           : prompts
       }, [])
-      .concat({
-        required: true,
-        nightPrompt: true,
-        message: `${getRoleEmoji(
-          isFangFaceActive ? Roles['fang face'] : Roles.werewolf
-        )} ${
-          isFangFaceActive ? 'fangface' : 'werewolves'
-        } wake up and kill someone ${
-          isFangFaceActive
-            ? getRoleEmoji(Roles['fang face'])
-            : getRoleEmoji(Roles.werewolf)
-        }`,
-      })
+      .concat(this.makeWerewolfPrompt())
 
     const tempStatuses = values(game.players).filter(player => {
       return !!player.silenced
@@ -105,11 +116,11 @@ export class GameView extends React.Component<Props> {
       propEq('alive', true)
     )
     const theLivingWolves = theLiving.filter(
-      p => getRoleTeam(p.role || Roles.villager) === Team.wolf
+      p => getCard(p.role).team === 'wolf'
     ).length
 
     const theLivingVampires = theLiving.filter(
-      p => getRoleTeam(p.role || Roles.villager) === Team.vampire
+      p => getCard(p.role).team === 'vampire'
     ).length
 
     const theLivingNonWolves =
@@ -120,14 +131,14 @@ export class GameView extends React.Component<Props> {
         <Tabs navigation className="stats">
           <div>All Players: {theLiving.length}</div>
           <div className="green">
-            {getRoleEmoji(Roles.villager)}: {theLivingNonWolves}{' '}
+            {getCard('villager').emoji}: {theLivingNonWolves}{' '}
           </div>
           <div className="red">
-            {getRoleEmoji(Roles.werewolf)}: {theLivingWolves}
+            {getCard('werewolf').emoji}: {theLivingWolves}
           </div>
-          {gameHasRole(this.props.game, Roles.vampire) && (
+          {gameHasRole(this.props.game, 'vampire') && (
             <div className="red">
-              {getRoleEmoji(Roles.vampire)}: {theLivingVampires}
+              {getCard('vampire').emoji}: {theLivingVampires}
             </div>
           )}
           <Timer

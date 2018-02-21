@@ -3,7 +3,7 @@ import * as cx from 'classnames'
 import { Button } from 'components/button'
 import { Game, performAction } from 'interfaces/game'
 import { gameHasRole, updatePlayer } from 'helpers/index'
-import { Roles, getRoleActions, AllRoles, getRoleImage } from 'interfaces/roles'
+import { Roles, AllCards, getCard } from 'interfaces/roles'
 import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Actions } from 'interfaces/actions'
@@ -66,25 +66,22 @@ class ChangeRoleButton extends React.Component<
         </Button>
         {this.state.open && (
           <Grid>
-            {AllRoles.sort().map(
-              role =>
-                role === player.role ? null : (
+            {AllCards.sort().map(
+              card =>
+                card.role === player.role ? null : (
                   <Button
-                    key={role}
+                    key={card.role}
                     onClick={() =>
                       done({
                         ...game,
                         ...updatePlayer(game, player.name, {
-                          role: role as Roles,
+                          role: card.role,
                         }),
                         activePlayer: null,
                       })
                     }>
-                    <img
-                      className="role-profile"
-                      src={getRoleImage(role as Roles)}
-                    />
-                    {role}
+                    <img className="role-profile" src={card.image} />
+                    {card}
                   </Button>
                 )
             )}
@@ -116,33 +113,33 @@ export const makeGameButtons = (game: Game, player: Player) => {
           updateFirebase({ game })
         )}
       {player.alive &&
-        gameHasRole(game, Roles.bodyguard) &&
+        gameHasRole(game, 'bodyguard') &&
         makeActionButton(game, player, 'protect', game =>
           updateFirebase({ game })
         )}
       {player.alive &&
-        gameHasRole(game, Roles.vampire) &&
+        gameHasRole(game, 'vampire') &&
         makeActionButton(game, player, 'bite', game =>
           updateFirebase({ game })
         )}
       {player.alive &&
-        gameHasRole(game, Roles['cult leader']) &&
+        gameHasRole(game, 'cult leader') &&
         makeActionButton(game, player, 'indoctrinate', game =>
           updateFirebase({ game })
         )}
       {player.alive &&
-        gameHasRole(game, Roles.priest) &&
+        gameHasRole(game, 'priest') &&
         makeActionButton(game, player, 'bless', game =>
           updateFirebase({ game })
         )}
       {player.alive &&
-        gameHasRole(game, Roles['old hag']) &&
+        gameHasRole(game, 'old hag') &&
         makeActionButton(game, player, 'exile', game =>
           updateFirebase({ game })
         )}
 
       {player.alive &&
-        getRoleActions(player.role).map(type => (
+        (getCard(player.role).actions || []).map(type => (
           <Button
             key={type}
             onClick={() =>

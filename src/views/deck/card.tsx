@@ -1,13 +1,13 @@
 import * as React from 'react'
 import * as cx from 'classnames'
 import { getNumberOfARole } from 'helpers/index'
-import { Card, getRoleImage } from 'interfaces/roles'
 import { Weight } from 'components/weight'
+import { Card, Roles } from 'interfaces/roles'
 
 interface Props {
   id?: string
-  card: Card
-  deck: Card[]
+  card: Card<Roles>
+  deck: Card<Roles>[]
   onRemove: () => void
   onAdd: () => void
 }
@@ -26,7 +26,7 @@ export const CardRow: React.SFC<Props> = ({
       <div className="profile-container">
         <img
           className={cx('role-profile', { dim: numberInDeck === 0 })}
-          src={getRoleImage(card.role)}
+          src={card.image}
         />
         {!!numberInDeck &&
           numberInDeck > 1 && <div className="count white">{numberInDeck}</div>}

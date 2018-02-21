@@ -1,5 +1,5 @@
 import { reduce, uniq, findIndex, remove, propEq, values } from 'ramda'
-import { Card, Roles } from 'interfaces/roles'
+import { Card, Roles, getCard } from 'interfaces/roles'
 import { Game } from 'interfaces/game'
 import { Player } from 'interfaces/player'
 import { Prompt } from 'interfaces/prompt'
@@ -11,14 +11,11 @@ export const getDeckWeight = (deck: Card[]): number =>
     deck
   )
 
-export const getGameRoles = (game: Game): Roles[] => {
-  const playerRoles = getRoles(values(game.players))
-  const cardRoles = getRoles(game.cards)
-  return uniq([...playerRoles, ...cardRoles])
-}
+export const getGameRoles = (game: Game): Roles[] =>
+  uniq(values(game.players).map(player => player.role))
 
-export const getRoles = (source: (Card | Player)[]): Roles[] =>
-  uniq(source.map(c => c.role)) as Roles[]
+export const getGameCards = (game: Game): Card[] =>
+  getGameRoles(game).map(getCard)
 
 export const getNumberOfARole = (
   role: Roles,
@@ -75,7 +72,10 @@ export const comparePlayersFull = (a: Player, b: Player): number => {
   else return 0
 }
 
-export const comparePlayersName = (a: Player, b: Player): number => {
+export const comparePlayersName = <T extends { name: string }>(
+  a: T,
+  b: T
+): number => {
   const aName = a.name.toUpperCase()
   const bName = b.name.toUpperCase()
 

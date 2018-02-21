@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 import { Game } from 'interfaces/game'
-import { Card } from 'interfaces/roles'
-import { Player } from 'interfaces/player'
+import { Roles } from 'interfaces/roles'
+import { SetupPlayer } from 'interfaces/player'
 import { toPairs } from 'ramda'
 
 firebase.initializeApp({
@@ -15,14 +15,14 @@ firebase.initializeApp({
 
 export interface FirebaseState {
   game: Game | null
-  players: Player[]
-  cards: Card[]
+  players: SetupPlayer[]
+  roles: Roles[]
   timeLimit: number
   noFlip: boolean
 }
 
 export const defaultFirebaseState: FirebaseState = {
-  cards: [],
+  roles: [],
   players: [],
   game: null,
   timeLimit: 120,

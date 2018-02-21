@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Player } from 'interfaces/player'
-import { Card } from 'interfaces/roles'
-import { getDeckWeight, getRoles, getNumberOfARole } from 'helpers/index'
+import { SetupPlayer } from 'interfaces/player'
+import { Roles, getCard } from 'interfaces/roles'
+import { getDeckWeight, getNumberOfARole } from 'helpers/index'
 import { Tabs } from 'components/tabs'
 import { Content } from 'components/layout'
 import { Weight } from 'components/weight'
@@ -9,15 +9,15 @@ import { Button } from 'components/button'
 import { defaultFirebaseState, updateFirebase } from 'helpers/firebase'
 
 interface Props {
-  players: Player[]
-  cards: Card[]
+  players: SetupPlayer[]
+  roles: Roles[]
   noFlip: boolean
   timeLimit: number
 }
 
 export const Overview: React.SFC<Props> = ({
   players,
-  cards,
+  roles,
   noFlip,
   timeLimit,
 }) => (
@@ -32,13 +32,13 @@ export const Overview: React.SFC<Props> = ({
     <ul>{players.map(player => <li key={player.name}>{player.name}</li>)}</ul>
 
     <h1>
-      deck: cards: {cards.length}, weight:{' '}
-      <Weight weight={getDeckWeight(cards)} />
+      deck: cards: {roles.length}, weight:{' '}
+      <Weight weight={getDeckWeight(roles.map(getCard))} />
     </h1>
     <ul>
-      {getRoles(cards).map(role => (
+      {roles.map(role => (
         <li key={role}>
-          {role} @ {getNumberOfARole(role, cards)}
+          {role} @ {getNumberOfARole(role, roles.map(getCard))}
         </li>
       ))}
     </ul>
@@ -47,7 +47,7 @@ export const Overview: React.SFC<Props> = ({
       <Button
         confirm
         className="red"
-        disabled={!players.length && !cards.length}
+        disabled={!players.length && !roles.length}
         onClick={() => updateFirebase(defaultFirebaseState)}>
         reset everything
       </Button>
