@@ -105,6 +105,7 @@ export class App extends React.Component<Props, State> {
           <BuildDeck
             cards={this.state.roles.map(getCard)}
             players={this.state.players}
+            previousDecks={this.state.previousDecks}
           />
         )}
 
@@ -128,6 +129,7 @@ export class App extends React.Component<Props, State> {
             players={this.state.players}
             noFlip={this.state.noFlip}
             timeLimit={this.state.timeLimit}
+            previousDecks={this.state.previousDecks}
           />
         )}
       </div>

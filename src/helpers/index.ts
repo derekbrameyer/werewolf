@@ -101,3 +101,41 @@ export const isNight = (game: Game): boolean => {
     !!(game.prompts || []).filter(p => p.nightPrompt).length
   )
 }
+
+import { updateFirebase } from 'helpers/firebase'
+import { equals } from 'ramda'
+
+export interface Deck {
+  id: string
+  roles: Roles[]
+  timesPlayed: number
+  title?: string
+  description?: string
+}
+
+export const addDeck = (rawRoles: Roles[], rawDecks: Deck[]) => {
+  const roles = rawRoles.slice(0).sort()
+
+  let found = false
+  const decks = rawDecks.map(deck => {
+    if (equals(deck.roles.slice().sort(), roles)) {
+      found = true
+      return { ...deck, timesPlayed: deck.timesPlayed + 1 }
+    }
+
+    return deck
+  })
+
+  if (found) {
+    decks.sort((a, b) => b.timesPlayed - a.timesPlayed)
+    return updateFirebase({ previousDecks: decks })
+  }
+
+  updateFirebase({
+    previousDecks: decks.concat({
+      roles,
+      timesPlayed: 1,
+      id: Math.random().toString(),
+    }),
+  })
+}

@@ -1,7 +1,12 @@
 import * as React from 'react'
 import { Game, defaultGame } from 'interfaces/game'
 import { Roles, getCard } from 'interfaces/roles'
-import { getNumberOfARole, comparePlayersName } from 'helpers/index'
+import {
+  getNumberOfARole,
+  comparePlayersName,
+  Deck,
+  addDeck,
+} from 'helpers/index'
 import {
   sortBy,
   values,
@@ -12,7 +17,6 @@ import {
   equals,
   uniq,
 } from 'ramda'
-import { PlayerRow } from 'components/player'
 import { Tabs } from 'components/tabs'
 import { Grid } from 'components/grid'
 import { Button } from 'components/button'
@@ -36,7 +40,10 @@ interface Action {
 }
 
 const roleToAction = (role: Roles, roleCount: number): Action | null => {
-  const placeholder = '_____'
+  const placeholderText = '____'
+  const placeholder = (text?: string) => (
+    <strong>{text || placeholderText}</strong>
+  )
 
   switch (role) {
     case 'direwolf':
@@ -49,8 +56,8 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         targets: [],
         actionToString: (players, targets) => (
           <React.Fragment>
-            {strong(players[0] || placeholder)} is the {role} and dies when{' '}
-            {strong(targets[0] || placeholder)} dies
+            {placeholder(players[0])} is the {role} and dies when{' '}
+            {placeholder(targets[0])} dies
           </React.Fragment>
         ),
       }
@@ -65,8 +72,8 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         targets: [],
         actionToString: (players, targets) => (
           <React.Fragment>
-            {strong(players[0] || placeholder)} is the {role} and when they die{' '}
-            {strong(targets[0] || placeholder)} dies
+            {placeholder(players[0])} is the {role} and when they die{' '}
+            {placeholder(targets[0])} dies
           </React.Fragment>
         ),
       }
@@ -81,8 +88,8 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         targets: [],
         actionToString: (players, targets) => (
           <React.Fragment>
-            {strong(players[0] || placeholder)} is the {role} and copies{' '}
-            {strong(targets[0] || placeholder)} when they die
+            {placeholder(players[0])} is the {role} and copies{' '}
+            {placeholder(targets[0])} when they die
           </React.Fragment>
         ),
       }
@@ -97,9 +104,8 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         targets: [],
         actionToString: (players, targets) => (
           <React.Fragment>
-            {strong(players[0] || placeholder)} is the {role} and links{' '}
-            {strong(targets[0] || placeholder)} and{' '}
-            {strong(targets[1] || placeholder)} in love
+            {placeholder(players[0])} is the {role} and links{' '}
+            {placeholder(targets[0])} and {placeholder(targets[1])} in love
           </React.Fragment>
         ),
       }
@@ -114,9 +120,8 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         targets: [],
         actionToString: (players, targets) => (
           <React.Fragment>
-            {strong(players[0] || placeholder)} is the {role} and bet on{' '}
-            {strong(targets[0] || placeholder)} and{' '}
-            {strong(targets[1] || placeholder)}
+            {placeholder(players[0])} is the {role} and bet on{' '}
+            {placeholder(targets[0])} and {placeholder(targets[1])}
           </React.Fragment>
         ),
       }
@@ -159,7 +164,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
           const isPlural = roleCount > 1
 
           const playerNames = players
-            .concat(repeat(placeholder, roleCount))
+            .concat(repeat(placeholderText, roleCount))
             .slice(0, roleCount)
             .join(', ')
 
@@ -236,6 +241,7 @@ const performAction = (_game: Game, action: Action): Game => {
 interface Props {
   players: SetupPlayer[]
   roles: Roles[]
+  previousDecks: Deck[]
   noFlip: boolean
   timeLimit: number
 }
@@ -245,8 +251,6 @@ interface State {
   actionsRemaining: Action[]
   currentAction: Action | null | undefined
 }
-
-const strong = (text: string) => <strong>{text}</strong>
 
 export class SetupGame extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -293,6 +297,8 @@ export class SetupGame extends React.Component<Props, State> {
           ),
         },
       })
+
+      addDeck(this.props.roles, this.props.previousDecks)
     }
   }
 

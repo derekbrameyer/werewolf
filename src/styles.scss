@@ -132,16 +132,16 @@ ul {
   .profile-container {
     position: relative;
   }
+}
 
-  .count {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    text-align: center;
-    font-size: 2rem;
-    margin-top: -0.5em;
-    text-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
-  }
+.count {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: -0.5em;
+  text-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
 }
 
 .player,
@@ -290,5 +290,29 @@ ul {
   &.timer {
     background-color: red;
     left: 0;
+  }
+}
+
+.deck {
+  margin-bottom: 5 * $spacing;
+
+  .roles {
+    display: flex;
+    overflow: scroll;
+    justify-content: center;
+  }
+  .meta {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 2 * $spacing;
+  }
+  .role {
+    width: $card-min-width;
+    position: relative;
+    border-radius: 50%;
+    border: 2px solid white;
+    &:not(:first-child) {
+      margin-left: - $card-min-width / 3;
+    }
   }
 }

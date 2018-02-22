@@ -22,6 +22,7 @@ export interface Card<Role extends string = string> {
   cardCount: number
   emoji: string
   image: string
+  profile: string
   preDeathAction?: (player: Player) => Prompt
   nightMessage?: string
   deathMessage?: string
@@ -30,10 +31,11 @@ export interface Card<Role extends string = string> {
 }
 
 const Card = <Role extends string>(
-  card: Omit<Card<Role>, 'image'>
+  card: Omit<Card<Role>, 'image' | 'profile'>
 ): Card<Role> => ({
   ...card,
   image: images[`${card.role.replace(/\s/g, '-')}.png`],
+  profile: images[`${card.role.replace(/\s/g, '-') + '-profile'}.png`],
 })
 
 export const AllCards = [

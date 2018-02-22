@@ -3,14 +3,15 @@ import { Game } from 'interfaces/game'
 import { Roles } from 'interfaces/roles'
 import { SetupPlayer } from 'interfaces/player'
 import { toPairs } from 'ramda'
+import { Deck } from 'views/deck/previous'
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyDpVfAXmgLRROp1mhv0wGaL6iyrpHaDtaU',
-  authDomain: 'ultimate-werewolf-generator.firebaseapp.com',
-  databaseURL: 'https://ultimate-werewolf-generator.firebaseio.com',
-  projectId: 'ultimate-werewolf-generator',
-  storageBucket: 'ultimate-werewolf-generator.appspot.com',
-  messagingSenderId: '930320036382',
+  apiKey: 'AIzaSyC2XK6ev0rkTjbX1DEuiUrQb9ohAaJjRYg',
+  authDomain: 'wt-werewolf.firebaseapp.com',
+  databaseURL: 'https://wt-werewolf.firebaseio.com',
+  projectId: 'wt-werewolf',
+  storageBucket: 'wt-werewolf.appspot.com',
+  messagingSenderId: '529798462395',
 })
 
 export interface FirebaseState {
@@ -19,6 +20,7 @@ export interface FirebaseState {
   roles: Roles[]
   timeLimit: number
   noFlip: boolean
+  previousDecks: Deck[]
 }
 
 export const defaultFirebaseState: FirebaseState = {
@@ -27,6 +29,7 @@ export const defaultFirebaseState: FirebaseState = {
   game: null,
   timeLimit: 120,
   noFlip: false,
+  previousDecks: [],
 }
 
 export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
