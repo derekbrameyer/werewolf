@@ -6,7 +6,7 @@ import { Tabs } from 'components/tabs'
 import { Button } from 'components/button'
 import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
-import { isNight } from 'helpers'
+import { isNight, getNumberOfARole } from 'helpers'
 import { Timer } from 'components/timer'
 
 interface Props {
@@ -34,7 +34,16 @@ export const SpectateView: React.SFC<Props> = ({ game }) => {
           <h1>Players</h1>
           {values(game.players)
             .filter(p => p.alive)
-            .map(player => <div key={player.name}>{player.name}</div>)}
+            .map(player => {
+              const role =
+                !game.options.noFlip && !player.alive && `: ${player.role}`
+              return (
+                <div key={player.name}>
+                  {player.name}
+                  {role}
+                </div>
+              )
+            })}
           {values(game.players)
             .filter(p => !p.alive)
             .map(player => (
@@ -45,7 +54,16 @@ export const SpectateView: React.SFC<Props> = ({ game }) => {
         </Content>
         <Content>
           <h1>Possible Roles</h1>
-          {uniq(game.initialRoles).map(role => <div key={role}>{role}</div>)}
+          {uniq(game.initialRoles).map(role => {
+            const numRole = getNumberOfARole(role, game.initialRoles)
+
+            return (
+              <div key={role}>
+                {role}
+                {numRole > 1 && `: ${numRole}`}
+              </div>
+            )
+          })}
         </Content>
       </Content>
 

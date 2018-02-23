@@ -82,7 +82,9 @@ export class BuildDeck extends React.Component<Props> {
                         className="role-profile"
                         src={getCard(roles[0]).profile}
                       />
-                      <div className="count white">{roles.length}</div>
+                      {roles.length > 1 && (
+                        <div className="count white">{roles.length}</div>
+                      )}
                     </div>
                   ))}
                 </div>

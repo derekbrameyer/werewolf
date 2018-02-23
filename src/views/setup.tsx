@@ -250,9 +250,11 @@ export class SetupGame extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const cards = props.roles.map(getCard)
+    const cards = uniq(props.roles).map(getCard)
     const actions = sortBy(card => card.team, cards)
-      .map(({ role }) => roleToAction(role, getNumberOfARole(role, cards)))
+      .map(({ role }) =>
+        roleToAction(role, getNumberOfARole(role, props.roles))
+      )
       .filter(x => !!x) as Action[]
 
     this.state = {

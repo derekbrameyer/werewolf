@@ -7,6 +7,7 @@ import { Content } from 'components/layout'
 import { Weight } from 'components/weight'
 import { Button } from 'components/button'
 import { defaultFirebaseState, updateFirebase } from 'helpers/firebase'
+import { uniq } from 'ramda'
 
 interface Props {
   players: SetupPlayer[]
@@ -36,7 +37,7 @@ export const Overview: React.SFC<Props> = ({
       <Weight weight={getDeckWeight(roles.map(getCard))} />
     </h1>
     <ul>
-      {roles.map(role => (
+      {uniq(roles).map(role => (
         <li key={role}>
           {role} @ {getNumberOfARole(role, roles.map(getCard))}
         </li>
