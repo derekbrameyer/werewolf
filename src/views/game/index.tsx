@@ -46,10 +46,11 @@ export class GameView extends React.Component<Props> {
                                   getCard(livingWolves[0]).emoji
 
     // prettier-ignore
-    const wakeUpAndKillPeople = 'wake up and kill ' +
+    const wakeUpAndKillPeople = 'wake up and kill ' + (
         wasWolfCubKilled && isBigBadWolfInGame ? 'three people' :
         wasWolfCubKilled || isBigBadWolfInGame ? 'two people' :
                                                  'someone'
+    )
 
     // prettier-ignore
     const message =

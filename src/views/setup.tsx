@@ -28,7 +28,6 @@ import { PlayerSetupRow } from 'components/setupPlayer'
 
 interface Action {
   role: Roles
-  message: string
 
   requiredPlayers: number
   players: string[]
@@ -36,28 +35,24 @@ interface Action {
   requiredTargets: number
   targets: string[]
 
-  actionToString: (players: string[], targets: string[]) => React.ReactNode
+  message: (players: string[], targets: string[]) => React.ReactNode
 }
 
 const roleToAction = (role: Roles, roleCount: number): Action | null => {
-  const placeholderText = '____'
-  const placeholder = (text?: string) => (
-    <strong>{text || placeholderText}</strong>
-  )
+  const placeholder = (text?: string) => `(${text || '____'})`
 
   switch (role) {
     case 'direwolf':
       return {
         role,
-        message: `${role}, wake up and look at me. Point someone, when they die you die.`,
         requiredPlayers: 1,
         players: [],
         requiredTargets: 1,
         targets: [],
-        actionToString: (players, targets) => (
+        message: (players, targets) => (
           <React.Fragment>
-            {placeholder(players[0])} is the {role} and dies when{' '}
-            {placeholder(targets[0])} dies
+            {role}, wake up and look at me {placeholder(players[0])}. Point at
+            someone {placeholder(targets[0])}, when they die you die.
           </React.Fragment>
         ),
       }
@@ -65,15 +60,14 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'va wolf':
       return {
         role,
-        message: `${role}, wake up and look at me. Point at someone, when you die they die.`,
         requiredPlayers: 1,
         players: [],
         requiredTargets: 1,
         targets: [],
-        actionToString: (players, targets) => (
+        message: (players, targets) => (
           <React.Fragment>
-            {placeholder(players[0])} is the {role} and when they die{' '}
-            {placeholder(targets[0])} dies
+            {role}, wake up and look at me {placeholder(players[0])}. Point at
+            someone {placeholder(targets[0])}, when you die they die.
           </React.Fragment>
         ),
       }
@@ -81,15 +75,15 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'doppleganger':
       return {
         role,
-        message: `${role}, wake up and look at me. Point at someone, when they die you become their role.`,
         requiredPlayers: 1,
         players: [],
         requiredTargets: 1,
         targets: [],
-        actionToString: (players, targets) => (
+        message: (players, targets) => (
           <React.Fragment>
-            {placeholder(players[0])} is the {role} and copies{' '}
-            {placeholder(targets[0])} when they die
+            {role}, wake up and look at me {placeholder(players[0])}. Point at
+            someone {placeholder(targets[0])}, when they die you become their
+            role.
           </React.Fragment>
         ),
       }
@@ -97,15 +91,15 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'cupid':
       return {
         role,
-        message: `${role}, wake up and look at me. Point at two people, when one dies the other dies too.`,
         requiredPlayers: 1,
         players: [],
         requiredTargets: 2,
         targets: [],
-        actionToString: (players, targets) => (
+        message: (players, targets) => (
           <React.Fragment>
-            {placeholder(players[0])} is the {role} and links{' '}
-            {placeholder(targets[0])} and {placeholder(targets[1])} in love
+            {role}, wake up and look at me {placeholder(players[0])}. Point at
+            two people: {placeholder(targets[0])}, {placeholder(targets[1])}.
+            When one dies the other dies too.
           </React.Fragment>
         ),
       }
@@ -113,15 +107,15 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'hoodlum':
       return {
         role,
-        message: `${role}, wake up and look at me. You can only win with the villagers if you live and those two die`,
         requiredPlayers: 1,
         players: [],
         requiredTargets: 2,
         targets: [],
-        actionToString: (players, targets) => (
+        message: (players, targets) => (
           <React.Fragment>
-            {placeholder(players[0])} is the {role} and bet on{' '}
-            {placeholder(targets[0])} and {placeholder(targets[1])}
+            {role}, wake up and look at me {placeholder(players[0])}. Point at
+            two people: {placeholder(targets[0])}, {placeholder(targets[1])}.
+            You can only win with the villagers if they both die.
           </React.Fragment>
         ),
       }
@@ -155,23 +149,23 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'village idiot':
       return {
         role,
-        message: `${role}, wake up and look at me`,
         requiredPlayers: roleCount,
         players: [],
         requiredTargets: 0,
         targets: [],
-        actionToString: (players, targets) => {
+        message: (players, targets) => {
           const isPlural = roleCount > 1
 
           const playerNames = players
-            .concat(repeat(placeholderText, roleCount))
+            .map(placeholder)
+            .concat(repeat(placeholder(), roleCount))
             .slice(0, roleCount)
             .join(', ')
 
           return (
             <React.Fragment>
-              {playerNames} {isPlural ? 'are' : 'is'} the {role}
-              {isPlural ? 's' : ''}
+              {role}
+              {isPlural ? 's' : ''}, wake up and look at me: {playerNames}
             </React.Fragment>
           )
         },
@@ -310,16 +304,10 @@ export class SetupGame extends React.Component<Props, State> {
     return (
       <Content>
         <h1 className="prompt">
-          {getCard(currentAction.role).emoji} {currentAction.message}{' '}
+          {getCard(currentAction.role).emoji}{' '}
+          {currentAction.message(currentAction.players, currentAction.targets)}{' '}
           {getCard(currentAction.role).emoji}
         </h1>
-
-        <div style={{ paddingTop: '1rem', textAlign: 'center' }}>
-          {currentAction.actionToString(
-            currentAction.players,
-            currentAction.targets
-          )}
-        </div>
 
         <Grid>
           {values(game.players)

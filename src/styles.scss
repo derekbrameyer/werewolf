@@ -82,7 +82,7 @@ ul {
   display: grid;
   width: 100%;
 
-  $grid-spacing: $spacing * 3;
+  $grid-spacing: $spacing;
   grid-gap: $grid-spacing;
   padding: $grid-spacing;
 
@@ -147,6 +147,7 @@ ul {
 .player,
 .card {
   text-align: center;
+  padding: 0;
 
   h2 {
     overflow: hidden;
