@@ -261,6 +261,7 @@ export class SetupGame extends React.Component<Props, State> {
 
       game: {
         ...defaultGame,
+        initialRoles: props.roles,
         players: props.players.reduce(
           (memo, player) => ({ ...memo, [player.name]: player }),
           {}

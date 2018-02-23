@@ -13,6 +13,7 @@ import { Prompt } from 'interfaces/prompt'
 
 export interface Game {
   passcode: string
+  initialRoles: Roles[]
   players: { [name: string]: Player }
   options: {
     noFlip: boolean
@@ -27,6 +28,7 @@ export interface Game {
 
 export const defaultGame: Game = {
   passcode: '',
+  initialRoles: [],
   players: {},
   options: {
     noFlip: false,

@@ -4,6 +4,7 @@ import * as cx from 'classnames'
 interface Props {
   className?: string
   timeLimit: number // seconds
+  display: 'bar' | 'numbers'
 }
 
 interface State {
@@ -35,17 +36,21 @@ export class Timer extends React.Component<Props, State> {
   }
 
   render() {
+    if (this.props.display === 'numbers') {
+      return <div className="timer numbers">{Math.floor(this.state.time)}</div>
+    }
+
     return (
       <React.Fragment>
         <div
-          className={cx('timer', this.props.className)}
+          className={cx('timer bar', this.props.className)}
           style={{
             width: `${this.state.time / this.props.timeLimit * 100}%`,
             transition: `width ${this.interval}ms linear`,
           }}
         />
         <div
-          className={cx('timer-completed', this.props.className)}
+          className={cx('bar timer-completed', this.props.className)}
           style={{
             width: `${100 - this.state.time / this.props.timeLimit * 100}%`,
             transition: `width ${this.interval}ms linear`,

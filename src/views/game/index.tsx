@@ -43,6 +43,7 @@ export class GameView extends React.Component<Props> {
         wasWolfCubKilled        ? getCard('wolf cub').emoji :
         isBigBadWolfInGame      ? getCard('big bad wolf').emoji :
         livingWolves.length > 1 ? getCard('werewolf').emoji :
+        !livingWolves.length    ? getCard('werewolf').emoji :
                                   getCard(livingWolves[0]).emoji
 
     // prettier-ignore
@@ -133,6 +134,7 @@ export class GameView extends React.Component<Props> {
           )}
           <Timer
             key={this.props.game.dayCount}
+            display="bar"
             timeLimit={this.props.game.options.timeLimit || 0}
           />
         </Tabs>
