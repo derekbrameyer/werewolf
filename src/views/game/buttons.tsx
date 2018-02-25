@@ -81,7 +81,7 @@ class ChangeRoleButton extends React.Component<
                       })
                     }>
                     <img className="role-profile" src={card.image} />
-                    {card}
+                    {card.role}
                   </Button>
                 )
             )}
