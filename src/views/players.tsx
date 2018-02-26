@@ -1,9 +1,5 @@
 import * as React from 'react'
-import {
-  defaultPlayer,
-  SetupPlayer,
-  defaultSetupPlayer,
-} from 'interfaces/player'
+import { SetupPlayer, defaultSetupPlayer } from 'interfaces/player'
 import { find, whereEq, remove, findIndex } from 'ramda'
 import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'

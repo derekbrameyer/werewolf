@@ -256,7 +256,7 @@ export const AllCards = [
   Card({
     role: 'direwolf',
     weight: -4,
-    team: 'villager',
+    team: 'wolf',
     emoji: '🐩',
     cardCount: 1,
   }),

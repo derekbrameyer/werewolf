@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Game, defaultGame } from 'interfaces/game'
-import { Roles, getCard } from 'interfaces/roles'
+import { Roles, getCard, Card } from 'interfaces/roles'
 import {
   getNumberOfARole,
   comparePlayersName,
@@ -16,6 +16,7 @@ import {
   reject,
   equals,
   uniq,
+  partition,
 } from 'ramda'
 import { Tabs } from 'components/tabs'
 import { Grid } from 'components/grid'
@@ -130,7 +131,6 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'sorceress':
     case 'witch':
     case 'big bad wolf':
-    case 'werewolf':
     case 'wolf cub':
     case 'tanner':
     case 'pi':
@@ -145,6 +145,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'fang face':
     case 'fruit brute':
     case 'pacifist':
+    case 'werewolf':
     case 'spell caster':
     case 'village idiot':
       return {
@@ -173,6 +174,28 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'villager':
       return null
   }
+}
+
+const wolfPrompt: Action = {
+  role: 'werewolf',
+  requiredPlayers: 0,
+  players: [],
+  requiredTargets: 0,
+  targets: [],
+  message: (players, target) => {
+    return <React.Fragment>Wolves wake up and look at me</React.Fragment>
+  },
+}
+
+const wolfSleep: Action = {
+  role: 'werewolf',
+  requiredPlayers: 0,
+  players: [],
+  requiredTargets: 0,
+  targets: [],
+  message: (players, target) => {
+    return <React.Fragment>Wolves go back to sleep</React.Fragment>
+  },
 }
 
 const performAction = (_game: Game, action: Action): Game => {
@@ -246,16 +269,35 @@ interface State {
   currentAction: Action | null | undefined
 }
 
+const cardsToActions = (cards: Card<Roles>[], roles: Roles[]): Action[] => {
+  return cards
+    .map(({ role }: Card<Roles>) => {
+      return roleToAction(role, getNumberOfARole(role, roles))
+    })
+    .filter(x => !!x) as Action[]
+}
+
 export class SetupGame extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
     const cards = uniq(props.roles).map(getCard)
-    const actions = sortBy(card => card.team, cards)
-      .map(({ role }) =>
-        roleToAction(role, getNumberOfARole(role, props.roles))
-      )
-      .filter(x => !!x) as Action[]
+    const sortedCards = sortBy(card => card.team, cards)
+    const [wolves, villagers] = partition((card: Card) => {
+      return card.team === 'wolf'
+    }, sortedCards)
+
+    const villageActions = cardsToActions(villagers, props.roles)
+    const werewolfActions = cardsToActions(wolves, props.roles)
+
+    const wolfBreak = werewolfActions.length > 1 ? [wolfPrompt] : []
+    const villagerBreak = werewolfActions.length > 1 ? [wolfSleep] : []
+    const actions = [
+      ...wolfBreak,
+      ...werewolfActions,
+      ...villagerBreak,
+      ...villageActions,
+    ]
 
     this.state = {
       actionsRemaining: actions.slice(1),
@@ -375,7 +417,8 @@ export class SetupGame extends React.Component<Props, State> {
 
           <Button
             disabled={
-              !currentAction.players.length ||
+              (currentAction.requiredPlayers &&
+                !currentAction.players.length) ||
               currentAction.targets.length !== currentAction.requiredTargets
             }
             confirm={
