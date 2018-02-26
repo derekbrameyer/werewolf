@@ -1,3 +1,4 @@
+import { Player } from '../interfaces/player'
 import * as React from 'react'
 import { Game, defaultGame } from 'interfaces/game'
 import { Roles, getCard, Card } from 'interfaces/roles'
@@ -148,6 +149,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'werewolf':
     case 'spell caster':
     case 'village idiot':
+    case 'drunk':
       return {
         role,
         requiredPlayers: roleCount,
@@ -318,23 +320,34 @@ export class SetupGame extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (!this.state.currentAction) {
-      const passcode = Math.random()
-        .toString()
-        .slice(3)
+      // Assign drunk
+      const randomRole = Roles[Math.floor(Math.random() * Roles.length)]
+      // prettier-ignore
+      const players: { [key: string]: Player } = map(
+        player => player.role === 'drunk'? { ...player, role: randomRole as Roles, drunk: true }: player,
+        this.state.game.players
+      )
 
-      localStorage.setItem('ww-passcode', passcode)
+      this.setState({ game: { ...this.state.game, players } }, () => {
+        // Protect game with passcode
+        const passcode = Math.random()
+          .toString()
+          .slice(3)
 
-      updateFirebase({
-        game: {
-          ...this.state.game,
-          passcode,
-          players: map(
-            player => ({ ...defaultPlayer, role: 'villager', ...player }),
-            this.state.game.players
-          ),
-        },
+        localStorage.setItem('ww-passcode', passcode)
+
+        updateFirebase({
+          game: {
+            ...this.state.game,
+            passcode,
+            players: map(
+              player => ({ ...defaultPlayer, role: 'villager', ...player }),
+              this.state.game.players
+            ),
+          },
+        })
       })
 
       addDeck(this.props.roles, this.props.previousDecks)

@@ -71,7 +71,19 @@ export class GameView extends React.Component<Props> {
 
     let game = this.props.game
 
+    const drunkMessage =
+      this.props.game.dayCount === 2
+        ? `${
+            getCard('drunk').emoji
+          } Drunk sober up, and receive your true identity. You can wake with the werewolves if you are now a werewolf 😏`
+        : this.props.game.dayCount > 2
+          ? `${getCard('drunk').emoji} Drunk wake up and do something`
+          : ``
+
+    const drunk = values(game.players).find(player => player.drunk)
+
     const nightPrompts: Prompt[] = getGameRoles(game)
+      .filter(role => !drunk || role !== drunk.role)
       .map(getCard)
       .sort((a, b) => b.weight - a.weight)
       .reduce<Prompt[]>((prompts, card, i) => {
@@ -86,6 +98,14 @@ export class GameView extends React.Component<Props> {
             })
           : prompts
       }, [])
+      .concat(
+        !!~game.initialRoles.indexOf('drunk') && drunkMessage
+          ? {
+              message: drunkMessage,
+              nightPrompt: true,
+            }
+          : []
+      )
       .concat(this.makeWerewolfPrompt())
 
     values(game.players).forEach(player => {

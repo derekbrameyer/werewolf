@@ -25,6 +25,7 @@ export interface Player extends SetupPlayer {
   blessed: boolean
   silenced: boolean
   betOn: boolean
+  drunk: boolean
   exiled: boolean
 }
 
@@ -41,5 +42,6 @@ export const defaultPlayer: Player = {
   originalRole: null,
   silenced: false,
   exiled: false,
+  drunk: false,
   betOn: false,
 }

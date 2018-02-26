@@ -166,6 +166,14 @@ export const AllCards = [
   }),
 
   Card({
+    role: 'drunk',
+    weight: 4,
+    team: 'villager',
+    emoji: '🍺',
+    cardCount: 1,
+  }),
+
+  Card({
     role: 'sorceress',
     weight: -3,
     team: 'minion',
@@ -230,7 +238,7 @@ export const AllCards = [
     emoji: '🧛‍♀️',
     cardCount: 3,
     nightMessage:
-      'vampire, bite someone, if that person gets two nominations from now on, they die',
+      'vampire, bite someone, when someone stands trial the next die, that person will die',
   }),
 
   Card({
