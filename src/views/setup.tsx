@@ -241,7 +241,7 @@ const performAction = (_game: Game, action: Action): Game => {
   }
 
   // Link the direwolf to its target
-  if (action.role === 'cupid') {
+  if (action.role === 'direwolf') {
     game = updatePlayer(game, action.targets[0], ({ links }) => ({
       links: uniq((links || []).concat(action.players[0])),
     }))

@@ -8,7 +8,6 @@ interface Props {
   id?: string
   card: Card<Roles>
   deck: Card<Roles>[]
-  onRemove: () => void
   onAdd: () => void
 }
 
@@ -16,13 +15,12 @@ export const CardRow: React.SFC<Props> = ({
   card,
   deck = [],
   children,
-  onRemove,
   onAdd,
 }) => {
   const numberInDeck = getNumberOfARole(card.role, deck)
 
   return (
-    <button className="card" onDoubleClick={onRemove} onClick={onAdd}>
+    <button className="card" onClick={onAdd}>
       <div className="profile-container">
         <img
           className={cx('role-profile', { dim: numberInDeck === 0 })}

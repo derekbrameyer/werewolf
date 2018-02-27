@@ -42,13 +42,6 @@ export class BuildDeck extends React.Component<Props> {
           })
         }
       }}
-      onRemove={() => {
-        updateFirebase({
-          roles: this.props.cards
-            .map(card => card.role)
-            .filter(role => role !== card.role),
-        })
-      }}
     />
   )
 
