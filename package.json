@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": ">=8.2.1"
+  },
   "scripts": {
     "deploy": "npm run build && firebase deploy",
-    "build": "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
+    "build":
+      "parcel build ./src/index.html --no-cache --no-minify --public-url=./",
     "start": "parcel ./src/index.html"
   },
   "devDependencies": {
@@ -26,20 +30,9 @@
       "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
-    "modulePaths": [
-      "src/",
-      "node_modules"
-    ],
-    "moduleDirectories": [
-      "node_modules",
-      "src"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
+    "modulePaths": ["src/", "node_modules"],
+    "moduleDirectories": ["node_modules", "src"]
   },
   "prettier": {
     "printWidth": 80,
