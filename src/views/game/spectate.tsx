@@ -15,7 +15,21 @@ interface Props {
 
 export const SpectateView: React.SFC<Props> = ({ game }) => {
   if (isNight(game)) {
-    return <Content className="spectate night">🌕</Content>
+    return (
+      <div className="spectate night">
+        {values(game.players)
+          .sort()
+          .map(player => (
+            <div
+              key={player.name}
+              className={cx('player', {
+                active: game.activePlayer === player.name,
+              })}>
+              {player.name}
+            </div>
+          ))}
+      </div>
+    )
   }
 
   return (
@@ -27,7 +41,6 @@ export const SpectateView: React.SFC<Props> = ({ game }) => {
 
       <Content className="spectate-body">
         <Content>
-          {/* <h1>Time Left</h1> */}
           <Timer display="numbers" timeLimit={game.options.timeLimit || 0} />
         </Content>
         <Content>

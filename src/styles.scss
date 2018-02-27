@@ -319,7 +319,7 @@ ul {
 }
 
 .spectate {
-  // font-size: 2vw;
+  font-size: 2.5vw;
 
   .spectate-body {
     flex-flow: row;
@@ -336,12 +336,18 @@ ul {
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10em;
+    font-size: 8vw;
+    text-align: center;
 
-    background-color: black;
+    .player {
+      display: inline-block;
+      margin: 1vw;
+    }
+
+    .active {
+      color: red;
+      font-weight: bold;
+    }
   }
 
   .dead {
@@ -350,6 +356,6 @@ ul {
   }
 
   .timer {
-    font-size: 10em;
+    font-size: 8em;
   }
 }
