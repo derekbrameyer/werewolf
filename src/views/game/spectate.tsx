@@ -21,6 +21,9 @@ export const SpectateView: React.SFC<Props> = ({ game }) => {
 
     return (
       <div className="spectate night">
+        {displayablePrompts.map(prompt => (
+          <h2 key={prompt.message}>{prompt.message}</h2>
+        ))}
         {values(game.players)
           .sort()
           .map(player => (
