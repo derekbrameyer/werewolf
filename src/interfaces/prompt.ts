@@ -7,4 +7,5 @@ export interface Prompt {
   actions?: (Actions)[]
   className?: string
   nightPrompt?: boolean
+  spectatable: boolean
 }

@@ -32,8 +32,10 @@ export class GameView extends React.Component<Props> {
     const isBigBadWolfInGame = contains('big bad wolf', livingWolves)
 
     const isOnlyFangFace = livingWolves === ['fang face']
-    const isOnlyFruitBrute = livingWolves === ['fruit brute']
-
+    const isOnlyFruitBrute = all(
+      wolf => wolf === 'fang face' || wolf === 'fruit brute',
+      livingWolves
+    )
     const wasWolfCubKilled = !!(this.props.game.nightKills || []).find(
       playerName => this.props.game.players[playerName].role === 'wolf cub'
     )
@@ -63,12 +65,14 @@ export class GameView extends React.Component<Props> {
     return {
       nightPrompt: true,
       message: `${emoji} ${message} ${emoji}`,
+      spectatable: true,
     }
   }
 
   makeSpecialPrompt = (player: Player): Prompt => {
     return {
       message: `${player.name} wake up, you get to do something`,
+      spectatable: true,
     }
   }
 
@@ -109,6 +113,7 @@ export class GameView extends React.Component<Props> {
               message: `${card.emoji} ${card.nightMessage} ${card.emoji}`,
               className: cx({ dim: !active }),
               nightPrompt: true,
+              spectatable: true,
             })
           : prompts
       }, [])

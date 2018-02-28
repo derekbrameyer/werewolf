@@ -50,6 +50,7 @@ const makeIndoctrinatePrompt = (game: Game): Game => {
   ) {
     game = addPrompt(game, {
       message: 'All the living players are in the cult, the cult leader wins!',
+      spectatable: true,
     })
   }
   return game
@@ -69,6 +70,7 @@ const makeFruitBrutePrompt = (game: Game): Game => {
     game = addPrompt(game, {
       message:
         'The fruit brute is currently the only werewolf active, they can not kill anyone.',
+      spectatable: true,
     })
   }
 
@@ -89,6 +91,7 @@ export const preDeathAction = (
       target: player.name,
       message: `${player.name} is protected, what would you like to do?`,
       actions: [typeSpecificAction, 'bypass protection'],
+      spectatable: false,
     }
   }
 
@@ -152,6 +155,7 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
           message: `${player.copiedBy} transformed into a ${
             player.role
           } since ${player.name} was killed`,
+          spectatable: false,
         })
       }
 
@@ -165,12 +169,16 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
             } has died and was linked to ${linkedPlayer}`,
             actions: ['kill'],
             target: linkedPlayer,
+            spectatable: true,
           })
         }, game)
 
       // Add any prompts for when specific roles die
       if (role.deathMessage) {
-        game = addPrompt(game, { message: role.deathMessage })
+        game = addPrompt(game, {
+          message: role.deathMessage,
+          spectatable: !game.options.noFlip,
+        })
       }
 
       // Update what players have been killed this night
