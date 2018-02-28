@@ -27,6 +27,7 @@ export interface Player extends SetupPlayer {
   betOn: boolean
   drunk: boolean
   exiled: boolean
+  powers: Roles[]
 }
 
 export const defaultPlayer: Player = {
@@ -44,4 +45,5 @@ export const defaultPlayer: Player = {
   exiled: false,
   drunk: false,
   betOn: false,
+  powers: [],
 }

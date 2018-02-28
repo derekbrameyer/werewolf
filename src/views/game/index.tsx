@@ -1,7 +1,7 @@
-import { isPlayerAlive } from '../../helpers'
+import { Player } from 'interfaces/player'
 import * as React from 'react'
 import * as cx from 'classnames'
-import { propEq, values, contains } from 'ramda'
+import { propEq, values, contains, all } from 'ramda'
 import { Game, isRoleActive, performAction } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
@@ -24,7 +24,7 @@ interface Props {
 export class GameView extends React.Component<Props> {
   makeWerewolfPrompt = (): Prompt => {
     const livingWolves = values(this.props.game.players)
-      .filter(player => isPlayerAlive(this.props.game, player.name))
+      .filter(player => player.alive)
       .filter(player => getCard(player.role).team === 'wolf')
       .map(player => player.role)
 
@@ -66,10 +66,17 @@ export class GameView extends React.Component<Props> {
     }
   }
 
+  makeSpecialPrompt = (player: Player): Prompt => {
+    return {
+      message: `${player.name} wake up, you get to do something`,
+    }
+  }
+
   startNight = () => {
     if (isNight(this.props.game)) return
 
     let game = this.props.game
+    const players = values(game.players)
 
     const drunkMessage =
       this.props.game.dayCount === 2
@@ -80,7 +87,14 @@ export class GameView extends React.Component<Props> {
           ? `${getCard('drunk').emoji} Drunk wake up and do something`
           : ``
 
-    const drunk = values(game.players).find(player => player.drunk)
+    const drunk = players.find(player => player.drunk)
+
+    // Special players are players with more than one power, or a power that is not their role.
+    const specialPlayers = players.filter(
+      player =>
+        player.alive &&
+        (player.powers.length > 1 || !~player.powers.indexOf(player.role))
+    )
 
     const nightPrompts: Prompt[] = getGameRoles(game)
       .filter(role => !drunk || role !== drunk.role)
@@ -103,9 +117,11 @@ export class GameView extends React.Component<Props> {
           ? {
               message: drunkMessage,
               nightPrompt: true,
+              spectatable: true,
             }
           : []
       )
+      .concat(specialPlayers.map(this.makeSpecialPrompt))
       .concat(this.makeWerewolfPrompt())
 
     values(game.players).forEach(player => {

@@ -324,9 +324,20 @@ export class SetupGame extends React.Component<Props, State> {
     if (!this.state.currentAction) {
       // Assign drunk
       const randomRole = Roles[Math.floor(Math.random() * Roles.length)]
-      // prettier-ignore
+
       const players: { [key: string]: Player } = map(
-        player => player.role === 'drunk'? { ...player, role: randomRole as Roles, drunk: true }: player,
+        player =>
+          player.role === 'drunk'
+            ? {
+                ...player,
+                role: randomRole as Roles,
+                drunk: true,
+                powers: [randomRole as Roles],
+              }
+            : {
+                ...player,
+                powers: [(player.role || 'villager') as Roles],
+              },
         this.state.game.players
       )
 

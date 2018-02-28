@@ -15,6 +15,10 @@ interface Props {
 
 export const SpectateView: React.SFC<Props> = ({ game }) => {
   if (isNight(game)) {
+    const displayablePrompts = (game.prompts || []).filter(
+      prompt => prompt.spectatable
+    )
+
     return (
       <div className="spectate night">
         {values(game.players)
