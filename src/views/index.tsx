@@ -70,7 +70,6 @@ export class App extends React.Component<Props, State> {
       return (
         <div className="lobby">
           <h1>Welcome to the Werewolf Moderator app.</h1>
-          <p>Join a lobby to get started</p>
           <Input
             id="lobby"
             label="Lobby name:"
