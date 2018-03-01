@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 interface Props {
-  onSubmit?: () => void
+  onSubmit?: (value: any) => void
   onChange?: (value: any) => void
   label: string
   id: string
@@ -33,8 +33,7 @@ export const Input: React.SFC<Props> = ({
       value={value}
       checked={checked}
       onChange={e => onChange && onChange(e)}
-      onKeyPress={e => e.key === 'Enter' && onSubmit && onSubmit()}
+      onKeyPress={e => e.key === 'Enter' && onSubmit && onSubmit(e)}
     />
-    <button onClick={onSubmit}>done</button>
   </div>
 )

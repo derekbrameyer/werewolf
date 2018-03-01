@@ -321,7 +321,7 @@ export class SetupGame extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (!this.state.currentAction) {
+    if (!this.state.currentAction && !equals(this.state, prevState)) {
       // Assign drunk
       const randomRole = Roles[Math.floor(Math.random() * Roles.length)]
       // prettier-ignore

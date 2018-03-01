@@ -14,6 +14,8 @@ interface Props {
   roles: Roles[]
   noFlip: boolean
   timeLimit: number
+  lobbyId: string
+  leaveLobby: () => void
 }
 
 export const Overview: React.SFC<Props> = ({
@@ -21,8 +23,12 @@ export const Overview: React.SFC<Props> = ({
   roles,
   noFlip,
   timeLimit,
+  leaveLobby,
+  lobbyId,
 }) => (
   <Content>
+    <h1>Lobby: {lobbyId}</h1>
+
     <h1>options:</h1>
     <ul>
       <li>Day time limit: {timeLimit}</li>
@@ -45,6 +51,9 @@ export const Overview: React.SFC<Props> = ({
     </ul>
 
     <Tabs actions>
+      <Button confirm className="red" onClick={leaveLobby}>
+        leave lobby
+      </Button>
       <Button
         confirm
         className="red"

@@ -11,9 +11,10 @@ import { Timer } from 'components/timer'
 
 interface Props {
   game: Game
+  leaveLobby: () => void
 }
 
-export const SpectateView: React.SFC<Props> = ({ game }) => {
+export const SpectateView: React.SFC<Props> = ({ game, leaveLobby }) => {
   if (isNight(game)) {
     return (
       <div className="spectate night">
@@ -81,6 +82,10 @@ export const SpectateView: React.SFC<Props> = ({ game }) => {
       </Content>
 
       <Tabs actions>
+        <Button confirm className="red" onClick={leaveLobby}>
+          leave lobby
+        </Button>
+
         <Button
           confirm
           className="red"

@@ -9,28 +9,56 @@ import { Tabs } from 'components/tabs'
 import { Overview } from 'views/overview'
 import { Weight } from 'components/weight'
 import { GameView } from 'views/game'
-import { FirebaseState, defaultFirebaseState, database } from 'helpers/firebase'
+import {
+  FirebaseState,
+  defaultFirebaseState,
+  database,
+  setLobby,
+} from 'helpers/firebase'
 import { Options } from 'views/options'
 import { SpectateView } from 'views/game/spectate'
 import { getCard } from 'interfaces/roles'
+import { Input } from 'components/input'
 
 interface Props {}
 
 interface State extends FirebaseState {
   view: 'menu' | 'deck' | 'players' | 'setup' | 'options'
+  lobbyId: string | null
 }
+
+const localStorageLobbyKey = 'wt-werewolf-loby'
+const initialLobbyId = JSON.parse(
+  localStorage.getItem(localStorageLobbyKey) || 'null'
+)
+setLobby(initialLobbyId)
 
 export class App extends React.Component<Props, State> {
   state: State = {
-    ...JSON.parse(
-      localStorage.getItem('wt-werewolf') ||
-        JSON.stringify(defaultFirebaseState)
-    ),
+    ...defaultFirebaseState,
     view: 'menu',
+    lobbyId: initialLobbyId,
   }
 
-  componentWillMount() {
-    database.ref('/').on('value', snapshot => {
+  constructor(props: Props) {
+    super(props)
+    if (initialLobbyId) {
+      this.listenToFirebase(initialLobbyId)
+    }
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    localStorage.setItem(
+      localStorageLobbyKey,
+      JSON.stringify(this.state.lobbyId)
+    )
+
+    if (prevState.lobbyId) database.ref(prevState.lobbyId).off()
+    if (this.state.lobbyId) this.listenToFirebase(this.state.lobbyId)
+  }
+
+  listenToFirebase = (id: string) => {
+    database.ref(id).on('value', snapshot => {
       this.setState(
         snapshot ? { ...defaultFirebaseState, ...snapshot.val() } : {}
       )
@@ -38,6 +66,24 @@ export class App extends React.Component<Props, State> {
   }
 
   render() {
+    if (!this.state.lobbyId) {
+      return (
+        <div className="lobby">
+          <h1>Welcome to the Werewolf Moderator app.</h1>
+          <p>Join a lobby to get started</p>
+          <Input
+            id="lobby"
+            label="Lobby name:"
+            onSubmit={e => {
+              const lobbyId = e.target.value.trim().toLowerCase()
+              setLobby(lobbyId)
+              this.setState({ lobbyId })
+            }}
+          />
+        </div>
+      )
+    }
+
     if (
       this.state.game &&
       localStorage.getItem('ww-passcode') === this.state.game.passcode
@@ -46,7 +92,12 @@ export class App extends React.Component<Props, State> {
     }
 
     if (this.state.game) {
-      return <SpectateView game={this.state.game} />
+      return (
+        <SpectateView
+          game={this.state.game}
+          leaveLobby={() => this.setState({ lobbyId: null })}
+        />
+      )
     }
 
     return (
@@ -56,6 +107,7 @@ export class App extends React.Component<Props, State> {
             className={cx({ active: this.state.view === 'menu' })}
             onClick={() => this.setState({ view: 'menu' })}>
             overview
+            <h3>lobby: {this.state.lobbyId}</h3>
           </button>
 
           <button
@@ -98,6 +150,8 @@ export class App extends React.Component<Props, State> {
             players={this.state.players}
             noFlip={this.state.noFlip}
             timeLimit={this.state.timeLimit}
+            leaveLobby={() => this.setState({ lobbyId: null })}
+            lobbyId={this.state.lobbyId}
           />
         )}
 

@@ -43,8 +43,12 @@ export const defaultFirebaseState: FirebaseState = {
   previousDecks: [],
 }
 
+let lobbyId: string | null = null
+export const setLobby = (id: string | null) => (lobbyId = id)
 export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
-  database.ref().update(
+  if (!lobbyId) return
+
+  database.ref(lobbyId).update(
     toPairs<string, any>(props).reduce(
       (acc, [key, val]) => ({
         ...acc,
@@ -52,14 +56,6 @@ export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
       }),
       {}
     )
-  )
-
-  const prev = JSON.parse(
-    localStorage.getItem('wt-werewolf') || JSON.stringify(defaultFirebaseState)
-  )
-  localStorage.setItem(
-    'wt-werewolf',
-    JSON.stringify({ ...prev, ...(props as object) })
   )
 }
 

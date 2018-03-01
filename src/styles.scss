@@ -1,13 +1,10 @@
 // ==============
 // Variables
 // ==============
-$base-font-size: 1rem;
-$spacing: 0.2rem;
-
-$card-height: 5rem;
-$card-min-width: 4rem;
-
-$nav-height: 3.5rem;
+$spacing: 0.2em;
+$card-height: 5em;
+$card-min-width: 4em;
+$nav-height: 3.5em;
 
 // ==============
 // Globals
@@ -23,8 +20,12 @@ $nav-height: 3.5rem;
 html {
   touch-action: manipulation;
   font-family: 'Roboto', sans-serif;
-  font-size: $base-font-size;
   padding-top: $nav-height;
+
+  font-size: 4vw;
+  @media (min-width: 50em) {
+    font-size: 2vw;
+  }
 }
 
 button {
@@ -125,7 +126,6 @@ ul {
 
 .role-profile {
   width: 100%;
-  max-width: 70px;
 }
 
 .card {
@@ -194,6 +194,10 @@ ul {
 
   button {
     background-color: transparent;
+  }
+
+  img {
+    max-width: 15vw;
   }
 }
 
@@ -319,8 +323,6 @@ ul {
 }
 
 .spectate {
-  font-size: 2.5vw;
-
   .spectate-body {
     flex-flow: row;
     > * {
@@ -359,4 +361,8 @@ ul {
   .timer {
     font-size: 8em;
   }
+}
+
+.lobby {
+  @extend .modal;
 }
