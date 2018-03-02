@@ -1,8 +1,13 @@
 import { isPlayerAlive } from '../../helpers'
 import * as React from 'react'
 import * as cx from 'classnames'
-import { propEq, values, contains } from 'ramda'
-import { Game, isRoleActive, performAction } from 'interfaces/game'
+import { propEq, values, contains, equals } from 'ramda'
+import {
+  Game,
+  isRoleActive,
+  performAction,
+  isRoleOmitted,
+} from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { PlayerRow } from 'components/player'
 import { getCard } from 'interfaces/roles'
@@ -23,16 +28,20 @@ interface Props {
 
 export class GameView extends React.Component<Props> {
   makeWerewolfPrompt = (): Prompt => {
+    const allWolves = getGameRoles(this.props.game).filter(
+      role => getCard(role).team === 'wolf'
+    )
+
     const livingWolves = values(this.props.game.players)
       .filter(player => isPlayerAlive(this.props.game, player.name))
       .filter(player => getCard(player.role).team === 'wolf')
       .map(player => player.role)
 
-    const isFangFaceInGame = contains('fang face', livingWolves)
-    const isBigBadWolfInGame = contains('big bad wolf', livingWolves)
+    const isFangFaceInGame = contains('fang face', allWolves)
+    const isBigBadWolfAlive = contains('big bad wolf', livingWolves)
 
-    const isOnlyFangFace = livingWolves === ['fang face']
-    const isOnlyFruitBrute = livingWolves === ['fruit brute']
+    const isOnlyFangFace = equals(livingWolves, ['fang face'])
+    const isOnlyFruitBrute = equals(livingWolves, ['fruit brute'])
 
     const wasWolfCubKilled = !!(this.props.game.nightKills || []).find(
       playerName => this.props.game.players[playerName].role === 'wolf cub'
@@ -41,15 +50,15 @@ export class GameView extends React.Component<Props> {
     // prettier-ignore
     const emoji =
         wasWolfCubKilled        ? getCard('wolf cub').emoji :
-        isBigBadWolfInGame      ? getCard('big bad wolf').emoji :
+        isBigBadWolfAlive       ? getCard('big bad wolf').emoji :
         livingWolves.length > 1 ? getCard('werewolf').emoji :
         !livingWolves.length    ? getCard('werewolf').emoji :
                                   getCard(livingWolves[0]).emoji
 
     // prettier-ignore
     const wakeUpAndKillPeople = 'wake up and kill ' + (
-        wasWolfCubKilled && isBigBadWolfInGame ? 'three people' :
-        wasWolfCubKilled || isBigBadWolfInGame ? 'two people' :
+        wasWolfCubKilled && isBigBadWolfAlive ? 'three people' :
+        wasWolfCubKilled || isBigBadWolfAlive ? 'two people' :
                                                  'someone'
     )
 
@@ -93,7 +102,7 @@ export class GameView extends React.Component<Props> {
           (game.options.noFlip || (!game.options.noFlip && active))
           ? prompts.concat({
               message: `${card.emoji} ${card.nightMessage} ${card.emoji}`,
-              className: cx({ dim: !active }),
+              className: cx({ dim: !active || isRoleOmitted(game, card.role) }),
               nightPrompt: true,
             })
           : prompts

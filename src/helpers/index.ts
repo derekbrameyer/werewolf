@@ -12,7 +12,11 @@ export const getDeckWeight = (deck: Card[]): number =>
   )
 
 export const getGameRoles = (game: Game): Roles[] =>
-  uniq(values(game.players).map(player => player.role))
+  uniq(
+    values(game.players)
+      .map(player => player.role)
+      .concat(game.initialRoles)
+  )
 
 export const getGameCards = (game: Game): Card[] =>
   getGameRoles(game).map(getCard)

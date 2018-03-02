@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SetupPlayer, defaultSetupPlayer } from 'interfaces/player'
-import { find, whereEq, remove, findIndex } from 'ramda'
+import { find, whereEq, remove, findIndex, sortBy } from 'ramda'
 import { Tabs } from 'components/tabs'
 import { Input } from 'components/input'
 import { Card } from 'interfaces/roles'
@@ -42,10 +42,10 @@ export class Players extends React.Component<Props, State> {
             })
 
             updateFirebase({
-              players: [
+              players: sortBy(player => player.name, [
                 ...this.props.players,
                 { ...defaultSetupPlayer, name: this.state.playerName },
-              ],
+              ]),
             })
           }}
         />

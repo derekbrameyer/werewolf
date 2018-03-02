@@ -53,8 +53,11 @@ export class App extends React.Component<Props, State> {
       JSON.stringify(this.state.lobbyId)
     )
 
-    if (prevState.lobbyId) database.ref(prevState.lobbyId).off()
-    if (this.state.lobbyId) this.listenToFirebase(this.state.lobbyId)
+    if (this.state.lobbyId !== prevState.lobbyId) {
+      if (prevState.lobbyId) database.ref(prevState.lobbyId).off()
+
+      if (this.state.lobbyId) this.listenToFirebase(this.state.lobbyId)
+    }
   }
 
   listenToFirebase = (id: string) => {

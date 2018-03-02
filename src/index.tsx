@@ -5,4 +5,11 @@ import './styles.scss'
 
 import { App } from 'views'
 
-render(<App />, document.getElementById('root'))
+function renderApp() {
+  const App = require('./views/index').App
+  render(<App />, document.getElementById('root'))
+}
+
+renderApp()
+
+module['hot'].accept(renderApp)

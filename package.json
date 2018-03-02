@@ -20,6 +20,7 @@
     "nodemon": "^1.14.11",
     "parcel-bundler": "^1.5.1",
     "prettier": "^1.10.2",
+    "react-hot-loader": "^4.0.0",
     "ts-jest": "^22.0.1",
     "ts-node": "^4.1.0",
     "ts-node-dev": "^1.0.0-pre.9",
@@ -50,7 +51,6 @@
     "@types/classnames": "^2.2.3",
     "@types/react": "^16.0.35",
     "@types/react-dom": "^16.0.3",
-    "@types/styled-jsx": "^2.2.1",
     "classnames": "^2.2.5",
     "firebase": "^4.9.0",
     "firebase-tools": "^3.17.4",
@@ -59,8 +59,7 @@
     "parcel-plugin-typescript": "^0.5.3",
     "ramda": "^0.25.0",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "styled-jsx": "^2.2.1"
+    "react-dom": "^16.2.0"
   },
   "cache": {
     "prodOnly": false,

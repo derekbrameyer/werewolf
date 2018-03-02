@@ -6,7 +6,7 @@ import {
   removeFirst,
   isNight,
 } from 'helpers/index'
-import { values } from 'ramda'
+import { values, difference, contains } from 'ramda'
 import { Player, PlayerId } from 'interfaces/player'
 import { Action, Actions } from 'interfaces/actions'
 import { Prompt } from 'interfaces/prompt'
@@ -236,16 +236,38 @@ export const performAction = (cleanGame: Game, action: Action): Game => {
   }
 }
 
-export const isRoleActive = (game: Game, role: Roles): boolean => {
-  const livingPlayers = values(game.players).filter(p => p.alive)
-  const isRoleInGame = !!livingPlayers.filter(p => p.role === role).length
-
-  const isSeerInGame = !!livingPlayers.find(p => p.role === 'seer')
-  const isApprenticeSeerInGame = !!livingPlayers.find(
-    p => p.role === Roles['apprentice seer']
+// Sometimes we have extra roles, if we have an extra role that isn't
+// in the game, the mod should bluff that the role is in the game still
+export const isRoleOmitted = (game: Game, role: Roles): boolean => {
+  return contains(
+    role,
+    difference(game.initialRoles, values(game.players).map(p => p.role))
   )
+}
 
-  return role === Roles['apprentice seer']
-    ? !isSeerInGame && isApprenticeSeerInGame
-    : isRoleInGame
+export const isRoleAlive = (game: Game, role: Roles): boolean => {
+  return contains(
+    role,
+    values(game.players)
+      .filter(p => p.alive)
+      .map(p => p.role)
+  )
+}
+
+export const isRoleActive = (game: Game, role: Roles): boolean => {
+  // The apprentice seer is active only when the seer isn't alive
+  if (
+    role === 'apprentice seer' &&
+    !isRoleAlive(game, 'seer') &&
+    isRoleAlive(game, 'apprentice seer')
+  ) {
+    return true
+  }
+
+  // If the role is ommited then fake it
+  if (isRoleOmitted(game, role)) {
+    return true
+  }
+
+  return isRoleAlive(game, role)
 }

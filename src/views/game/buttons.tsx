@@ -8,6 +8,7 @@ import { Player } from 'interfaces/player'
 import { updateFirebase } from 'helpers/firebase'
 import { Actions } from 'interfaces/actions'
 import { Grid } from 'components/grid'
+import { sortBy } from 'ramda'
 
 export const makeActionButton = (
   game: Game,
@@ -66,7 +67,7 @@ class ChangeRoleButton extends React.Component<
         </Button>
         {this.state.open && (
           <Grid>
-            {AllCards.sort().map(
+            {sortBy(c => c.role, AllCards).map(
               card =>
                 card.role === player.role ? null : (
                   <Button
