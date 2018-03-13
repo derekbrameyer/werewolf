@@ -176,8 +176,10 @@ ul {
   align-items: center;
   top: 0;
   left: 0;
-  bottom: 0;
-  width: 100%;
+
+  width: 100vw;
+  min-height: 100vh;
+
   background-color: rgba(255, 255, 255, 0.95);
   z-index: 10;
   padding-top: $nav-height;
@@ -365,4 +367,15 @@ ul {
 
 .lobby {
   @extend .modal;
+}
+
+.game-passcode {
+  position: relative;
+  > * {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 1.2em;
+    text-align: center;
+  }
 }

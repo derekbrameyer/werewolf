@@ -98,6 +98,12 @@ export class App extends React.Component<Props, State> {
         <SpectateView
           game={this.state.game}
           leaveLobby={() => this.setState({ lobbyId: null })}
+          moderate={passcode => {
+            console.log('...')
+            console.log(passcode)
+            localStorage.setItem('ww-passcode', passcode)
+            this.forceUpdate()
+          }}
         />
       )
     }

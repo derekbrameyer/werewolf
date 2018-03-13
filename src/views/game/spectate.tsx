@@ -8,13 +8,19 @@ import { updateFirebase } from 'helpers/firebase'
 import { Content } from 'components/layout'
 import { isNight, getNumberOfARole } from 'helpers'
 import { Timer } from 'components/timer'
+import { Input } from 'components/input'
 
 interface Props {
   game: Game
   leaveLobby: () => void
+  moderate: (passcode: string) => void
 }
 
-export const SpectateView: React.SFC<Props> = ({ game, leaveLobby }) => {
+export const SpectateView: React.SFC<Props> = ({
+  game,
+  leaveLobby,
+  moderate,
+}) => {
   if (isNight(game)) {
     return (
       <div className="spectate night">
@@ -80,6 +86,13 @@ export const SpectateView: React.SFC<Props> = ({ game, leaveLobby }) => {
           })}
         </Content>
       </Content>
+
+      <Input
+        label="moderate:"
+        id="moderate"
+        onSubmit={e => moderate(e.target.value)}
+        placeholder="passcode"
+      />
 
       <Tabs actions>
         <Button confirm className="red" onClick={leaveLobby}>

@@ -9,6 +9,7 @@ interface Props {
   type?: 'text' | 'tel' | 'checkbox'
   value?: any
   checked?: any
+  placeholder?: string
 }
 
 export const Input: React.SFC<Props> = ({
@@ -19,6 +20,7 @@ export const Input: React.SFC<Props> = ({
   label,
   type,
   checked,
+  placeholder,
   id,
 }) => (
   <div className="input-container">
@@ -30,6 +32,7 @@ export const Input: React.SFC<Props> = ({
       spellCheck={false}
       id={id}
       type={type}
+      placeholder={placeholder}
       value={value}
       checked={checked}
       onChange={e => onChange && onChange(e)}

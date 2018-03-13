@@ -149,6 +149,10 @@ export class GameView extends React.Component<Props> {
     return (
       <Content>
         <Tabs navigation className="stats">
+          <div className="game-passcode">
+            {this.props.game.passcode}
+            <h3>passcode</h3>
+          </div>
           <div>All Players: {theLiving.length}</div>
           <div className="green">
             {getCard('villager').emoji}: {theLivingNonWolves}{' '}

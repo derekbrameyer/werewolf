@@ -332,9 +332,7 @@ export class SetupGame extends React.Component<Props, State> {
 
       this.setState({ game: { ...this.state.game, players } }, () => {
         // Protect game with passcode
-        const passcode = Math.random()
-          .toString()
-          .slice(3)
+        const passcode = Math.floor(Math.random()*10000).toString()
 
         localStorage.setItem('ww-passcode', passcode)
 
