@@ -16,7 +16,7 @@ import {
   setLobby,
 } from 'helpers/firebase'
 import { Options } from 'views/options'
-import { SpectateView } from 'views/game/spectate'
+import { Spectate } from 'views/game/spectate'
 import { getCard } from 'interfaces/roles'
 import { Input } from 'components/input'
 
@@ -95,7 +95,7 @@ export class App extends React.Component<Props, State> {
 
     if (this.state.game) {
       return (
-        <SpectateView
+        <Spectate
           game={this.state.game}
           leaveLobby={() => this.setState({ lobbyId: null })}
           moderate={passcode => {
@@ -182,6 +182,7 @@ export class App extends React.Component<Props, State> {
           <Options
             timeLimit={this.state.timeLimit}
             noFlip={this.state.noFlip}
+            ghost={this.state.ghost}
           />
         )}
 
@@ -192,6 +193,7 @@ export class App extends React.Component<Props, State> {
             noFlip={this.state.noFlip}
             timeLimit={this.state.timeLimit}
             previousDecks={this.state.previousDecks}
+            ghost={this.state.ghost}
           />
         )}
       </div>

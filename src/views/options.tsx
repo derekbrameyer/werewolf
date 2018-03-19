@@ -8,6 +8,7 @@ import { Button } from 'components/button'
 interface Props {
   timeLimit: number
   noFlip: boolean
+  ghost: boolean
 }
 
 export class Options extends React.Component<Props> {
@@ -34,11 +35,23 @@ export class Options extends React.Component<Props> {
           }}
         />
 
+        <Input
+          id="ghost"
+          type="checkbox"
+          checked={!!this.props.ghost}
+          label="Ghost:"
+          onChange={e => {
+            updateFirebase({ ghost: !!e.target.checked })
+          }}
+        />
+
         <Tabs actions>
           <Button
             confirm
             className="red"
-            onClick={() => updateFirebase({ timeLimit: 120, noFlip: false })}>
+            onClick={() =>
+              updateFirebase({ timeLimit: 120, noFlip: false, ghost: false })
+            }>
             reset options
           </Button>
         </Tabs>

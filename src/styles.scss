@@ -32,6 +32,7 @@ button {
   border: 0;
   padding: 2 * $spacing;
   outline: none;
+  background-color: transparent;
 
   &:active,
   &:focus {
@@ -325,6 +326,10 @@ ul {
 }
 
 .spectate {
+  .spectate-tab-button {
+    flex: 0 0 3em;
+  }
+
   .spectate-body {
     flex-flow: row;
     > * {
@@ -336,16 +341,16 @@ ul {
   &.night {
     padding: 0;
     position: fixed;
-    top: 0;
+    top: $nav-height;
     left: 0;
     right: 0;
-    bottom: 0;
-    font-size: 8vw;
+    // bottom: 0;
     text-align: center;
 
     .player {
       display: inline-block;
       margin: 1vw;
+      font-size: 8vw;
     }
 
     .active {
@@ -378,4 +383,32 @@ ul {
     top: 1.2em;
     text-align: center;
   }
+}
+
+.chat {
+  .comment {
+    padding: $spacing;
+  }
+
+  .player-name {
+    font-weight: bold;
+    margin-right: 2 * $spacing;
+  }
+}
+
+.ghost {
+  text-align: center;
+
+  .ghost-buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1 0 25%;
+    }
+  }
+}
+
+.prove-dead {
+  text-align: center;
 }

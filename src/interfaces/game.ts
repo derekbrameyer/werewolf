@@ -11,6 +11,11 @@ import { Player, PlayerId } from 'interfaces/player'
 import { Action, Actions } from 'interfaces/actions'
 import { Prompt } from 'interfaces/prompt'
 
+export interface Comment {
+  playerName: string
+  comment: string
+}
+
 export interface Game {
   passcode: string
   initialRoles: Roles[]
@@ -18,12 +23,18 @@ export interface Game {
   options: {
     noFlip: boolean
     timeLimit: number | null
+    ghost: boolean
   }
   prompts: Prompt[] | null
   nightPrompts: Prompt[] | null
   nightKills: PlayerId[] | null
   dayCount: number
   activePlayer: string | null
+  chat: Comment[] | null
+  loggedInDeadPlayers: { [name: string]: boolean } | null
+  ghost: {
+    [letter: string]: number[] | null
+  }
 }
 
 export const defaultGame: Game = {
@@ -33,12 +44,16 @@ export const defaultGame: Game = {
   options: {
     noFlip: false,
     timeLimit: 0,
+    ghost: false,
   },
   prompts: [],
   nightPrompts: [],
   nightKills: [],
   activePlayer: null,
   dayCount: 0,
+  loggedInDeadPlayers: {},
+  chat: [],
+  ghost: {},
 }
 
 const makeIndoctrinatePrompt = (game: Game): Game => {

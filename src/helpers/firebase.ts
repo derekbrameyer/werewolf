@@ -31,6 +31,7 @@ export interface FirebaseState {
   roles: Roles[]
   timeLimit: number
   noFlip: boolean
+  ghost: boolean
   previousDecks: Deck[]
 }
 
@@ -40,15 +41,16 @@ export const defaultFirebaseState: FirebaseState = {
   game: null,
   timeLimit: 120,
   noFlip: false,
+  ghost: false,
   previousDecks: [],
 }
 
 let lobbyId: string | null = null
 export const setLobby = (id: string | null) => (lobbyId = id)
 export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
-  if (!lobbyId) return
+  if (!lobbyId) return Promise.reject(null)
 
-  database.ref(lobbyId).update(
+  return database.ref(lobbyId).update(
     toPairs<string, any>(props).reduce(
       (acc, [key, val]) => ({
         ...acc,
@@ -57,6 +59,11 @@ export const updateFirebase = <T extends Partial<FirebaseState>>(props: T) => {
       {}
     )
   )
+}
+
+export const ghostVote = (letter: string) => {
+  if (!lobbyId) return Promise.reject(null)
+  return database.ref(`/${lobbyId}/game/ghost/${letter}`).push(1)
 }
 
 export const database = firebase.database()

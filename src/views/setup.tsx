@@ -263,6 +263,7 @@ interface Props {
   previousDecks: Deck[]
   noFlip: boolean
   timeLimit: number
+  ghost: boolean
 }
 
 interface State {
@@ -315,6 +316,7 @@ export class SetupGame extends React.Component<Props, State> {
         options: {
           timeLimit: props.timeLimit,
           noFlip: props.noFlip,
+          ghost: props.ghost,
         },
       },
     }
@@ -332,7 +334,7 @@ export class SetupGame extends React.Component<Props, State> {
 
       this.setState({ game: { ...this.state.game, players } }, () => {
         // Protect game with passcode
-        const passcode = Math.floor(Math.random()*10000).toString()
+        const passcode = Math.floor(Math.random() * 10000).toString()
 
         localStorage.setItem('ww-passcode', passcode)
 

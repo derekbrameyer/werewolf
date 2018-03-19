@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as cx from 'classnames'
-import { values, uniq } from 'ramda'
+import { values, uniq, toPairs, map, filter } from 'ramda'
 import { Game } from 'interfaces/game'
 import { Tabs } from 'components/tabs'
 import { Button } from 'components/button'
@@ -16,11 +16,7 @@ interface Props {
   moderate: (passcode: string) => void
 }
 
-export const SpectateView: React.SFC<Props> = ({
-  game,
-  leaveLobby,
-  moderate,
-}) => {
+export const Overview: React.SFC<Props> = ({ game, leaveLobby, moderate }) => {
   if (isNight(game)) {
     return (
       <div className="spectate night">
@@ -41,14 +37,23 @@ export const SpectateView: React.SFC<Props> = ({
 
   return (
     <Content className="spectate day">
-      <Tabs navigation className="stats">
-        <div>Living: {values(game.players).filter(p => p.alive).length}</div>
-        <div>Dead: {values(game.players).filter(p => !p.alive).length}</div>
-      </Tabs>
-
       <Content className="spectate-body">
         <Content>
           <Timer display="numbers" timeLimit={game.options.timeLimit || 0} />
+          <div className="timer">
+            {
+              // lol
+              (toPairs<string, number>(
+                filter(
+                  arr => !!arr,
+                  map(
+                    arr => (arr ? Object.keys(arr).length : 0),
+                    game.ghost || {}
+                  )
+                )
+              ).sort((a, b) => b[1] - a[1])[0] || [])[0]
+            }
+          </div>
         </Content>
         <Content>
           <h1>Players</h1>

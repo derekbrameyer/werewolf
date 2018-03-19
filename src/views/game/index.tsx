@@ -127,6 +127,7 @@ export class GameView extends React.Component<Props> {
         nightKills: [],
         nightPrompts: nightPrompts.slice(1),
         prompts: (this.props.game.prompts || []).concat(nightPrompts[0]),
+        ghost: {},
       },
     })
   }
