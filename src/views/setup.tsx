@@ -132,6 +132,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
     case 'sorceress':
     case 'witch':
     case 'big bad wolf':
+    case 'mayor':
     case 'wolf cub':
     case 'tanner':
     case 'pi':

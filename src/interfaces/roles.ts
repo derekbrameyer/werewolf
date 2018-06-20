@@ -242,6 +242,14 @@ export const AllCards = [
   }),
 
   Card({
+    role: 'mayor',
+    weight: 2,
+    team: 'villager',
+    emoji: '👩🏽‍🎤',
+    cardCount: 1,
+  }),
+
+  Card({
     role: 'priest',
     weight: 3,
     team: 'villager',
