@@ -59,7 +59,7 @@ const roleToAction = (role: Roles, roleCount: number): Action | null => {
         ),
       }
 
-    case 'va wolf':
+    case 'va woolf':
       return {
         role,
         requiredPlayers: 1,
@@ -248,8 +248,8 @@ const performAction = (_game: Game, action: Action): Game => {
     }))
   }
 
-  // Link the target to va wolf
-  if (action.role === 'va wolf') {
+  // Link the target to va woolf
+  if (action.role === 'va woolf') {
     game = updatePlayer(game, action.players[0], ({ links }) => ({
       links: uniq((links || []).concat(action.targets[0])),
     }))

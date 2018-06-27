@@ -278,7 +278,7 @@ export const AllCards = [
   }),
 
   Card({
-    role: 'va wolf',
+    role: 'va woolf',
     weight: -2,
     team: 'villager',
     emoji: '👵',
